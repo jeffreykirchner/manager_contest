@@ -159,13 +159,7 @@ class ParameterSet(models.Model):
 
                 p.parameter_set_groups.set(groups)
 
-            #parameter set walls
-            self.parameter_set_walls.all().delete()
-            new_parameter_set_walls = new_ps.get("parameter_set_walls")
-
-            for i in new_parameter_set_walls:
-                p = main.models.ParameterSetWall.objects.create(parameter_set=self)
-                p.from_dict(new_parameter_set_walls[i])
+            #parameter set walls removed
 
             #parameter set notices
             self.parameter_set_notices.all().delete()
@@ -300,8 +294,8 @@ class ParameterSet(models.Model):
             self.json_for_session["parameter_set_players"] = {p.id : p.json() for p in self.parameter_set_players.all()}
 
         if update_walls:
-            self.json_for_session["parameter_set_walls_order"] = list(self.parameter_set_walls.all().values_list('id', flat=True))
-            self.json_for_session["parameter_set_walls"] = {str(p.id) : p.json() for p in self.parameter_set_walls.all()}
+            self.json_for_session["parameter_set_walls_order"] = []
+            self.json_for_session["parameter_set_walls"] = {}
 
         if update_barriers:
             self.json_for_session["parameter_set_barriers_order"] = list(self.parameter_set_barriers_a.all().values_list('id', flat=True))

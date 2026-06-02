@@ -26,10 +26,6 @@ let app = Vue.createApp({
                         id:0,
                     },
 
-                    current_parameter_set_wall : {
-                        id:0,
-                    },
-
                     current_parameter_set_group : {
                         id:0,
                     },
@@ -55,7 +51,6 @@ let app = Vue.createApp({
                     edit_parameterset_modal : null,
                     edit_parameterset_player_modal : null,
                     edit_parameterset_notice_modal : null,
-                    edit_parameterset_wall_modal : null,
                     edit_parameterset_group_modal : null,
                     edit_parameterset_ground_modal : null,
                     upload_parameter_set_modal : null,
@@ -136,7 +131,6 @@ let app = Vue.createApp({
             app.edit_parameterset_player_modal = bootstrap.Modal.getOrCreateInstance(document.getElementById('edit_parameterset_player_modal'), {keyboard: false})
             app.upload_parameter_set_modal = bootstrap.Modal.getOrCreateInstance(document.getElementById('upload_parameter_set_modal'), {keyboard: false})   
             app.edit_parameterset_notice_modal = bootstrap.Modal.getOrCreateInstance(document.getElementById('edit_parameterset_notice_modal'), {keyboard: false})
-            app.edit_parameterset_wall_modal = bootstrap.Modal.getOrCreateInstance(document.getElementById('edit_parameterset_wall_modal'), {keyboard: false})
             app.edit_parameterset_group_modal = bootstrap.Modal.getOrCreateInstance(document.getElementById('edit_parameterset_group_modal'), {keyboard: false})
             app.edit_parameterset_barrier_modal = bootstrap.Modal.getOrCreateInstance(document.getElementById('edit_parameterset_barrier_modal'), {keyboard: false})
             app.edit_parameterset_ground_modal = bootstrap.Modal.getOrCreateInstance(document.getElementById('edit_parameterset_ground_modal'), {keyboard: false})
@@ -180,7 +174,6 @@ let app = Vue.createApp({
         {%include "staff/staff_session_parameters/control/control.js"%}
         {%include "staff/staff_session_parameters/players/players.js"%}
         {%include "staff/staff_session_parameters/notices/notices.js"%}
-        {%include "staff/staff_session_parameters/walls/walls.js"%}
         {%include "staff/staff_session_parameters/groups/groups.js"%}
         {%include "staff/staff_session_parameters/barriers/barriers.js"%}
         {%include "staff/staff_session_parameters/grounds/grounds.js"%}
