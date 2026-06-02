@@ -20,7 +20,6 @@ from main.models import Session
 from main.forms import ImportParametersForm
 from main.forms import ParameterSetForm
 from main.forms import ParameterSetPlayerForm
-from main.forms import ParameterSetNoticeForm
 from main.forms import ParameterSetGroupForm
 
 class StaffSessionParametersView(SingleObjectMixin, View):
@@ -40,7 +39,6 @@ class StaffSessionParametersView(SingleObjectMixin, View):
         session = Session.objects.only("id", "parameter_set").get(id=self.kwargs['pk'])
         
         parameter_set_player_form = ParameterSetPlayerForm()
-        parameter_set_notice_form = ParameterSetNoticeForm()
         parameter_set_group_form = ParameterSetGroupForm()
 
         parameter_set_player_form.fields["parameter_set_group"].queryset = session.parameter_set.parameter_set_groups.all()
@@ -51,9 +49,6 @@ class StaffSessionParametersView(SingleObjectMixin, View):
             parameterset_form_ids.append(i.html_name)
 
         for i in parameter_set_player_form:
-            parameterset_form_ids.append(i.html_name)
-
-        for i in parameter_set_notice_form:
             parameterset_form_ids.append(i.html_name)
 
         for i in parameter_set_group_form:
@@ -67,7 +62,6 @@ class StaffSessionParametersView(SingleObjectMixin, View):
 
                                "parameter_set_form" : ParameterSetForm(),
                                "parameter_set_player_form" : parameter_set_player_form,
-                               "parameter_set_notice_form" : parameter_set_notice_form,
                                "parameter_set_group_form" : parameter_set_group_form,
                                
                                "import_parameters_form" : ImportParametersForm(user=request.user, session_id=session.id),

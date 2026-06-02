@@ -147,14 +147,6 @@ class ParameterSet(models.Model):
 
             #parameter set walls removed
 
-            #parameter set notices
-            self.parameter_set_notices.all().delete()
-            new_parameter_set_notices = new_ps.get("parameter_set_notices")
-
-            for i in new_parameter_set_notices:
-                p = main.models.ParameterSetNotice.objects.create(parameter_set=self)
-                p.from_dict(new_parameter_set_notices[i])
-
             self.json_for_session = None
             self.save()
             
@@ -258,8 +250,7 @@ class ParameterSet(models.Model):
 
         self.save()
     
-    def update_json_fk(self, update_players=False, 
-                             update_notices=False, 
+    def update_json_fk(self, update_players=False,
                              update_walls=False,
                              update_groups=False):
         '''
@@ -272,10 +263,6 @@ class ParameterSet(models.Model):
         if update_walls:
             self.json_for_session["parameter_set_walls_order"] = []
             self.json_for_session["parameter_set_walls"] = {}
-
-        if update_notices:
-            self.json_for_session["parameter_set_notices_order"] = list(self.parameter_set_notices.all().values_list('id', flat=True))
-            self.json_for_session["parameter_set_notices"] = {str(p.id) : p.json() for p in self.parameter_set_notices.all()}    
 
         if update_groups:
             self.json_for_session["parameter_set_groups_order"] = list(self.parameter_set_groups.all().values_list('id', flat=True))
@@ -292,7 +279,6 @@ class ParameterSet(models.Model):
             self.json_for_session = {}
             self.update_json_local()
             self.update_json_fk(update_players=True, 
-                                update_notices=True,
                                 update_walls=True,
                                 update_groups=True)
 
