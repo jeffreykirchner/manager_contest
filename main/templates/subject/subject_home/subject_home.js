@@ -20,8 +20,6 @@ document.addEventListener('contextmenu', event => event.preventDefault());
 
 let worker = null;
 
-{%include "subject/subject_home/the_stage/pixi_globals.js"%}
-
 //vue app
 let app = Vue.createApp({
     delimiters: ["[[", "]]"],
@@ -48,38 +46,14 @@ let app = Vue.createApp({
                     instructions : {{instructions|safe}},
                     instruction_pages_show_scroll : false,
 
-                    notices_seen: [],
-
                     // modals
                     end_game_modal : null,
-                    interaction_modal : null,
-                    insteration_start_modal : null,
                     help_modal : null,
                     chat_gpt_modal : null,
                     test_mode : {%if session.parameter_set.test_mode%}true{%else%}false{%endif%},
 
                     //last time screen was tapped
                     last_subject_pointer_tap : Date.now(),
-
-                    //pixi
-                    canvas_width  : null,
-                    canvas_height : null,
-                    move_speed : 5,
-                    animation_speed : 0.5,
-                    scroll_speed : 10,
-                    pixi_mode : "subject",
-                    pixi_scale : 1,
-                    stage_width : 10000,
-                    stage_height : 10000,
-                    scroll_direction : {x:0, y:0},
-                    draw_bounding_boxes: false,
-
-                    //selected avatar
-                    selected_player : {
-                        session_player:null,
-                        parameter_set_player:null,
-                        interaction_amount:null,
-                    },
 
                     //forms
                     interaction_form : {direction:null, amount:null},
@@ -178,29 +152,8 @@ let app = Vue.createApp({
                 case "update_refresh_screens":
                     app.take_refresh_screens(message_data);
                     break;
-                case "update_target_location_update":
-                    app.take_target_location_update(message_data);
-                    break;
-                case "update_collect_token":
-                    app.take_collect_token(message_data);
-                    break;
-                case "update_tractor_beam":
-                    app.take_tractor_beam(message_data);
-                    break;
-                case "update_interaction":
-                    app.take_interaction(message_data);
-                    break;
-                case "update_cancel_interaction":
-                    app.take_cancel_interaction(message_data);
-                    break;
                 case "update_rescue_subject":
                     app.take_rescue_subject(message_data);
-                    break;
-                case "process_chat_gpt_prompt":
-                    app.take_process_chat_gpt_prompt(message_data);
-                    break;
-                case "clear_chat_gpt_history":
-                    app.take_clear_chat_gpt_history(message_data);
                     break;
                 case "update_show_help_doc":
                     app.take_update_show_help_doc(message_data);
@@ -228,15 +181,10 @@ let app = Vue.createApp({
         */
         do_first_load: function do_first_load()
         {           
-            app.end_game_modal = bootstrap.Modal.getOrCreateInstance(document.getElementById('end_game_modal'), {keyboard: false})   
-            app.interaction_modal = bootstrap.Modal.getOrCreateInstance(document.getElementById('interaction_modal'), {keyboard: false})
-            app.interaction_start_modal = bootstrap.Modal.getOrCreateInstance(document.getElementById('interaction_start_modal'), {keyboard: false})          
+            app.end_game_modal = bootstrap.Modal.getOrCreateInstance(document.getElementById('end_game_modal'), {keyboard: false})           
             app.help_modal = bootstrap.Modal.getOrCreateInstance(document.getElementById('help_modal'), {keyboard: false})
-            app.chat_gpt_modal = bootstrap.Modal.getOrCreateInstance(document.getElementById('chat_gpt_modal'), {keyboard: false})
 
             document.getElementById('end_game_modal').addEventListener('hidden.bs.modal', app.hide_end_game_modal);
-            document.getElementById('interaction_modal').addEventListener('hidden.bs.modal', app.hide_interaction_modal);
-            document.getElementById('interaction_start_modal').addEventListener('hidden.bs.modal', app.hide_interaction_start_modal);
 
             {%if session.parameter_set.test_mode%} setTimeout(app.do_test_mode, app.random_number(1000 , 1500)); {%endif%}
 
@@ -265,8 +213,6 @@ let app = Vue.createApp({
                 app.scroll_update();
             }
 
-            app.setup_pixi();            
-            app.auto_update_avatar_location();
         },
 
         /**
@@ -287,13 +233,7 @@ let app = Vue.createApp({
          */
         do_reload: function do_reload()
         {
-            app.setup_pixi_tokens_for_current_period();
-            app.setup_pixi_ground();
-            app.setup_pixi_subjects();
-            app.setup_pixi_wall();
-            app.setup_pixi_barrier();
-            app.update_subject_status_overlay();
-            app.setup_pixi_minimap();
+
         },
 
         /** send winsock request to get session info
@@ -306,9 +246,7 @@ let app = Vue.createApp({
         *    @param message_data {json} session day in json format
         */
         take_get_session: function take_get_session(message_data){
-            app.destroy_pixi_tokens_for_all_periods();
-            app.destroy_setup_pixi_subjects();
-            
+ 
             app.session = message_data.session;
             app.session_player = message_data.session_player;
 
@@ -362,15 +300,7 @@ let app = Vue.createApp({
             app.take_get_session(message_data);
 
             app.end_game_modal.hide();        
-            
-            app.interaction_modal.hide();
-            app.interaction_start_modal.hide();
             app.help_modal.hide();
-
-            app.setup_pixi_minimap();
-            app.remove_all_notices();
-
-            app.notices_seen = [];
         },
 
         /**
@@ -408,38 +338,10 @@ let app = Vue.createApp({
                 app.show_end_game_modal();
             }            
 
-            Vue.nextTick(() => {
-                app.update_subject_status_overlay();
-            });
-
-
             //period has changed
             if(message_data.period_is_over)
             {
-                Vue.nextTick(() => {
-                    let current_location = app.session.world_state.session_players[app.session_player.id].current_location;
-
-                    app.add_text_emitters("+" + period_earnings + "¢", 
-                            current_location.x, 
-                            current_location.y,
-                            current_location.x,
-                            current_location.y-100,
-                            0xFFFFFF,
-                            28,
-                            null)                    
-                });          
-                
-                app.setup_pixi_tokens_for_current_period();
-                app.setup_pixi_minimap();
-                app.update_player_inventory();
-
-                //add break notice
-                if(app.session.world_state.current_period % app.session.parameter_set.break_frequency == 0)
-                {
-                    app.add_notice("Break Time: Interactions are disabled. Chat is enabled.", 
-                                    app.session.world_state.current_period,
-                                    app.session.parameter_set.period_length);
-                }
+         
             }
 
             //update player states
@@ -479,7 +381,6 @@ let app = Vue.createApp({
         show_end_game_modal: function show_end_game_modal(){
             if(app.end_game_modal_visible) return;
    
-            app.interaction_modal.hide();
             app.help_modal.hide();
 
             app.end_game_modal.toggle();
@@ -534,9 +435,7 @@ let app = Vue.createApp({
             {
                 app.session.world_state = message_data.world_state;
                 
-                app.destroy_setup_pixi_subjects();
                 app.do_reload();
-                app.remove_all_notices();
             }
         },
 
@@ -555,22 +454,7 @@ let app = Vue.createApp({
         {%include "subject/subject_home/summary/summary_card.js"%}
         {%include "subject/subject_home/test_mode/test_mode.js"%}
         {%include "subject/subject_home/instructions/instructions_card.js"%}
-        {%include "subject/subject_home/the_stage/pixi_setup.js"%}
-        {%include "subject/subject_home/the_stage/token.js"%}
-        {%include "subject/subject_home/the_stage/avatar.js"%}
-        {%include "subject/subject_home/the_stage/helpers.js"%}
-        {%include "subject/subject_home/the_stage/subject.js"%}
-        {%include "subject/subject_home/the_stage/mini_map.js"%}
-        {%include "subject/subject_home/the_stage/subject_overlay.js"%}
-        {%include "subject/subject_home/the_stage/text_emitter.js"%}
-        {%include "subject/subject_home/the_stage/transfer_beam.js"%}
-        {%include "subject/subject_home/the_stage/notices.js"%}
-        {%include "subject/subject_home/the_stage/wall.js"%}
-        {%include "subject/subject_home/the_stage/move_objects.js"%}
-        {%include "subject/subject_home/the_stage/ground.js"%}
         {%include "subject/subject_home/help_doc_subject.js"%}
-        {%include "subject/subject_home/the_stage/chat_gpt.js"%}
-        {%include "subject/subject_home/the_stage/help_doc_buttons.js"%}
 
         /** clear form error messages
         */
@@ -603,13 +487,6 @@ let app = Vue.createApp({
                     document.getElementById("div_id_" + e).scrollIntoView(); 
                 }
         }, 
-
-        /**
-         * handle window resize event
-         */
-        handleResize: function handleResize(){
-            app.update_subject_status_overlay();
-        },
 
     },
 
