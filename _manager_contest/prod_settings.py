@@ -34,7 +34,7 @@ CHANNEL_LAYERS = {
         'CONFIG': {
             # 'hosts': [(os.environ['REDIS'])],
             'hosts' :  [("localhost", 6379)],
-            'prefix' : 'multi_user_socket_template',
+            'prefix' : 'manager_contest',
             'capacity': 1500,
         },
     },
