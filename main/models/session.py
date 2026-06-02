@@ -35,6 +35,10 @@ from main.models import ParameterSet
 from main.globals import ExperimentPhase
 from main.globals import round_up
 
+TOKEN_COUNT_PER_PERIOD = 100
+WORLD_WIDTH_PIXELS = 10000
+WORLD_HEIGHT_PIXELS = 10000
+
 #experiment sessoin
 class Session(models.Model):
     '''
@@ -188,18 +192,9 @@ class Session(models.Model):
         
         #session players
         for i in self.session_players.prefetch_related('parameter_set_player').all().values('id', 
-                                                                                            'parameter_set_player__start_x',
-                                                                                            'parameter_set_player__start_y',
                                                                                             'parameter_set_player__id' ):
             v = {}
 
-            v['current_location'] = {'x':i['parameter_set_player__start_x'], 'y':i['parameter_set_player__start_y']}
-            v['target_location'] = v['current_location']
-            v['inventory'] = inventory
-            v['tractor_beam_target'] = None
-            v['frozen'] = False
-            v['cool_down'] = 0
-            v['interaction'] = 0
             v['earnings'] = 0
             v['parameter_set_player_id'] = i['parameter_set_player__id']
             v['id'] = i['id']
@@ -207,24 +202,6 @@ class Session(models.Model):
             self.world_state["session_players"][str(i['id'])] = v
             self.world_state["session_players_order"].append(i['id'])
         
-        parameter_set  = self.parameter_set.json_for_session
-
-        #tokens
-        tokens = {}
-        for i in self.session_periods.all():
-            tokens[str(i)] = {}
-
-            for j in range(self.parameter_set.tokens_per_period):
-                token = {"current_location" : {
-                        "x":random.randint(25, self.parameter_set.world_width-25),
-                        "y":random.randint(25, self.parameter_set.world_height-25)},
-                        "status":"available",}
-                
-                tokens[str(i)][str(j)] = token
-            
-
-        self.world_state["tokens"] = tokens
-
         self.save()
 
     def reset_experiment(self):

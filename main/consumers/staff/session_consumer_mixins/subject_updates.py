@@ -15,6 +15,9 @@ from main.globals import ExperimentPhase
 
 import main
 
+INTERACTION_SECONDS = 10
+COOLDOWN_SECONDS = 10
+
 class SubjectUpdatesMixin():
     '''
     subject updates mixin for staff session consumer
@@ -402,9 +405,9 @@ class SubjectUpdatesMixin():
             target_player["state_payload"] = {}
 
             source_player['tractor_beam_target'] = target_player_id
-            source_player['interaction'] = self.parameter_set_local['interaction_length']
+            source_player['interaction'] = INTERACTION_SECONDS
 
-            target_player['interaction'] = self.parameter_set_local['interaction_length']
+            target_player['interaction'] = INTERACTION_SECONDS
 
             result["player_id"] = player_id
             result["target_player_id"] = target_player_id
@@ -541,8 +544,8 @@ class SubjectUpdatesMixin():
             target_player['frozen'] = False
 
             if interaction_type == 'take':
-                source_player["cool_down"] = self.parameter_set_local["cool_down_length"]
-                target_player["cool_down"] = self.parameter_set_local["cool_down_length"]
+                source_player["cool_down"] = COOLDOWN_SECONDS
+                target_player["cool_down"] = COOLDOWN_SECONDS
 
             source_player['tractor_beam_target'] = None
 
@@ -606,7 +609,7 @@ class SubjectUpdatesMixin():
             source_player['frozen'] = False
             target_player['frozen'] = False
 
-            source_player["cool_down"] = self.parameter_set_local["cool_down_length"]
+            source_player["cool_down"] = COOLDOWN_SECONDS
 
             source_player['tractor_beam_target'] = None
 

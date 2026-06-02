@@ -11,6 +11,9 @@ from main.models import SessionEvent
 from main.globals import ExperimentPhase
 from main.globals import round_up
 
+TOKEN_VALUE_CENTS = Decimal("1.0")
+COOLDOWN_SECONDS = 10
+
 class TimerMixin():
     '''
     timer mixin for staff session consumer
@@ -104,8 +107,7 @@ class TimerMixin():
             last_period["consumption_completed"] = True
             
             for i in self.world_state_local["session_players"]:
-                period_earnings = (self.world_state_local["session_players"][i]["inventory"][last_period_id_s] * 
-                                           Decimal(self.parameter_set_local["token_cents_value"]))
+                period_earnings = self.world_state_local["session_players"][i]["inventory"][last_period_id_s] * TOKEN_VALUE_CENTS
                 
                 self.world_state_local["session_players"][i]["earnings"] += period_earnings
 
@@ -174,8 +176,7 @@ class TimerMixin():
                     
                     for i in self.world_state_local["session_players"]:
 
-                        period_earnings = Decimal(self.world_state_local["session_players"][i]["inventory"][last_period_id_s]) * \
-                                          Decimal(self.parameter_set_local["token_cents_value"])
+                        period_earnings = Decimal(self.world_state_local["session_players"][i]["inventory"][last_period_id_s]) * TOKEN_VALUE_CENTS
 
                         self.world_state_local["session_players"][i]["earnings"] = Decimal(self.world_state_local["session_players"][i]["earnings"]) + period_earnings
 
@@ -219,7 +220,7 @@ class TimerMixin():
                     session_player["interaction"] -= 1
 
                     if session_player["interaction"] == 0:
-                        session_player["cool_down"] = self.parameter_set_local["cool_down_length"]
+                        session_player["cool_down"] = COOLDOWN_SECONDS
                 
                 if session_player["interaction"] == 0:
                     session_player["frozen"] = False
