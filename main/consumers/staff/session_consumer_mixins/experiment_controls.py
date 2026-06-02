@@ -193,11 +193,6 @@ def take_start_experiment(session_id, data):
         value = "fail"
         message = "No Subjects Configured"
 
-    # Prevent start when no ground elements are configured.
-    elif session.parameter_set.parameter_set_grounds.count() == 0:
-        value = "fail"
-        message = "No Ground Elements Configured"
-        
     if value=="success" and not session.started:
         session.start_experiment()
 
