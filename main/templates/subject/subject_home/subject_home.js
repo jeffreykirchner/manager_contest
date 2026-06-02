@@ -483,9 +483,6 @@ let app = Vue.createApp({
             //update any notices on screen
             app.update_notices();
 
-            //update barriers
-            app.update_barriers();
-
             //update help doc buttons
             app.clock_tick_help_doc_buttons();
         },
@@ -584,7 +581,6 @@ let app = Vue.createApp({
         {%include "subject/subject_home/the_stage/notices.js"%}
         {%include "subject/subject_home/the_stage/wall.js"%}
         {%include "subject/subject_home/the_stage/move_objects.js"%}
-        {%include "subject/subject_home/the_stage/barriers.js"%}
         {%include "subject/subject_home/the_stage/ground.js"%}
         {%include "subject/subject_home/help_doc_subject.js"%}
         {%include "subject/subject_home/the_stage/chat_gpt.js"%}

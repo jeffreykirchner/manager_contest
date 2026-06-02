@@ -30,10 +30,6 @@ let app = Vue.createApp({
                         id:0,
                     },
 
-                    current_parameter_set_barrier : {
-                        id:0,
-                    },
-
                     current_parameter_set_ground : {
                         id:0,
                     },
@@ -132,7 +128,6 @@ let app = Vue.createApp({
             app.upload_parameter_set_modal = bootstrap.Modal.getOrCreateInstance(document.getElementById('upload_parameter_set_modal'), {keyboard: false})   
             app.edit_parameterset_notice_modal = bootstrap.Modal.getOrCreateInstance(document.getElementById('edit_parameterset_notice_modal'), {keyboard: false})
             app.edit_parameterset_group_modal = bootstrap.Modal.getOrCreateInstance(document.getElementById('edit_parameterset_group_modal'), {keyboard: false})
-            app.edit_parameterset_barrier_modal = bootstrap.Modal.getOrCreateInstance(document.getElementById('edit_parameterset_barrier_modal'), {keyboard: false})
             app.edit_parameterset_ground_modal = bootstrap.Modal.getOrCreateInstance(document.getElementById('edit_parameterset_ground_modal'), {keyboard: false})
 
             document.getElementById('import_parameters_modal').addEventListener('hidden.bs.modal', app.hide_import_parameters);
@@ -175,7 +170,6 @@ let app = Vue.createApp({
         {%include "staff/staff_session_parameters/players/players.js"%}
         {%include "staff/staff_session_parameters/notices/notices.js"%}
         {%include "staff/staff_session_parameters/groups/groups.js"%}
-        {%include "staff/staff_session_parameters/barriers/barriers.js"%}
         {%include "staff/staff_session_parameters/grounds/grounds.js"%}
 
 
