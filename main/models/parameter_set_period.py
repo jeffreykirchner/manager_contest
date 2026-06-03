@@ -22,6 +22,8 @@ class ParameterSetPeriod(models.Model):
     type_b_units_player_2 = models.IntegerField(verbose_name='Type B Player 2', default=0)
     outside_option_payout = models.DecimalField(verbose_name='Outside Option Payout', max_digits=10, decimal_places=2, default=0)
 
+    pairs = models.JSONField(verbose_name='Pairs', default=dict)  #store pairs for this period, format {"pair number": ()}
+
     timestamp = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 
@@ -49,6 +51,8 @@ class ParameterSetPeriod(models.Model):
         self.type_b_units_player_1 = new_ps.get("type_b_units_player_1", self.type_b_units_player_1)
         self.type_b_units_player_2 = new_ps.get("type_b_units_player_2", self.type_b_units_player_2)
         self.outside_option_payout = new_ps.get("outside_option_payout", self.outside_option_payout)
+
+        self.pairs = new_ps.get("pairs", self.pairs)
 
         self.save()
 
@@ -86,6 +90,7 @@ class ParameterSetPeriod(models.Model):
             "type_b_units_player_1": self.type_b_units_player_1,
             "type_b_units_player_2": self.type_b_units_player_2,
             "outside_option_payout": self.outside_option_payout,
+            "pairs": self.pairs,
         }
 
     def get_json_for_subject(self, update_required=False):

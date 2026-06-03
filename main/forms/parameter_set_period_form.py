@@ -10,14 +10,7 @@ from main.models import ParameterSetPeriod
 class ParameterSetPeriodForm(forms.ModelForm):
     '''
     parameterset period edit form
-    '''
-
-    period_number = forms.IntegerField(label='Period Number',
-                                       min_value=1,
-                                       widget=forms.NumberInput(attrs={"v-model": "current_parameter_set_period.period_number",
-                                                                       "step": "1",
-                                                                       "min": "1"}))
-    
+    '''    
     type_a_units_player_1 = forms.IntegerField(label='Type A Units Player 1',
                                          widget=forms.NumberInput(attrs={"v-model": "current_parameter_set_period.type_a_units_player_1",
                                                                         "step": "1",
@@ -47,4 +40,4 @@ class ParameterSetPeriodForm(forms.ModelForm):
 
     class Meta:
         model = ParameterSetPeriod
-        fields = ['period_number', 'type_a_units_player_1', 'type_a_units_player_2', 'type_b_units_player_1', 'type_b_units_player_2', 'outside_option_payout']
+        fields = ['type_a_units_player_1', 'type_a_units_player_2', 'type_b_units_player_1', 'type_b_units_player_2', 'outside_option_payout']

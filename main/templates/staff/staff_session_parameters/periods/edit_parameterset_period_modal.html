@@ -33,6 +33,13 @@
                     Delete period <i class="far fa-trash-alt"></i>
                 </button>
                 <button type="button"
+                        class="btn btn-outline-success"
+                        title="Copy period settings to all future periods."
+                        v-on:click = "send_copy_forward_parameter_set_period()"
+                        v-bind:disabled="reconnecting || working">
+                    Copy Forward <i class="fa-solid fa-forward"></i>
+                </button>
+                <button type="button"
                         class="btn btn-outline-primary"
                         title="Update period settings."
                         v-on:click = "send_update_parameter_set_period()"

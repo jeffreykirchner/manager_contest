@@ -37,6 +37,9 @@
                                 <th scope="col" class = "m-1 p-1">
                                     Outside<br>Option ($)
                                 </th>
+                                <th scope="col" class = "m-1 p-1">
+                                    Pairs [P1, P2]
+                                </th>
                             </tr>
                         </thead>
                         <tbody id="period_list">
@@ -44,8 +47,7 @@
                                 v-bind:key="p"
                                 :set="temp_p=parameter_set.parameter_set_periods[p]"
                                 >
-                                <td v-on:click="show_edit_parameter_set_period(p)"
-                                    class="player_table_cell">
+                                <td>
                                     [[temp_p.period_number]]
                                 </td>
                                 <td v-on:click="show_edit_parameter_set_period(p)"
@@ -68,6 +70,13 @@
                                     class="player_table_cell">
                                     [[temp_p.outside_option_payout]]
                                 </td>
+                                <td>
+                                    <span v-for="(pair, index) in (temp_p.pairs || {})"
+                                          v-bind:key="pair">
+                                    [[pair]]
+                                    <span v-if="index < Object.keys(temp_p.pairs || {}).length">, </span>
+                                   </span>
+                                </td>
                             </tr>
                         </tbody>
 
@@ -84,6 +93,26 @@
                         v-bind:disabled="session.started || reconnecting || working"
                         v-on:click="send_add_parameter_set_period()">
                         Add <i class="fas fa-plus"></i>
+                </button>
+            </div>
+
+             <div class="col-md-auto">
+                <button class="btn btn-outline-primary btn-sm"
+                        type="button"
+                        title="Round Robin Pairs"
+                        v-bind:disabled="session.started || reconnecting || working"
+                        v-on:click="send_setup_pairs()">
+                        Round Robin Pairs <i class="fa-regular fa-handshake"></i>
+                </button>
+            </div>
+
+            <div class="col-md-auto">
+                <button class="btn btn-outline-primary btn-sm"
+                        type="button"
+                        title="Random Pairs"
+                        v-bind:disabled="session.started || reconnecting || working"
+                        v-on:click="send_setup_random_pairs()">
+                        Random Pairs <i class="fa-regular fa-handshake"></i>
                 </button>
             </div>
         </div>

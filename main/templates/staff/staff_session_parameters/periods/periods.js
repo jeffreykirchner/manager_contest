@@ -39,3 +39,27 @@ send_add_parameter_set_period: function send_add_parameter_set_period(){
     app.send_message("add_parameterset_period", {"session_id" : app.session.id});
 
 },
+
+/** setup round robin pairs
+*/
+send_setup_pairs: function send_setup_pairs(){
+    app.working = true;
+    app.send_message("setup_pairs", {"session_id" : app.session.id});
+
+},
+
+/**
+ * setup random pairs
+ */
+send_setup_random_pairs: function send_setup_random_pairs(){
+    app.working = true;
+    app.send_message("setup_random_pairs", {"session_id" : app.session.id});
+},
+
+/** copy current period settings forward to all future periods
+*/
+send_copy_forward_parameter_set_period: function send_copy_forward_parameter_set_period(){
+    app.working = true;
+    app.send_message("copy_forward_parameter_set_period", {"session_id" : app.session.id,
+                                                          "parameterset_period_id" : app.current_parameter_set_period.id,});
+},
