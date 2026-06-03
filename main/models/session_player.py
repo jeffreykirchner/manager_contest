@@ -223,7 +223,6 @@ class SessionPlayer(models.Model):
 
         link_string = f'{self.session.parameter_set.survey_link}?'
         link_string += f'session_id={self.session.id}&'
-        link_string += f'player_label={self.parameter_set_player.id_label}&'
         link_string += f'player_number={self.player_number}&'        
         link_string += f'player_key={self.player_key}&'
         link_string += f'server_url={p.site_url}&'

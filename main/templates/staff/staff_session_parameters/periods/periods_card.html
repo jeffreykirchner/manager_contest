@@ -1,0 +1,92 @@
+<div class="card">
+    <div class="card-header fw-bold">
+        <span class="align-middle">
+            Periods ([[ Object.keys(parameter_set.parameter_set_periods || {}).length]])
+        </span>
+
+        <span class="float-end">
+            <button type="button" class="btn btn-link ms-4" title="Show Help Doc" v-on:click="send_load_help_doc('Staff Parameters periods')">
+                <i class="far fa-question-circle"></i>
+            </button>
+        </span>
+
+    </div>
+    <div class="card-body" >
+
+        <div class="row justify-content-center">
+            <div class="col-md-auto text-center">
+                <div class="table-responsive">
+                    <table class="table table-condensed">
+                        <thead>
+                            <tr>
+                                <th scope="col" class = "m-1 p-1">
+                                    #
+                                </th>
+                                <th scope="col" class = "m-1 p-1">
+                                    A Units<br>P1
+                                </th>
+                                <th scope="col" class = "m-1 p-1">
+                                    A Units<br>P2
+                                </th>
+                                <th scope="col" class = "m-1 p-1">
+                                    B Units<br>P1
+                                </th>
+                                <th scope="col" class = "m-1 p-1">
+                                    B Units<br>P2
+                                </th>
+                                <th scope="col" class = "m-1 p-1">
+                                    Outside<br>Option ($)
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody id="period_list">
+                            <tr v-for="(p, index) in (parameter_set.parameter_set_periods_order || [])"
+                                v-bind:key="p"
+                                :set="temp_p=parameter_set.parameter_set_periods[p]"
+                                >
+                                <td v-on:click="show_edit_parameter_set_period(p)"
+                                    class="player_table_cell">
+                                    [[temp_p.period_number]]
+                                </td>
+                                <td v-on:click="show_edit_parameter_set_period(p)"
+                                    class="player_table_cell">
+                                    [[temp_p.type_a_units_player_1]]
+                                </td>
+                                <td v-on:click="show_edit_parameter_set_period(p)"
+                                    class="player_table_cell">
+                                    [[temp_p.type_a_units_player_2]]
+                                </td>
+                                <td v-on:click="show_edit_parameter_set_period(p)"
+                                    class="player_table_cell">
+                                    [[temp_p.type_b_units_player_1]]
+                                </td>
+                                <td v-on:click="show_edit_parameter_set_period(p)"
+                                    class="player_table_cell">  
+                                    [[temp_p.type_b_units_player_2]]
+                                </td>
+                                <td v-on:click="show_edit_parameter_set_period(p)"
+                                    class="player_table_cell">
+                                    [[temp_p.outside_option_payout]]
+                                </td>
+                            </tr>
+                        </tbody>
+
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="row justify-content-center">
+            <div class="col-md-auto">
+                <button class="btn btn-outline-success btn-sm"
+                        type="button"
+                        title="Add period"
+                        v-bind:disabled="session.started || reconnecting || working"
+                        v-on:click="send_add_parameter_set_period()">
+                        Add <i class="fas fa-plus"></i>
+                </button>
+            </div>
+        </div>
+
+    </div>
+</div>

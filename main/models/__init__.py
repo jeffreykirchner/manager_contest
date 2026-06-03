@@ -13,7 +13,7 @@ from .instruction import Instruction
 from .help_docs_subject import HelpDocsSubject
 
 from .parameter_set import ParameterSet
-from .parameter_set_group import ParameterSetGroup
+from .parameter_set_period import ParameterSetPeriod
 from .parameter_set_player import ParameterSetPlayer
 
 from .session import Session

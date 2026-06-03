@@ -7,7 +7,7 @@ description: 'Create a Django feature slice with a new model, form, Channels con
 
 ## Procedure
 1. Discover local patterns first.
-- Inspect the similar existing files, `main/models/parameter_set_ground.py`, `main/forms/parameter_set_ground_form.py`, `main/consumers/staff/session_parameters_consumer_mixins/parameter_set_grounds.py`, and the files in `main/templates/staff/staff_session_parameters/grounds`.
+- Inspect the similar existing files, `main/models/parameter_set_group.py`, `main/forms/parameter_set_group_form.py`, `main/consumers/staff/session_parameters_consumer_mixins/parameter_set_groups.py`, and the files in `main/templates/staff/staff_session_parameters/groups`.
 - Reuse conventions already established in these files for model fields, form structure, consumer event handling, and template organization.
 
 2. Create a new the model .
@@ -27,6 +27,10 @@ description: 'Create a Django feature slice with a new model, form, Channels con
 7. Implement the template.
 - Create a template in `main/templates/staff/staff_session_parameters/` that provides the UI for the new feature.
 - Use existing templates as a reference for structure, styling, and how data is passed from the
+
+8. Hide modal after update.
+- In file `main/templates/staff/staff_session_parameters/general_settings/general_settings.js`, add lines to hide the new modal after updates, following the pattern of existing modals.
+
 
 ## Example Prompts
 - `/add-model-form-consumer-template Build a live notice board with Notice model, NoticeForm, NoticeConsumer, and a staff template.`
