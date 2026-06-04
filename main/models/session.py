@@ -34,6 +34,7 @@ from main.models import ParameterSet
 
 from main.globals import ExperimentPhase
 from main.globals import round_up
+from main.globals import GroupPhase
 
 TOKEN_COUNT_PER_PERIOD = 100
 WORLD_WIDTH_PIXELS = 10000
@@ -123,7 +124,7 @@ class Session(models.Model):
         
         session_periods = []
 
-        for i in range(self.parameter_set.period_count):
+        for i in range(self.parameter_set.parameter_set_periods.count()):
             session_periods.append(main.models.SessionPeriod(session=self, period_number=i+1))
         
         main.models.SessionPeriod.objects.bulk_create(session_periods)
@@ -183,13 +184,56 @@ class Session(models.Model):
                             "session_periods":{str(i.id) : i.json() for i in self.session_periods.all()},
                             "session_periods_order" : list(self.session_periods.all().values_list('id', flat=True)),
                             "tokens":{},}
-        
-        inventory = {str(i):0 for i in list(self.session_periods.all().values_list('id', flat=True))}
 
         #session periods
         for i in self.world_state["session_periods"]:
-            self.world_state["session_periods"][i]["consumption_completed"] = False
-        
+            session_period = self.world_state["session_periods"][i]
+            groups = {}
+            group_map = {}
+
+            parameter_set_period = self.parameter_set.parameter_set_periods.get(period_number=session_period["period_number"])
+            pairs = parameter_set_period.pairs
+
+            session_period["parameter_set_period_id"] = parameter_set_period.id
+
+            for p_id in pairs:
+                pair = pairs[p_id]
+                p = {}
+
+                p["player_1"] = self.session_players.get(parameter_set_player__id=pair[0]).id
+                p["player_2"] = self.session_players.get(parameter_set_player__id=pair[1]).id
+
+                p["type_a_units_player_1"] = parameter_set_period.type_a_units_player_1
+                p["type_a_units_player_2"] = parameter_set_period.type_a_units_player_2
+                p["type_b_units_player_1"] = parameter_set_period.type_b_units_player_1
+                p["type_b_units_player_2"] = parameter_set_period.type_b_units_player_2
+
+                p["type_a_phase_1_units_player_1"] = None
+                p["type_a_phase_1_units_player_2"] = None
+                # p["type_a_phase_1_units_player_1"] = 0
+                # p["type_a_phase_1_units_player_2"] = 0
+
+                # p["type_a_phase_b_units_player_1"] = 0
+                # p["type_a_phase_b_units_player_2"] = 0
+
+                p["manager"] = None
+                p["manager_split_offer"] = None
+                p["manager_split_offer_accepted"] = None
+
+                p["player_1_earnings"] = 0
+                p["player_2_earnings"] = 0
+
+                p["phase"] = GroupPhase.PHASE_1
+
+                groups[str(p_id)] = p
+
+                group_map[str(p["player_1"])] = p_id
+                group_map[str(p["player_2"])] = p_id
+
+            session_period["groups"] = groups
+            session_period["group_map"] = group_map
+            session_period["paid"] = False
+
         #session players
         for i in self.session_players.prefetch_related('parameter_set_player').all().values('id', 
                                                                                             'parameter_set_player__id' ):

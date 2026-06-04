@@ -35,6 +35,9 @@
                                     B Units<br>P2
                                 </th>
                                 <th scope="col" class = "m-1 p-1">
+                                    Work<br>Payout ($)
+                                </th>
+                                <th scope="col" class = "m-1 p-1">
                                     Outside<br>Option ($)
                                 </th>
                                 <th scope="col" class = "m-1 p-1">
@@ -68,12 +71,17 @@
                                 </td>
                                 <td v-on:click="show_edit_parameter_set_period(p)"
                                     class="player_table_cell">
+                                    [[temp_p.work_payout]]
+                                </td>
+                                <td v-on:click="show_edit_parameter_set_period(p)"
+                                    class="player_table_cell">
                                     [[temp_p.outside_option_payout]]
                                 </td>
                                 <td>
                                     <span v-for="(pair, index) in (temp_p.pairs || {})"
                                           v-bind:key="pair">
-                                    [[pair]]
+                                    
+                                    [ [[get_player_number(temp_p.pairs[index][0])]] , [[get_player_number(temp_p.pairs[index][1])]] ]
                                     <span v-if="index < Object.keys(temp_p.pairs || {}).length">, </span>
                                    </span>
                                 </td>

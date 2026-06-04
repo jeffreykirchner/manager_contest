@@ -14,12 +14,6 @@ class ParameterSetForm(forms.ModelForm):
     '''
     Parameterset edit form
     '''
-    period_count = forms.IntegerField(label='Number of Periods',
-                                      min_value=1,
-                                      widget=forms.NumberInput(attrs={"v-model":"parameter_set.period_count",
-                                                                      "step":"1",
-                                                                      "min":"1"}))
-
     period_length = forms.IntegerField(label='Period Length (seconds)',
                                        min_value=1,
                                        widget=forms.NumberInput(attrs={"v-model":"parameter_set.period_length",
@@ -79,7 +73,7 @@ class ParameterSetForm(forms.ModelForm):
 
     class Meta:
         model=ParameterSet
-        fields =['period_count', 'period_length', 'break_frequency', 'break_length',
+        fields =['period_length', 'break_frequency', 'break_length',
                  'chat_gpt_mode', 'enable_chat', 'show_instructions', 
                  'survey_required', 'survey_link', 'prolific_mode', 'prolific_completion_link', 'reconnection_limit',
                   'test_mode']

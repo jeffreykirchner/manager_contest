@@ -30,6 +30,13 @@ class ParameterSetPeriodForm(forms.ModelForm):
                                          widget=forms.NumberInput(attrs={"v-model": "current_parameter_set_period.type_b_units_player_2",
                                                                         "step": "1",
                                                                         "min": "0"}))
+
+    work_payout = forms.DecimalField(label='Work Payout($)',
+                                        max_digits=10,
+                                        decimal_places=2,
+                                        widget=forms.NumberInput(attrs={"v-model": "current_parameter_set_period.work_payout",
+                                                                        "step": "0.01",
+                                                                        "min": "0"}))
     
     outside_option_payout = forms.DecimalField(label='Outside Option Payout($)',
                                                max_digits=10,
@@ -40,4 +47,4 @@ class ParameterSetPeriodForm(forms.ModelForm):
 
     class Meta:
         model = ParameterSetPeriod
-        fields = ['type_a_units_player_1', 'type_a_units_player_2', 'type_b_units_player_1', 'type_b_units_player_2', 'outside_option_payout']
+        fields = ['type_a_units_player_1', 'type_a_units_player_2', 'type_b_units_player_1', 'type_b_units_player_2', 'work_payout', 'outside_option_payout']

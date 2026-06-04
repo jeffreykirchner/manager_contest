@@ -16,11 +16,13 @@ class ParameterSetPeriod(models.Model):
 
     period_number = models.IntegerField(verbose_name='Period Number', default=1)
 
-    type_a_units_player_1 = models.IntegerField(verbose_name='Type A Player 1', default=0)
-    type_a_units_player_2 = models.IntegerField(verbose_name='Type A Player 2', default=0)
-    type_b_units_player_1 = models.IntegerField(verbose_name='Type B Player 1', default=0)
-    type_b_units_player_2 = models.IntegerField(verbose_name='Type B Player 2', default=0)
-    outside_option_payout = models.DecimalField(verbose_name='Outside Option Payout', max_digits=10, decimal_places=2, default=0)
+    type_a_units_player_1 = models.IntegerField(verbose_name='Type A Player 1', default=0)            #starting number of type a units for player 1
+    type_a_units_player_2 = models.IntegerField(verbose_name='Type A Player 2', default=0)            #starting number of type a units for player 2    
+    type_b_units_player_1 = models.IntegerField(verbose_name='Type B Player 1', default=0)            #starting number of type b units for player 1
+    type_b_units_player_2 = models.IntegerField(verbose_name='Type B Player 2', default=0)            #starting number of type b units for player 2
+
+    work_payout = models.DecimalField(verbose_name='Work Payout', max_digits=10, decimal_places=2, default=1.00)                       #payout per unit of work, for both types and both players 
+    outside_option_payout = models.DecimalField(verbose_name='Outside Option Payout', max_digits=10, decimal_places=2, default=0.75)   #payout for outside option, for type b units
 
     pairs = models.JSONField(verbose_name='Pairs', default=dict)  #store pairs for this period, format {"pair number": ()}
 
@@ -50,6 +52,8 @@ class ParameterSetPeriod(models.Model):
         self.type_a_units_player_2 = new_ps.get("type_a_units_player_2", self.type_a_units_player_2)
         self.type_b_units_player_1 = new_ps.get("type_b_units_player_1", self.type_b_units_player_1)
         self.type_b_units_player_2 = new_ps.get("type_b_units_player_2", self.type_b_units_player_2)
+
+        self.work_payout = new_ps.get("work_payout", self.work_payout)
         self.outside_option_payout = new_ps.get("outside_option_payout", self.outside_option_payout)
 
         self.pairs = new_ps.get("pairs", self.pairs)
@@ -89,6 +93,8 @@ class ParameterSetPeriod(models.Model):
             "type_a_units_player_2": self.type_a_units_player_2,
             "type_b_units_player_1": self.type_b_units_player_1,
             "type_b_units_player_2": self.type_b_units_player_2,
+
+            "work_payout": self.work_payout,
             "outside_option_payout": self.outside_option_payout,
             "pairs": self.pairs,
         }

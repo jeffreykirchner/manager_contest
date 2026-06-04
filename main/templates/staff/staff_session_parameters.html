@@ -84,7 +84,7 @@
     </div>
 </div>
 
-<div class="row justify-content-lg-center mt-4" v-cloak>
+<div class="row justify-content-lg-center mt-4" v-if="first_load_done">
     <div class="col-md">
         {%include "staff/staff_session_parameters/periods/periods_card.html"%}
      </div>
