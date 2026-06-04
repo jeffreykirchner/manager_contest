@@ -189,7 +189,6 @@ class SessionPlayer(models.Model):
             text = text.replace(f'#{i}#', str(parameter_set[i]))
 
         text = text.replace("#player_count-1#", str(len(parameter_set["parameter_set_players"])-1))
-        text = text.replace("#id_label#", str(parameter_set_player["id_label"]))
         
         return text
     

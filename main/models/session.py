@@ -217,6 +217,7 @@ class Session(models.Model):
                 # p["type_a_phase_b_units_player_2"] = 0
 
                 p["manager"] = None
+                p["worker"] = None
                 p["manager_split_offer"] = None
                 p["manager_split_offer_accepted"] = None
 

@@ -37,4 +37,5 @@ class GroupPhase(models.TextChoices):
     '''
     PHASE_1 = 'Phase 1', _('Phase 1')
     PHASE_2 = 'Phase 2', _('Phase 2')
-    COMPLETED = 'Completed', _('Completed')
+    REVIEW = 'Review', _('Review')
+    WAITING = 'Waiting', _('Waiting')
