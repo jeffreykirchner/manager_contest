@@ -455,6 +455,11 @@ let app = Vue.createApp({
         {%include "subject/subject_home/test_mode/test_mode.js"%}
         {%include "subject/subject_home/instructions/instructions_card.js"%}
         {%include "subject/subject_home/help_doc_subject.js"%}
+        {%include "subject/subject_home/phase_1/phase_1.js"%}
+        {%include "subject/subject_home/phase_2_manager/phase_2_manager.js"%}
+        {%include "subject/subject_home/phase_2_worker/phase_2_worker.js"%}
+        {%include "subject/subject_home/helpers.js"%}
+
 
         /** clear form error messages
         */
