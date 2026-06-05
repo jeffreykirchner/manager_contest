@@ -15,6 +15,20 @@ get_role: function get_role()
 },
 
 /**
+ * get player number (1 or 2) for the subject from the current parameter set player id
+ */
+get_player_number: function get_player_number()
+{
+    if(!app.session) return null;
+
+    let group = app.get_current_group();
+
+    if(group.player_1 == app.session_player.id) return 1;
+    
+    return 2;
+},
+
+/**
  * return the current group from world state for the subject
  */
 get_current_group: function get_current_group()
@@ -42,4 +56,58 @@ get_current_session_period: function get_current_session_period()
     return app.session.world_state.session_periods[current_session_period_id];
 },
 
+/**
+ * get my type A units for the current period
+ */
+get_my_type_a_units: function get_my_type_a_units()
+{
+    if(!app.session) return null;
 
+    let group = app.get_current_group();
+    let player_number = app.get_player_number();
+
+    return group["type_a_units_player_" + player_number];
+},
+
+/**
+ * get counterpart type A units for the current period
+ */
+get_counterpart_type_a_units: function get_counterpart_type_a_units()
+{
+    if(!app.session) return null;
+
+    let group = app.get_current_group();
+    let player_number = app.get_player_number();
+
+    let counterpart_player_number = player_number == 1 ? 2 : 1;
+
+    return group["type_a_units_player_" + counterpart_player_number];
+},
+
+/**
+ * get my type B units for the current period
+ */
+get_my_type_b_units: function get_my_type_b_units()
+{
+    if(!app.session) return null;
+
+    let group = app.get_current_group();
+    let player_number = app.get_player_number();
+
+    return group["type_b_units_player_" + player_number];
+},
+
+/**
+ * get counterpart type B units for the current period
+ */
+get_counterpart_type_b_units: function get_counterpart_type_b_units()
+{
+    if(!app.session) return null;
+
+    let group = app.get_current_group();
+    let player_number = app.get_player_number();
+
+    let counterpart_player_number = player_number == 1 ? 2 : 1;
+
+    return group["type_b_units_player_" + counterpart_player_number];
+},

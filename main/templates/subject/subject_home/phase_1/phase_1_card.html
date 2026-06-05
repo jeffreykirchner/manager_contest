@@ -8,6 +8,7 @@
         
     </div>
     <div class="card-body"> 
+        <!-- units table -->
         <div class="row justify-content-center" >
             <div class="col-auto">
                 <table class="table table-condensed"> 
@@ -31,10 +32,10 @@
                                Type A Units
                             </td>
                             <td class="text-center">
-                               10
+                               [[get_my_type_a_units()]]
                             </td>
                             <td class="text-center">
-                                10
+                                [[get_counterpart_type_a_units()]]
                             </td>                                               
                         </tr>
                         <tr>
@@ -42,10 +43,10 @@
                                Type B Units
                             </td>
                             <td class="text-center">
-                               10
+                                [[get_my_type_b_units()]]
                             </td>
                             <td class="text-center">
-                                10
+                                [[get_counterpart_type_b_units()]]
                             </td>                                               
                         </tr>
                     </tbody>
@@ -53,5 +54,24 @@
                 </table>
             </div>
         </div>
+
+        <!-- bid form -->
+        <div class="row justify-content-center fw-bold mt-4">
+            <div class="col-auto text-start" id="div_id_type_a_bid">
+                Submit how many Type A Units to spend to compete for the manager role
+            </div>
+        </div>
+        <div class="row justify-content-center fw-bold mt-2">
+            <div class="col-auto text-start" id="div_id_type_a_bid">
+                <input type="number" 
+                    class="transfer_model_input form-control-lg fw-bold"
+                    v-model="type_a_bid"
+                    min="0"
+                    max="999"
+                    step="1"
+                    id="type_a_bid">     
+            </div>
+        </div>
+        
     </div>                    
 </div> 
