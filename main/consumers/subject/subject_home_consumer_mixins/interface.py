@@ -37,69 +37,6 @@ class InterfaceMixin():
         await self.send_message(message_to_self=event_data, message_to_subjects=None, message_to_staff=None, 
                                 message_type=event['type'], send_to_client=True, send_to_group=False)
     
-    async def collect_token(self, event):
-        '''
-        subject collects token, handled by staff consumer
-        '''
-        pass
-
-    async def update_collect_token(self, event):
-        '''
-        subject collects token update
-        '''
-        event_data = json.loads(event["group_data"])
-
-        await self.send_message(message_to_self=event_data, message_to_subjects=None, message_to_staff=None, 
-                                message_type=event['type'], send_to_client=True, send_to_group=False)
-    
-    async def tractor_beam(self, event):
-        '''
-        subject activates tractor beam, handled by staff consumer
-        '''
-        pass
-
-    async def update_tractor_beam(self, event):
-        '''
-        subject activates tractor beam update
-        '''
-
-        event_data = json.loads(event["group_data"])
-
-        await self.send_message(message_to_self=event_data, message_to_subjects=None, message_to_staff=None, 
-                                message_type=event['type'], send_to_client=True, send_to_group=False)
-        
-    async def interaction(self, event):
-        '''
-        a subject has submitted an interaction, handled by staff consumer
-        '''
-        pass
-
-    async def update_interaction(self, event):
-        '''
-        a subject has submitted an interaction, update
-        '''
-
-        event_data = json.loads(event["group_data"])
-
-        await self.send_message(message_to_self=event_data, message_to_subjects=None, message_to_staff=None, 
-                                message_type=event['type'], send_to_client=True, send_to_group=False)
-        
-    async def cancel_interaction(self, event):
-        '''
-        a subject has canceled an interaction, handled by staff consumer
-        '''
-        pass
-
-    async def update_cancel_interaction(self, event):
-        '''
-        a subject has canceled an interaction, update
-        '''
-
-        event_data = json.loads(event["group_data"])
-
-        await self.send_message(message_to_self=event_data, message_to_subjects=None, message_to_staff=None, 
-                                message_type=event['type'], send_to_client=True, send_to_group=False)
-    
     async def update_rescue_subject(self, event):
         '''
         update rescue subject
@@ -203,6 +140,13 @@ class InterfaceMixin():
 
     @check_message_for_me
     async def update_show_help_doc(self, event):
+        event_data = json.loads(event["group_data"])
+
+        await self.send_message(message_to_self=event_data, message_to_subjects=None, message_to_staff=None, 
+                                message_type=event['type'], send_to_client=True, send_to_group=False)
+
+    @check_message_for_me  
+    async def take_submit_type_a_bid(self, event):
         event_data = json.loads(event["group_data"])
 
         await self.send_message(message_to_self=event_data, message_to_subjects=None, message_to_staff=None, 

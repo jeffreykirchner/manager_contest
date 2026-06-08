@@ -78,6 +78,12 @@ let app = Vue.createApp({
 
                     //on screen help docs
                     help_docs : {},
+
+                    //templates
+                    type_a_bid : null,
+                    type_a_bid_error : null,
+                    manager_offer_to_worker : null,
+                    manager_offer_to_worker_error : null,
                 }},
     methods: {
 
@@ -157,6 +163,9 @@ let app = Vue.createApp({
                     break;
                 case "update_show_help_doc":
                     app.take_update_show_help_doc(message_data);
+                    break;
+                case "update_submit_type_a_bid":
+                    app.take_submit_type_a_bid(message_data);
                     break;
             }
 
