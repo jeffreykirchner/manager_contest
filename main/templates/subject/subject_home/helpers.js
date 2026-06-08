@@ -4,8 +4,11 @@
 get_role: function get_role()
 {
     if(!app.session) return null;
+    if(!app.session.started) return null;
     
     let group = app.get_current_group();
+
+    if(!group.phase) return null;
 
     if(group.phase == "Phase 1") return null;
 
@@ -20,6 +23,7 @@ get_role: function get_role()
 get_player_number: function get_player_number()
 {
     if(!app.session) return null;
+    if(!app.session.started) return null;
 
     let group = app.get_current_group();
 
@@ -51,6 +55,7 @@ get_current_group: function get_current_group()
 get_current_session_period: function get_current_session_period()
 {
     if(!app.session) return null;
+    if(!app.session.started) return null;
     
     let current_session_period_id = app.session.world_state.session_periods_order[app.session.world_state.current_period-1];
     return app.session.world_state.session_periods[current_session_period_id];
@@ -62,6 +67,7 @@ get_current_session_period: function get_current_session_period()
 get_my_type_a_units: function get_my_type_a_units()
 {
     if(!app.session) return null;
+    if(!app.session.started) return null;
 
     let group = app.get_current_group();
     let player_number = app.get_player_number();
@@ -75,6 +81,7 @@ get_my_type_a_units: function get_my_type_a_units()
 get_counterpart_type_a_units: function get_counterpart_type_a_units()
 {
     if(!app.session) return null;
+    if(!app.session.started) return null;
 
     let group = app.get_current_group();
     let player_number = app.get_player_number();
@@ -90,6 +97,7 @@ get_counterpart_type_a_units: function get_counterpart_type_a_units()
 get_my_type_b_units: function get_my_type_b_units()
 {
     if(!app.session) return null;
+    if(!app.session.started) return null;
 
     let group = app.get_current_group();
     let player_number = app.get_player_number();
@@ -103,6 +111,7 @@ get_my_type_b_units: function get_my_type_b_units()
 get_counterpart_type_b_units: function get_counterpart_type_b_units()
 {
     if(!app.session) return null;
+    if(!app.session.started) return null;
 
     let group = app.get_current_group();
     let player_number = app.get_player_number();
@@ -110,4 +119,18 @@ get_counterpart_type_b_units: function get_counterpart_type_b_units()
     let counterpart_player_number = player_number == 1 ? 2 : 1;
 
     return group["type_b_units_player_" + counterpart_player_number];
+},
+
+/**
+ * get type A bid for the current period
+ */
+get_type_a_bid: function get_type_a_bid()
+{
+    if(!app.session) return null;
+    if(!app.session.started) return null;
+
+    let group = app.get_current_group();
+    let player_number = app.get_player_number();
+
+    return group["type_a_phase_1_units_player_" + player_number];
 },

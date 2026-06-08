@@ -74,21 +74,21 @@
     </div>
 
     <!-- phase 1 -->
-    <div class="row justify-content-lg-center mt-4" v-cloak v-show="get_current_group().phase == 'Phase 1'">
+    <div class="row justify-content-lg-center mt-4" v-cloak v-show="session.started && get_current_group().phase == 'Phase 1'">
         <div class="col-md">
             {%include "subject/subject_home/phase_1/phase_1_card.html"%}
         </div>
     </div>  
 
     <!-- phase 2 manager -->
-    <div class="row justify-content-lg-center mt-4" v-cloak v-show="get_current_group().phase == 'Phase 2' && get_role() == 'manager'">
+    <div class="row justify-content-lg-center mt-4" v-cloak v-if="session.started && get_current_group().phase == 'Phase 2' && get_role() == 'manager'">
         <div class="col-md">
             {%include "subject/subject_home/phase_2_manager/phase_2_manager_card.html"%}
         </div>
     </div>          
 
     <!-- phase 2 worker -->
-    <div class="row justify-content-lg-center mt-4" v-cloak v-show="get_current_group().phase == 'Phase 2' && get_role() == 'worker'">
+    <div class="row justify-content-lg-center mt-4" v-cloak v-if="session.started && get_current_group().phase == 'Phase 2' && get_role() == 'worker'">
         <div class="col-md">
             {%include "subject/subject_home/phase_2_worker/phase_2_worker_card.html"%}
         </div>

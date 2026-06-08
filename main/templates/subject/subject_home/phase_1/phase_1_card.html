@@ -56,48 +56,56 @@
         </div>
 
         <!-- bid form -->
-        <div class="row justify-content-center fw-bold mt-4">
-            <div class="col-auto text-center" id="div_id_type_a_bid">
-                Submit how many Type A Units to spend to compete for the manager role
+        <div v-show="get_type_a_bid() == null">
+            <div class="row justify-content-center fw-bold mt-4">
+                <div class="col-auto text-center" id="div_id_type_a_bid">
+                    Submit how many Type A Units to spend to compete for the manager role
+                </div>
             </div>
-        </div>
-        <div class="row justify-content-center fw-bold mt-2">
-            <div class="col-auto text-start" id="div_id_type_a_bid">
-                <input type="number" 
-                    class="transfer_model_input form-control-lg fw-bold"
-                    v-model="type_a_bid"
-                    min="0"
-                    max="999"
-                    step="1"
-                    id="type_a_bid">     
+            <div class="row justify-content-center fw-bold mt-2">
+                <div class="col-auto text-start" id="div_id_type_a_bid">
+                    <input type="number" 
+                        class="transfer_model_input form-control-lg fw-bold"
+                        v-model="type_a_bid"
+                        min="0"
+                        max="999"
+                        step="1"
+                        id="type_a_bid">     
+                </div>
             </div>
-        </div>
-        
-        <!-- button -->
-        <div class="row justify-content-center fw-bold mt-2">
-            <div class="col-auto text-start">
-                <button type="button"
-                        class="btn btn-outline-primary"
-                        v-on:click = "submit_type_a_bid()"
-                        title="Submit your bid."                       
-                        v-bind:disabled="reconnecting || 
-                                            working || 
-                                            (session.world_state.current_experiment_phase == 'Instructions' && 
-                                            session_player.current_instruction != instructions.action_page_attacks)">
+            
+            <!-- button -->
+            <div class="row justify-content-center fw-bold mt-2">
+                <div class="col-auto text-start">
+                    <button type="button"
+                            class="btn btn-outline-primary"
+                            v-on:click = "submit_type_a_bid()"
+                            title="Submit your bid."                       
+                            v-bind:disabled="reconnecting || 
+                                                working || 
+                                                (session.world_state.current_experiment_phase == 'Instructions' && 
+                                                session_player.current_instruction != instructions.action_page_attacks)">
 
-                    Submit <i class="fas fa-sign-in-alt"></i>
-                </button>
+                        Submit <i class="fas fa-sign-in-alt"></i>
+                    </button>
+                </div>
             </div>
-        </div>
 
-        <!-- error message -->
-        <div class="row justify-content-center fw-bold mt-2">
-            <div class="col-auto text-start">
-                <div class="alert alert-danger" role="alert" v-if="type_a_bid_error">
-                    [[type_a_bid_error]]
+            <!-- error message -->
+            <div class="row justify-content-center fw-bold mt-2">
+                <div class="col-auto text-start">
+                    <div class="text-danger" role="alert" v-if="type_a_bid_error">
+                        [[type_a_bid_error]]
+                    </div>
                 </div>
             </div>
         </div>
-
+        <div v-show="get_type_a_bid() != null">
+            <div class="row justify-content-center fw-bold mt-4">
+                <div class="col-auto text-center" id="div_id_type_a_bid">
+                   Waiting for others.
+                </div>
+            </div>  
+        </div>
     </div>                    
 </div> 

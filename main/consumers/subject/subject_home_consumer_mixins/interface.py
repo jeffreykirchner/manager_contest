@@ -146,7 +146,7 @@ class InterfaceMixin():
                                 message_type=event['type'], send_to_client=True, send_to_group=False)
 
     @check_message_for_me  
-    async def take_submit_type_a_bid(self, event):
+    async def update_submit_type_a_bid(self, event):
         event_data = json.loads(event["group_data"])
 
         await self.send_message(message_to_self=event_data, message_to_subjects=None, message_to_staff=None, 

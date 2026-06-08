@@ -14,6 +14,7 @@ from main.models import SessionEvent
 
 from main.globals import ExperimentPhase
 from main.globals import GroupPhase
+from main.globals import is_non_negative
 
 import main
 
@@ -262,6 +263,9 @@ class SubjectUpdatesMixin():
         subject submits type a bid from subject screen
         '''
 
+        status = "success"
+        error_message = ""
+
         event_data = event["message_text"]
         player_id = self.session_players_local[event["player_key"]]["id"]
         world_state = self.world_state_local
@@ -274,38 +278,58 @@ class SubjectUpdatesMixin():
         group["type_a_phase_1_units_player_" + str(player_number)] = type_a_bid
 
         player_1_bid = group["type_a_phase_1_units_player_1"]
-        player_2_bid = group["type_a_phase_1_units_player_2"]   
+        player_2_bid = group["type_a_phase_1_units_player_2"]
+
+        #check if bid is a non-negative integer
+        if not is_non_negative(type_a_bid):
+            status = "fail"
+            error_message = "Invalid entry."
+
+        #check if bid is less than or equal to the inventory of type a units for the player
+        if status == "success":     
+            type_a_units_player = group["type_a_units_player_" + str(player_number)]
+            if type_a_bid > type_a_units_player:
+                status = "fail"
+                error_message = f"Bid must be less than or equal to {type_a_units_player} (your inventory of type A units)."
 
         #check if both players in the group have submitted their type a bid, if so, process the bids and determine the manager for the next period
         #if the probability of player 1 winning is player 1's bid / (player 1's bid + player 2's bid), then we can randomly determine the winner based on that probability
         #if both players have a zero bid then we can randomly determine the winner with equal probability
         start_phase_2 = False
-        if player_1_bid is not None and player_2_bid is not None:   
-            start_phase_2 = True     
-            if player_1_bid == 0 and player_2_bid == 0:
-                player_1_win = random.choice([True, False])
-            else:
-                player_1_win_probability = player_1_bid / (player_1_bid + player_2_bid)
-                player_1_win = random.random() < player_1_win_probability
-            
-            if player_1_win:
-                group["manager"] = group["player_1"]
-            else:
-                group["manager"] = group["player_2"]
-            
-            group["phase"] = GroupPhase.PHASE_2
+        if status == "success":
+            if player_1_bid is not None and player_2_bid is not None:   
+                start_phase_2 = True     
+                if player_1_bid == 0 and player_2_bid == 0:
+                    player_1_win = random.choice([True, False])
+                else:
+                    player_1_win_probability = player_1_bid / (player_1_bid + player_2_bid)
+                    player_1_win = random.random() < player_1_win_probability
+                
+                if player_1_win:
+                    group["manager"] = group["player_1"]
+                    group["worker"] = group["player_2"]
+                else:
+                    group["manager"] = group["player_2"]
+                    group["worker"] = group["player_1"]
 
+                group["phase"] = GroupPhase.PHASE_2
         
         result = {"group" : group,
                   "session_player_id" : player_id,
-                  "value" : "success"}
-
-        self.session_events.append(SessionEvent(session_id=self.session_id,
-                                                    session_player_id=player_id,
-                                                    type=event['type'],
-                                                    period_number=world_state["current_period"],
-                                                    time_remaining=world_state["time_remaining"],
-                                                    data=result))
+                  "status" : status,
+                  "error_message" : error_message}
+        
+        if status == "success":
+            #store event and update world state in database
+            await self.store_world_state(force_store=True)
+            self.session_events.append(SessionEvent(session_id=self.session_id,
+                                                        session_player_id=player_id,
+                                                        type=event['type'],
+                                                        period_number=world_state["current_period"],
+                                                        time_remaining=world_state["time_remaining"],
+                                                        data=result))
+            await SessionEvent.objects.abulk_create(self.session_events, ignore_conflicts=True)
+            self.session_events = []
 
         if start_phase_2:
             await self.send_message(message_to_self=None, message_to_group=result,
@@ -327,13 +351,22 @@ class SubjectUpdatesMixin():
                                 message_type=event['type'], send_to_client=True, send_to_group=False)
     
     # helpers
+    async def get_world_state_current_session_period(self):
+        '''
+        get current session period for a session player id from the world state local
+        '''
+        session_period_id = self.world_state_local["session_periods_order"][self.world_state_local["current_period"]-1]
+        session_period = self.world_state_local["session_periods"][str(session_period_id)]
+
+        return session_period
+
     async def get_world_state_group(self, session_player_id):
         '''
         get group id for a session player id for the current period from the world state local
         '''
-        session_period = self.world_state_local["session_periods"][str(self.world_state_local["current_period"])]
+        session_period = await self.get_world_state_current_session_period()
         group_id = session_period["group_map"][str(session_player_id)]
-        group = self.world_state_local["groups"][str(group_id)]
+        group = session_period["groups"][str(group_id)]
 
         return group
 
@@ -343,7 +376,7 @@ class SubjectUpdatesMixin():
         '''
         group = await self.get_world_state_group(session_player_id)
 
-        if group["player1_id"] == session_player_id:
+        if group["player_1"] == session_player_id:
             return 1
 
         return 2
