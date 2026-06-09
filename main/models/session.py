@@ -35,10 +35,8 @@ from main.models import ParameterSet
 from main.globals import ExperimentPhase
 from main.globals import round_up
 from main.globals import GroupPhase
-
-TOKEN_COUNT_PER_PERIOD = 100
-WORLD_WIDTH_PIXELS = 10000
-WORLD_HEIGHT_PIXELS = 10000
+from main.globals import get_total_group_value
+from main.globals import get_total_player_value
 
 #experiment sessoin
 class Session(models.Model):
@@ -192,6 +190,7 @@ class Session(models.Model):
             group_map = {}
 
             parameter_set_period = self.parameter_set.parameter_set_periods.get(period_number=session_period["period_number"])
+            parameter_set_period_json = parameter_set_period.json()
             pairs = parameter_set_period.pairs
 
             session_period["parameter_set_period_id"] = parameter_set_period.id
@@ -218,8 +217,12 @@ class Session(models.Model):
 
                 p["manager"] = None
                 p["worker"] = None
-                p["manager_split_offer"] = None
-                p["manager_split_offer_accepted"] = None
+                p["manager_offer"] = None
+                p["manager_offer_accepted"] = None
+
+                p["player_1_total_value"] = async_to_sync(get_total_player_value)(p, 1, parameter_set_period_json)
+                p["player_2_total_value"] = async_to_sync(get_total_player_value)(p, 2, parameter_set_period_json)
+                p["group_total_value"] = async_to_sync(get_total_group_value)(p, parameter_set_period_json)
 
                 p["player_1_earnings"] = 0
                 p["player_2_earnings"] = 0

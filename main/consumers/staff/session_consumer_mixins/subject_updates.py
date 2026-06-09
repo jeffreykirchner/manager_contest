@@ -312,7 +312,7 @@ class SubjectUpdatesMixin():
                     group["manager"] = group["player_2"]
                     group["worker"] = group["player_1"]
 
-                group["phase"] = GroupPhase.PHASE_2
+                group["phase"] = GroupPhase.PHASE_2_MANAGER
         
         result = {"group" : group,
                   "session_player_id" : player_id,
@@ -349,6 +349,57 @@ class SubjectUpdatesMixin():
 
         await self.send_message(message_to_self=event_data, message_to_group=None,
                                 message_type=event['type'], send_to_client=True, send_to_group=False)
+        
+    async def submit_manager_offer_to_worker(self, event):
+        '''
+        subject submits manager offer to worker from subject screen
+        '''
+
+        status = "success"
+        error_message = ""
+
+        event_data = event["message_text"]
+        player_id = self.session_players_local[event["player_key"]]["id"]
+        world_state = self.world_state_local
+
+        manager_offer_to_worker = event_data["manager_offer_to_worker"]
+
+        group = await self.get_world_state_group(player_id)
+        player_number = await self.get_world_state_player_number(player_id)
+
+        if group["manager"] != player_id:
+            status = "fail"
+            error_message = "Only the manager can submit an offer."
+        
+        #check if offer is a non-negative integer
+        if status == "success":
+            if not is_non_negative(manager_offer_to_worker):
+                status = "fail"
+                error_message = "Invalid entry."
+
+        if status == "success":
+            group["manager_offer"] = manager_offer_to_worker
+
+        result = {"group" : group,
+                  "session_player_id" : player_id,
+                  "status" : status,
+                  "error_message" : error_message}
+        
+        if status == "success":
+            #store event and update world state in database
+            await self.store_world_state(force_store=True)
+            self.session_events.append(SessionEvent(session_id=self.session_id,
+                                                        session_player_id=player_id,
+                                                        type=event['type'],
+                                                        period_number=world_state["current_period"],
+                                                        time_remaining=world_state["time_remaining"],
+                                                        data=result))
+            await SessionEvent.objects.abulk_create(self.session_events, ignore_conflicts=True)
+            self.session_events = []
+
+        await self.send_message(message_to_self=None, message_to_group=result,
+                                message_type=event['type'], send_to_client=False,
+                                send_to_group=True, target_list=[group["manager"], group["worker"]])
     
     # helpers
     async def get_world_state_current_session_period(self):
@@ -359,6 +410,16 @@ class SubjectUpdatesMixin():
         session_period = self.world_state_local["session_periods"][str(session_period_id)]
 
         return session_period
+
+    async def get_world_state_current_parameter_set_period(self):
+        '''
+        get current parameter set period for a session player id from the world state local
+        '''
+        session_period = await self.get_world_state_current_session_period()
+        parameter_set_period_id = session_period["parameter_set_period_id"]
+        parameter_set_period = self.world_state_local["parameter_set_periods"][str(parameter_set_period_id)]
+
+        return parameter_set_period
 
     async def get_world_state_group(self, session_player_id):
         '''
