@@ -56,12 +56,59 @@
         </div>
 
         <!-- units values -->
+        <div class="row justify-content-center mt-4" >
+            <div class="col-auto text-center">
+                One Type A and one Type B unit together is worth $[[get_current_parameter_set_period().work_payout]].
+            </div>
+        </div>
+
+        <div class="row justify-content-center mt-2" >
+            <div class="col-auto text-center">
+                One Type B unit alone is worth $[[get_current_parameter_set_period().outside_option_payout]].
+            </div>
+        </div>
+
+        <div class="row justify-content-center mt-4" >
+            <div class="col-auto text-center">
+                My potential profit if I work alone:
+            </div>
+        </div>
+
+        <div class="row justify-content-center mt-2" >
+            <div class="col-auto text-center">
+                Counterpart's potential profit if they work alone:
+            </div>
+        </div>
+
+        <div class="row justify-content-center mt-2" >
+            <div class="col-auto text-center">
+                Total potential profit for the group if we work together:<br>
+                (the unit manager proposes how to split, their counterpart decides to work together or separately)
+            </div>
+        </div>
 
         <!-- bid form -->
         <div v-show="get_type_a_bid() == null">
             <div class="row justify-content-center fw-bold mt-4">
                 <div class="col-auto text-center" id="div_id_type_a_bid">
-                    Submit how many Type A Units to spend to compete for the unit manager role
+                    Submit how many Type A Units you want to spend to compete for the unit manager role
+                </div>
+            </div>
+            <div class="row justify-content-center fw-bold mt-2">
+                <div class="col-auto text-start" id="div_id_type_a_bid">
+                    <input type="number" 
+                        class="transfer_model_input form-control-lg fw-bold"
+                        v-model="type_a_bid"
+                        min="0"
+                        max="999"
+                        step="1"
+                        id="type_a_bid">     
+                </div>
+            </div>
+
+            <div class="row justify-content-center fw-bold mt-4">
+                <div class="col-auto text-center" id="div_id_type_a_bid">
+                    Submit how many Type A Units you think your counterpart will spend to compete for the unit manager role
                 </div>
             </div>
             <div class="row justify-content-center fw-bold mt-2">
@@ -77,7 +124,7 @@
             </div>
             
             <!-- button -->
-            <div class="row justify-content-center fw-bold mt-2">
+            <div class="row justify-content-center fw-bold mt-4">
                 <div class="col-auto text-start">
                     <button type="button"
                             class="btn btn-outline-primary"

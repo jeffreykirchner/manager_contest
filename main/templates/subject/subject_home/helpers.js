@@ -62,6 +62,19 @@ get_current_session_period: function get_current_session_period()
 },
 
 /**
+ * get parameter set period for the current session period from the world state
+ */
+get_current_parameter_set_period: function get_current_parameter_set_period()
+{
+    let current_session_period = app.get_current_session_period();
+
+    if(!current_session_period) return null;
+
+    let parameter_set_period_id = current_session_period.parameter_set_period_id;
+    return app.session.parameter_set.parameter_set_periods[parameter_set_period_id];
+},
+
+/**
  * get my type A units for the current period
  */
 get_my_type_a_units: function get_my_type_a_units()
