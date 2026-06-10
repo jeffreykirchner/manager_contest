@@ -29,13 +29,13 @@
                     <tbody >
                         <tr>
                             <td class="fw-bold" >
-                               Type A Units Remaining
+                               Type A Units Remaining (Spent in Phase 1)
                             </td>
                             <td class="text-center">
-                               [[get_my_type_a_units()]]
+                               [[get_my_type_a_units()]] ([[get_my_type_a_units_spent_in_phase_1()]])
                             </td>
                             <td class="text-center">
-                                [[get_counterpart_type_a_units()]]
+                                [[get_counterpart_type_a_units()]] ([[get_counterpart_type_a_units_spent_in_phase_1()]])
                             </td>                                               
                         </tr>
                         <tr>
@@ -55,8 +55,40 @@
             </div>
         </div>
 
+         <!-- units values -->
+        <div class="row justify-content-center mt-4" >
+            <div class="col-auto text-center">
+                One Type A and one Type B unit together is worth $[[get_current_parameter_set_period().work_payout]].
+            </div>
+        </div>
+
+        <div class="row justify-content-center mt-2" >
+            <div class="col-auto text-center">
+                One Type B unit alone is worth $[[get_current_parameter_set_period().outside_option_payout]].
+            </div>
+        </div>
+
+        <div class="row justify-content-center mt-4" >
+            <div class="col-auto text-center">
+                My potential profit if I work alone: $<span v-html="get_total_player_value_string(get_player_number())"></span>
+            </div>
+        </div>
+
+        <div class="row justify-content-center mt-2" >
+            <div class="col-auto text-center">
+                Counterpart's potential profit if they work alone: $<span v-html="get_total_player_value_string(get_player_number() == 1 ? 2 : 1)"></span><br>
+            </div>
+        </div>
+
+        <div class="row justify-content-center mt-2" >
+            <div class="col-auto text-center">
+                Total potential profit for the group if we work together: $<span v-html="get_total_value_value_string()"></span><br>
+                (You propose how to split, your counterpart decides to accept or reject your proposal)
+            </div>
+        </div>
+
         <!-- offer form -->
-        <div v-show="get_type_a_bid() == null">
+        <div v-show="get_current_group().manager_offer == null">
             <div class="row justify-content-center fw-bold mt-4">
                 <div class="col-auto text-center" id="div_id_type_a_bid">
                     Submit your purchase offer($) to your counterpart for their remaining type A and type B units.
@@ -71,6 +103,12 @@
                         max="999"
                         step="1"
                         id="manager_offer_to_worker">     
+                </div>
+            </div>
+
+            <div class="row justify-content-center fw-bold mt-2">
+                <div class="col-auto text-center" id="div_id_type_a_bid">
+                    You keep [[get_manager_share_if_worker_accepts_offers_string()]] if your counterpart accepts your offer and you work together.
                 </div>
             </div>
             

@@ -1,3 +1,5 @@
+from decimal import Decimal
+
 async def get_total_group_value(group: dict, parameter_set_period: dict) -> float:
     '''
     get total value for type A units and type B units.
@@ -12,17 +14,17 @@ async def get_total_group_value(group: dict, parameter_set_period: dict) -> floa
     total_b_units = group["type_b_units_player_1"] + group["type_b_units_player_2"]
 
     # calculate value for type A and type B units
-    total_value = min(total_a_units, total_b_units) * parameter_set_period["work_payout"]
+    total_value = min(total_a_units, total_b_units) * Decimal(parameter_set_period["work_payout"])
 
     # add value for unused type B units
     unused_b_units = max(0, total_b_units - total_a_units)
-    total_value += unused_b_units * parameter_set_period["outside_option_payout"]
+    total_value += unused_b_units * Decimal(parameter_set_period["outside_option_payout"])  
 
     #check if all type B units are worth more than the work payout, if so calculate value as if all type B units are used for outside option
-    if parameter_set_period["outside_option_payout"] * total_b_units > total_value:
-        total_value = total_b_units * parameter_set_period["outside_option_payout"]
+    if Decimal(parameter_set_period["outside_option_payout"]) * total_b_units > total_value:
+        total_value = total_b_units * Decimal(parameter_set_period["outside_option_payout"])
 
-    return total_value
+    return float(total_value)
 
 async def get_total_player_value(group: dict, player_number: int, parameter_set_period: dict) -> float:
     '''
@@ -42,14 +44,14 @@ async def get_total_player_value(group: dict, player_number: int, parameter_set_
         b_units = group["type_b_units_player_2"]
 
     # calculate value for type A and type B units
-    total_value = min(a_units, b_units) * parameter_set_period["work_payout"]
+    total_value = min(a_units, b_units) * Decimal(parameter_set_period["work_payout"])
 
     # add value for unused type B units
     unused_b_units = max(0, b_units - a_units)
-    total_value += unused_b_units * parameter_set_period["outside_option_payout"]
+    total_value += unused_b_units * Decimal(parameter_set_period["outside_option_payout"])
 
     #check if all type B units are worth more than the work payout, if so calculate value as if all type B units are used for outside option
-    if parameter_set_period["outside_option_payout"] * b_units > total_value:
-        total_value = b_units * parameter_set_period["outside_option_payout"]
+    if Decimal(parameter_set_period["outside_option_payout"]) * b_units > total_value:
+        total_value = b_units * Decimal(parameter_set_period["outside_option_payout"])    
 
     return total_value

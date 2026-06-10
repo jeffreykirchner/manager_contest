@@ -15,11 +15,10 @@ from main.models import SessionEvent
 from main.globals import ExperimentPhase
 from main.globals import GroupPhase
 from main.globals import is_non_negative
+from main.globals import get_total_player_value
+from main.globals import get_total_group_value
 
 import main
-
-INTERACTION_SECONDS = 10
-COOLDOWN_SECONDS = 10
 
 class SubjectUpdatesMixin():
     '''
@@ -269,13 +268,16 @@ class SubjectUpdatesMixin():
         event_data = event["message_text"]
         player_id = self.session_players_local[event["player_key"]]["id"]
         world_state = self.world_state_local
+        parameter_set_period = await self.get_world_state_current_parameter_set_period()
 
         type_a_bid = event_data["type_a_bid"]
+        type_a_bid_counterpart = event_data["type_a_bid_counterpart"]
 
         group = await self.get_world_state_group(player_id)
         player_number = await self.get_world_state_player_number(player_id)
 
         group["type_a_phase_1_units_player_" + str(player_number)] = type_a_bid
+        group["type_a_phase_1_units_player_" + str(player_number) + "_prediction"] = type_a_bid_counterpart
 
         player_1_bid = group["type_a_phase_1_units_player_1"]
         player_2_bid = group["type_a_phase_1_units_player_2"]
@@ -283,7 +285,13 @@ class SubjectUpdatesMixin():
         #check if bid is a non-negative integer
         if not is_non_negative(type_a_bid):
             status = "fail"
-            error_message = "Invalid entry."
+            error_message = "Invalid entry for your bid."
+        
+        #check if prediction is a non-negative integer
+        if status == "success":
+            if not is_non_negative(type_a_bid_counterpart):
+                status = "fail"
+                error_message = "Invalid entry for your prediction."
 
         #check if bid is less than or equal to the inventory of type a units for the player
         if status == "success":     
@@ -291,6 +299,14 @@ class SubjectUpdatesMixin():
             if type_a_bid > type_a_units_player:
                 status = "fail"
                 error_message = f"Bid must be less than or equal to {type_a_units_player} (your inventory of type A units)."
+        
+        #check if prediction is less than or equal to the inventory of type a units for them
+        if status == "success":   
+            temp_player_number = 2 if player_number == 1 else 1  
+            type_a_units_player_counterpart = group["type_a_units_player_" + str(temp_player_number)]
+            if type_a_bid_counterpart > type_a_units_player_counterpart:
+                status = "fail"
+                error_message = f"Prediction must be less than or equal to {type_a_units_player_counterpart} (counterpart's inventory of type A units)."
 
         #check if both players in the group have submitted their type a bid, if so, process the bids and determine the manager for the next period
         #if the probability of player 1 winning is player 1's bid / (player 1's bid + player 2's bid), then we can randomly determine the winner based on that probability
@@ -312,7 +328,13 @@ class SubjectUpdatesMixin():
                     group["manager"] = group["player_2"]
                     group["worker"] = group["player_1"]
 
-                group["phase"] = GroupPhase.PHASE_2_MANAGER
+                group["phase"] = GroupPhase.PHASE_2
+                group["type_a_units_player_1"] -= player_1_bid
+                group["type_a_units_player_2"] -= player_2_bid
+
+                group["player_1_total_value"] = await get_total_player_value(group, 1, parameter_set_period)
+                group["player_2_total_value"] = await get_total_player_value(group, 2, parameter_set_period)
+                group["group_total_value"] =  await get_total_group_value(group, parameter_set_period)
         
         result = {"group" : group,
                   "session_player_id" : player_id,
@@ -417,7 +439,7 @@ class SubjectUpdatesMixin():
         '''
         session_period = await self.get_world_state_current_session_period()
         parameter_set_period_id = session_period["parameter_set_period_id"]
-        parameter_set_period = self.world_state_local["parameter_set_periods"][str(parameter_set_period_id)]
+        parameter_set_period = self.parameter_set_local["parameter_set_periods"][str(parameter_set_period_id)]
 
         return parameter_set_period
 

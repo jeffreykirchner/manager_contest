@@ -209,11 +209,9 @@ class Session(models.Model):
 
                 p["type_a_phase_1_units_player_1"] = None
                 p["type_a_phase_1_units_player_2"] = None
-                # p["type_a_phase_1_units_player_1"] = 0
-                # p["type_a_phase_1_units_player_2"] = 0
-
-                # p["type_a_phase_b_units_player_1"] = 0
-                # p["type_a_phase_b_units_player_2"] = 0
+                
+                p["type_a_phase_1_units_player_1_prediction"] = None
+                p["type_a_phase_1_units_player_2_prediction"] = None
 
                 p["manager"] = None
                 p["worker"] = None
