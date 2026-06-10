@@ -70,19 +70,19 @@
 
         <div class="row justify-content-center mt-4" >
             <div class="col-auto text-center">
-                My potential profit if I work alone:
+                My potential profit if I work alone: $<span v-html="get_total_player_value_string(get_player_number())"></span>
             </div>
         </div>
 
         <div class="row justify-content-center mt-2" >
             <div class="col-auto text-center">
-                Counterpart's potential profit if they work alone:
+                Counterpart's potential profit if they work alone: $<span v-html="get_total_player_value_string(get_player_number() == 1 ? 2 : 1)"></span><br>
             </div>
         </div>
 
         <div class="row justify-content-center mt-2" >
             <div class="col-auto text-center">
-                Total potential profit for the group if we work together:<br>
+                Total potential profit for the group if we work together: $<span v-html="get_total_value_value_string()"></span><br>
                 (the unit manager proposes how to split, their counterpart decides to work together or separately)
             </div>
         </div>
@@ -115,11 +115,11 @@
                 <div class="col-auto text-start" id="div_id_type_a_bid">
                     <input type="number" 
                         class="transfer_model_input form-control-lg fw-bold"
-                        v-model="type_a_bid"
+                        v-model="type_a_bid_counterpart"
                         min="0"
                         max="999"
                         step="1"
-                        id="type_a_bid">     
+                        id="type_a_bid_counterpart">     
                 </div>
             </div>
             

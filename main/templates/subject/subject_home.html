@@ -74,7 +74,7 @@
     </div>
 
     <!-- phase 1 -->
-    <div class="row justify-content-lg-center mt-4" v-cloak v-show="session.started && get_current_group().phase == 'Phase 1'">
+    <div class="row justify-content-lg-center mt-4" v-cloak v-if="session.started && get_current_group().phase == 'Phase 1'">
         <div class="col-md">
             {%include "subject/subject_home/phase_1/phase_1_card.html"%}
         </div>
