@@ -4,6 +4,7 @@ import math
 import json
 import random
 
+from decimal import Decimal
 from datetime import datetime, timedelta
 
 from django.utils.html import strip_tags
@@ -14,9 +15,10 @@ from main.models import SessionEvent
 
 from main.globals import ExperimentPhase
 from main.globals import GroupPhase
-from main.globals import is_non_negative
+from main.globals import is_non_negative_int
 from main.globals import get_total_player_value
 from main.globals import get_total_group_value
+from main.globals import is_non_negative_float_with_2_decimal_places
 
 import main
 
@@ -283,13 +285,13 @@ class SubjectUpdatesMixin():
         player_2_bid = group["type_a_phase_1_units_player_2"]
 
         #check if bid is a non-negative integer
-        if not is_non_negative(type_a_bid):
+        if not is_non_negative_int(type_a_bid):
             status = "fail"
             error_message = "Invalid entry for your bid."
         
         #check if prediction is a non-negative integer
         if status == "success":
-            if not is_non_negative(type_a_bid_counterpart):
+            if not is_non_negative_int(type_a_bid_counterpart):
                 status = "fail"
                 error_message = "Invalid entry for your prediction."
 
@@ -395,9 +397,15 @@ class SubjectUpdatesMixin():
         
         #check if offer is a non-negative integer
         if status == "success":
-            if not is_non_negative(manager_offer_to_worker):
+            if not is_non_negative_float_with_2_decimal_places(manager_offer_to_worker):
                 status = "fail"
                 error_message = "Invalid entry."
+
+        #check if offer exceeds the total group value
+        if status == "success":
+            if Decimal(manager_offer_to_worker) > Decimal(group["group_total_value"]):
+                status = "fail"
+                error_message = f"Offer exceeds total group profit of ${group['group_total_value']:.2f}."
 
         if status == "success":
             group["manager_offer"] = manager_offer_to_worker
@@ -419,10 +427,101 @@ class SubjectUpdatesMixin():
             await SessionEvent.objects.abulk_create(self.session_events, ignore_conflicts=True)
             self.session_events = []
 
-        await self.send_message(message_to_self=None, message_to_group=result,
-                                message_type=event['type'], send_to_client=False,
-                                send_to_group=True, target_list=[group["manager"], group["worker"]])
+            await self.send_message(message_to_self=None, message_to_group=result,
+                                    message_type=event['type'], send_to_client=False,
+                                    send_to_group=True, target_list=[group["manager"], group["worker"]])
+        else:
+            await self.send_message(message_to_self=None, message_to_group=result,
+                                    message_type=event['type'], send_to_client=False,
+                                    send_to_group=True, target_list=[player_id])
     
+    async def update_submit_manager_offer_to_worker(self, event):
+        '''
+        update manager offer to worker from subject screen
+        '''
+
+        event_data = json.loads(event["group_data"])
+
+        await self.send_message(message_to_self=event_data, message_to_group=None,
+                                message_type=event['type'], send_to_client=True, send_to_group=False)
+    
+    async def submit_worker_response_to_manager(self, event):
+        '''
+        subject submits worker response to manager offer from subject screen
+        '''
+        status = "success"
+        error_message = ""
+
+        event_data = event["message_text"]
+        player_id = self.session_players_local[event["player_key"]]["id"]
+        world_state = self.world_state_local
+
+        worker_response_to_manager = event_data["worker_response_to_manager"]
+
+        group = await self.get_world_state_group(player_id)
+        player_number = await self.get_world_state_player_number(player_id)
+
+        if group["worker"] != player_id:
+            status = "fail"
+            error_message = "Only the worker can submit a response."
+
+        if status == "success":
+            if worker_response_to_manager not in ["accept", "reject"]:
+                status = "fail"
+                error_message = "Invalid response. Please enter 'accept' or 'reject'."
+        
+        if status == "success":
+            group["manager_offer_accepted"] = worker_response_to_manager
+
+            if group["manager_offer_accepted"] == "accept":
+
+                if group["player_1"] == group["manager"]:
+                    group["player_1_earnings"] =  Decimal(group["group_total_value"]) - Decimal(group["manager_offer"])
+                    group["player_2_earnings"] = Decimal(group["manager_offer"])
+                else:
+                    group["player_2_earnings"] =  Decimal(group["group_total_value"]) - Decimal(group["manager_offer"])
+                    group["player_1_earnings"] = Decimal(group["manager_offer"])
+            else:
+                group["player_1_earnings"] = group["player_1_total_value"]
+                group["player_2_earnings"] = group["player_2_total_value"]
+            
+            group["phase"] = GroupPhase.REVIEW
+        
+        result = {"group" : group,
+                  "session_player_id" : player_id,
+                  "status" : status,
+                  "error_message" : error_message}
+        
+        if status == "success":
+            #store event and update world state in database
+            await self.store_world_state(force_store=True)
+            self.session_events.append(SessionEvent(session_id=self.session_id,
+                                                        session_player_id=player_id,
+                                                        type=event['type'],
+                                                        period_number=world_state["current_period"],
+                                                        time_remaining=world_state["time_remaining"],
+                                                        data=result))
+            await SessionEvent.objects.abulk_create(self.session_events, ignore_conflicts=True)
+            self.session_events = []
+
+            await self.send_message(message_to_self=None, message_to_group=result,
+                                    message_type=event['type'], send_to_client=False,
+                                    send_to_group=True, target_list=[group["manager"], group["worker"]])
+        else:
+            await self.send_message(message_to_self=None, message_to_group=result,
+                                    message_type=event['type'], send_to_client=False,
+                                    send_to_group=True, target_list=[player_id])
+
+    async def update_submit_worker_response_to_manager(self, event):
+        '''
+        update worker response to manager offer from subject screen
+        '''
+
+        event_data = json.loads(event["group_data"])
+
+        await self.send_message(message_to_self=event_data, message_to_group=None,
+                                message_type=event['type'], send_to_client=True, send_to_group=False)
+
     # helpers
     async def get_world_state_current_session_period(self):
         '''

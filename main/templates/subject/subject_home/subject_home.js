@@ -169,6 +169,12 @@ let app = Vue.createApp({
                 case "update_submit_type_a_bid":
                     app.take_submit_type_a_bid(message_data);
                     break;
+                case "update_submit_manager_offer_to_worker":
+                    app.take_submit_manager_offer_to_worker(message_data);
+                    break;
+                case "update_submit_worker_response_to_manager":
+                    app.take_submit_worker_response_to_manager(message_data);
+                    break;
             }
 
             app.first_load_done = true;

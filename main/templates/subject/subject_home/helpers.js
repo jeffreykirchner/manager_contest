@@ -327,3 +327,26 @@ get_total_value_value_string : function get_total_value_value_string()
         return `${value_from_outside_option.toFixed(2)}<br>(${type_b_units}Bs * ${outside_option_payout.toFixed(2)})`;
     }
 },
+
+/**
+ * get my profit if I work alone
+ */
+get_my_profit_if_working_alone: function get_my_profit_if_working_alone()
+{
+    if(!app.session) return "---";
+    if(!app.session.started) return "---";
+    
+    let group = app.get_current_group();
+    let player_number = app.get_player_number();
+
+    return group["player_" + player_number + "_total_value"];
+},
+
+/**
+ * get manager offer to worker
+ */
+get_manager_offer_to_worker: function get_manager_offer_to_worker()
+{
+    let group = app.get_current_group();
+    return group.manager_offer;
+},

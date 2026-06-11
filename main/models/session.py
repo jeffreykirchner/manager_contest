@@ -225,6 +225,9 @@ class Session(models.Model):
                 p["player_1_earnings"] = 0
                 p["player_2_earnings"] = 0
 
+                p["player_1_review_complete"] = False
+                p["player_2_review_complete"] = False
+
                 p["phase"] = GroupPhase.PHASE_1
 
                 groups[str(p_id)] = p

@@ -30,21 +30,12 @@ take_submit_manager_offer_to_worker: function take_submit_manager_offer_to_worke
 
     if(message_data.status == "fail")
     {
-        app.manager_offer_to_worker_error = message_data.error_message;
+        app.manager_offer_to_worker_error = "Error: " + message_data.error_message;
     }
     else
     {
         group.manager_offer = message_data.group.manager_offer;
     }
-},
-
-/**
- * get manager offer to worker
- */
-get_manager_offer_to_worker: function get_manager_offer_to_worker()
-{
-    let group = app.get_current_group();
-    return group.manager_offer;
 },
 
 /**
@@ -58,12 +49,15 @@ get_manager_share_if_worker_accepts_offers_string: function get_manager_share_if
         return "$---";
     }
 
+    if(!Number.isFinite(app.manager_offer_to_worker)) return "$---";
+    if(app.manager_offer_to_worker < 0) return "$---";
+
     let group = app.get_current_group();
     let manager_offer = parseFloat(group.group_total_value) - parseFloat(app.manager_offer_to_worker);
 
     if(manager_offer < 0)
     {
-        return "-$" + Math.abs(manager_offer).toFixed(2);
+        return "$---";
     } 
     return "$" + manager_offer.toFixed(2);
 },

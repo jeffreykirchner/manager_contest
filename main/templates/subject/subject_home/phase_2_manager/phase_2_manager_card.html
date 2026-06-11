@@ -94,14 +94,15 @@
                     Submit your purchase offer($) to your counterpart for their remaining type A and type B units.
                 </div>
             </div>
-            <div class="row justify-content-center fw-bold mt-2">
+            <div class="row justify-content-center fw-bold mt-2">                
                 <div class="col-auto text-start" id="div_id_type_a_bid">
+                    <span class="fs-4 pe-1">$</span>
                     <input type="number" 
                         class="transfer_model_input form-control-lg fw-bold"
                         v-model="manager_offer_to_worker"
                         min="0"
                         max="999"
-                        step="1"
+                        step="0.01"
                         id="manager_offer_to_worker">     
                 </div>
             </div>
@@ -119,11 +120,7 @@
                             class="btn btn-outline-primary"
                             v-on:click = "submit_manager_offer_to_worker()"
                             title="Submit your offer."                       
-                            v-bind:disabled="reconnecting || 
-                                                working || 
-                                                (session.world_state.current_experiment_phase == 'Instructions' && 
-                                                session_player.current_instruction != instructions.action_page_attacks)">
-
+                            v-bind:disabled="reconnecting || working">
                         Submit <i class="fas fa-sign-in-alt"></i>
                     </button>
                 </div>

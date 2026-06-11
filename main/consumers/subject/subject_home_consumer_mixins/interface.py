@@ -140,6 +140,9 @@ class InterfaceMixin():
 
     @check_message_for_me
     async def update_show_help_doc(self, event):
+        '''
+        show help doc from subject screen
+        '''
         event_data = json.loads(event["group_data"])
 
         await self.send_message(message_to_self=event_data, message_to_subjects=None, message_to_staff=None, 
@@ -147,9 +150,33 @@ class InterfaceMixin():
 
     @check_message_for_me  
     async def update_submit_type_a_bid(self, event):
+        '''
+        submit type A bid from subject screen
+        '''
         event_data = json.loads(event["group_data"])
 
         await self.send_message(message_to_self=event_data, message_to_subjects=None, message_to_staff=None, 
                                 message_type=event['type'], send_to_client=True, send_to_group=False)
+        
+    @check_message_for_me
+    async def update_submit_manager_offer_to_worker(self, event):
+        '''
+        manager offer to worker from subject screen
+        '''
+        event_data = json.loads(event["group_data"])
+
+        await self.send_message(message_to_self=event_data, message_to_subjects=None, message_to_staff=None, 
+                                message_type=event['type'], send_to_client=True, send_to_group=False)
+        
+    @check_message_for_me
+    async def update_submit_worker_response_to_manager(self, event):
+        '''
+        worker response to manager offer from subject screen
+        '''
+        event_data = json.loads(event["group_data"])
+
+        await self.send_message(message_to_self=event_data, message_to_subjects=None, message_to_staff=None, 
+                                message_type=event['type'], send_to_client=True, send_to_group=False)
+    
 
         

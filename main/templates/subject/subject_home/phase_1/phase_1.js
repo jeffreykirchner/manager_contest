@@ -32,7 +32,7 @@ take_submit_type_a_bid: function take_submit_type_a_bid(message_data)
 
     if(message_data.status == "fail")
     {
-        app.type_a_bid_error = message_data.error_message;
+        app.type_a_bid_error = "Error: " + message_data.error_message;
     }
     else
     {

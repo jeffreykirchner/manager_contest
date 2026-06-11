@@ -130,10 +130,8 @@
                             class="btn btn-outline-primary"
                             v-on:click = "submit_type_a_bid()"
                             title="Submit your bid."                       
-                            v-bind:disabled="reconnecting || 
-                                                working || 
-                                                (session.world_state.current_experiment_phase == 'Instructions' && 
-                                                session_player.current_instruction != instructions.action_page_attacks)">
+                            v-bind:disabled="reconnecting || working">
+                                               
 
                         Submit <i class="fas fa-sign-in-alt"></i>
                     </button>
