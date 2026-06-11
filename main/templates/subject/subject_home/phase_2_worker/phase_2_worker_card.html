@@ -1,0 +1,81 @@
+<div class="card" v-show="first_load_done" id="phase_2_worker_card">                  
+    <div class="card-header fw-bold">                
+        <span class="align-middle">Phase 2: You are the worker.</span>       
+            
+        <span class="float-end">
+            
+        </span>
+        
+    </div>
+    <div class="card-body"> 
+        <!-- units table -->
+        <div class="row justify-content-center" >
+            <div class="col-auto">
+                <table class="table table-condensed"> 
+                    <thead>
+                        <tr>
+                            <th scope="col" class = "">
+                               
+                            </th>
+                            <th scope="col" class = "">
+                                My Units
+                            </th>
+                            <th scope="col" class = "">
+                                Counterpart Units
+                            </th>                            
+                                                     
+                        </tr>
+                    </thead>
+                    <tbody >
+                        <tr>
+                            <td class="fw-bold" >
+                               Type A Units Remaining (Spent in Phase 1)
+                            </td>
+                            <td class="text-center">
+                               [[get_my_type_a_units()]] ([[get_my_type_a_units_spent_in_phase_1()]])
+                            </td>
+                            <td class="text-center">
+                                [[get_counterpart_type_a_units()]] ([[get_counterpart_type_a_units_spent_in_phase_1()]])
+                            </td>                                               
+                        </tr>
+                        <tr>
+                            <td class="fw-bold" >
+                               Type B Units
+                            </td>
+                            <td class="text-center">
+                                [[get_my_type_b_units()]]
+                            </td>
+                            <td class="text-center">
+                                [[get_counterpart_type_b_units()]]
+                            </td>                                               
+                        </tr>
+                    </tbody>
+                    
+                </table>
+            </div>
+        </div>
+
+         <!-- units values -->
+        <div class="row justify-content-center mt-4" >
+            <div class="col-auto text-center">
+                One Type A and one Type B unit together is worth $[[get_current_parameter_set_period().work_payout]].
+            </div>
+        </div>
+
+        <div class="row justify-content-center mt-2" >
+            <div class="col-auto text-center">
+                One Type B unit alone is worth $[[get_current_parameter_set_period().outside_option_payout]].
+            </div>
+        </div>
+
+    
+        </div>
+        <div v-show="get_manager_offer_to_worker() != null">
+            <div class="row justify-content-center fw-bold mt-4">
+                <div class="col-auto text-center" id="div_id_manager_offer_to_worker">
+                   Waiting for counterpart.
+                </div>
+            </div>  
+        </div>
+    </div>                    
+</div> 
