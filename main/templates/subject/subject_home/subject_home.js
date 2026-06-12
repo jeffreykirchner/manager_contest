@@ -175,6 +175,9 @@ let app = Vue.createApp({
                 case "update_submit_worker_response_to_manager":
                     app.take_submit_worker_response_to_manager(message_data);
                     break;
+                case "update_ready_to_go_on":
+                    app.take_update_ready_to_go_on(message_data);
+                    break;
             }
 
             app.first_load_done = true;

@@ -35,7 +35,7 @@ take_submit_worker_response_to_manager: function take_submit_worker_response_to_
     }
     else
     {
-        group.worker_response = message_data.group.worker_response;
+        group.manager_offer_accepted = message_data.group.manager_offer_accepted;
         group.phase = message_data.group.phase;
         group.player_1_earnings = message_data.group.player_1_earnings;
         group.player_2_earnings = message_data.group.player_2_earnings;
@@ -70,7 +70,7 @@ ready_to_go_on: function ready_to_go_on()
 /**
  * take results of ready_to_go_on
  */
-take_ready_to_go_on: function take_ready_to_go_on(message_data)
+take_update_ready_to_go_on: function take_update_ready_to_go_on(message_data)
 {
     
     let source_player_id = message_data.source_player_id;

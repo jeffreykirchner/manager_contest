@@ -521,6 +521,62 @@ class SubjectUpdatesMixin():
 
         await self.send_message(message_to_self=event_data, message_to_group=None,
                                 message_type=event['type'], send_to_client=True, send_to_group=False)
+    
+    async def ready_to_go_on(self, event):
+        '''
+        the ready to go on button is clicked
+        '''
+        status = "success"
+        error_message = ""
+
+        event_data = event["message_text"]
+        player_id = self.session_players_local[event["player_key"]]["id"]
+        world_state = self.world_state_local
+
+        group = await self.get_world_state_group(player_id)
+        player_number = await self.get_world_state_player_number(player_id)
+        session_period = await self.get_world_state_current_session_period()
+
+        group["player_" + str(player_number) + "player_1_review_complete"] = True
+
+        #check if all players have completed their review in all groups
+        all_players_review_complete = True
+        for g in session_period["groups"].values():
+            if not all(g.get(f"player_{i}_review_complete", False) for i in [1, 2]):
+                all_players_review_complete = False
+                break
+
+        result = {"group" : group,
+                  "session_player_id" : player_id,
+                  "status" : status,
+                  "error_message" : error_message}
+            
+        #store event and update world state in database
+        await self.store_world_state(force_store=True)
+        self.session_events.append(SessionEvent(session_id=self.session_id,
+                                                    session_player_id=player_id,
+                                                    type=event['type'],
+                                                    period_number=world_state["current_period"],
+                                                    time_remaining=world_state["time_remaining"],
+                                                    data=result))
+        await SessionEvent.objects.abulk_create(self.session_events, ignore_conflicts=True)
+        self.session_events = []
+        
+        if not all_players_review_complete:
+            await self.send_message(message_to_self=None, message_to_group=result,
+                                    message_type=event['type'], send_to_client=False,
+                                    send_to_group=True, target_list=[player_id])
+    
+    async def update_ready_to_go_on(self, event):
+        '''
+        update the ready to go on status for a session player
+        '''
+        event_data = json.loads(event["group_data"])
+
+        await self.send_message(message_to_self=event_data, message_to_group=None,
+                                message_type=event['type'], send_to_client=True, send_to_group=False)
+
+
 
     # helpers
     async def get_world_state_current_session_period(self):
