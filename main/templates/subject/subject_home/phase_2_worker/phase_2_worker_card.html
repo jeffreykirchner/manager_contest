@@ -74,45 +74,78 @@
             </div>
         </div>
 
-        <div class="row justify-content-center mt-4" v-show="get_current_group().manager_offer == null">
-            <div class="col-auto text-center">
-                Waiting for the manager's offer.
+        <div v-if="get_current_group().phase == 'Phase 2'">
+            <div class="row justify-content-center mt-4" v-if="get_current_group().manager_offer == null">
+                <div class="col-auto text-center">
+                    Waiting for the manager's offer.
+                </div>
+            </div>
+
+            <div v-if="get_current_group().manager_offer != null">
+                <div class="row justify-content-center fw-bold mt-2">
+                    <div class="col-auto text-center">
+                        The manager offers you $<span v-html="get_current_group().manager_offer"></span> to work together.<br>
+                        Make your decision below.
+                    </div>
+                </div>
+
+                <div class="row justify-content-center fw-bold mt-2">
+                    <div class="col-auto text-start">
+                        <button type="button"
+                                class="btn btn-outline-success"
+                                v-on:click = "submit_worker_response_to_manager('accept')"
+                                title="Work together."                       
+                                v-bind:disabled="reconnecting || working">
+                                                    
+                            Work together and earn $[[get_current_group().manager_offer.toFixed(2)]].
+                        </button>
+                    </div>
+                </div>
+
+                <div class="row justify-content-center fw-bold mt-2">
+                    <div class="col-auto text-start">
+                        <button type="button"
+                                class="btn btn-outline-success"
+                                v-on:click = "submit_worker_response_to_manager('reject')"
+                                title="Work together."                       
+                                v-bind:disabled="reconnecting || working">
+                                                    
+                            Work separately and earn $[[get_my_profit_if_working_alone()]].
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
+        <div v-if="get_current_group().phase == 'Review'">
 
-        <div v-show="get_current_group().manager_offer != null">
-            <div class="row justify-content-center fw-bold mt-2">
+            <div class="row justify-content-center mt-4">
                 <div class="col-auto text-center">
-                    The manager offers you $<span v-html="get_current_group().manager_offer"></span> to work together.<br>
-                    Make your decision below.
+                    <span v-if="get_current_group().manager_offer_accepted == 'accept'">
+                        You have accepted the manager's offer.
+                    </span>
+                    <span v-else>
+                        You have rejected the manager's offer.
+                    </span>
                 </div>
             </div>
 
-            <div class="row justify-content-center fw-bold mt-2">
-                <div class="col-auto text-start">
-                    <button type="button"
-                            class="btn btn-outline-success"
-                            v-on:click = "submit_worker_response_to_manager('accept')"
-                            title="Work together."                       
-                            v-bind:disabled="reconnecting || working">
-                                                
-                        Work together and earn $[[get_current_group().manager_offer.toFixed(2)]].
-                    </button>
+            <div v-if="show_ready_to_go_on_button()">
+                <div class="row justify-content-center fw-bold mt-2">
+                        <div class="col-auto text-start">
+                            <button type="button"
+                                    class="btn btn-outline-success"
+                                    v-on:click = "ready_to_go_on()"
+                                    title="Ready to go on."                       
+                                    v-bind:disabled="reconnecting || working">
+                                                        
+                                Ready to go on
+                            </button>
+                        </div>
+                    </div>
                 </div>
+            <div v-else>
+                Waiting for others.
             </div>
-
-             <div class="row justify-content-center fw-bold mt-2">
-                <div class="col-auto text-start">
-                    <button type="button"
-                            class="btn btn-outline-success"
-                            v-on:click = "submit_worker_response_to_manager('reject')"
-                            title="Work together."                       
-                            v-bind:disabled="reconnecting || working">
-                                                
-                        Work separately and earn $[[get_my_profit_if_working_alone()]].
-                    </button>
-                </div>
-            </div>
-        
+        </div>
     </div>                    
 </div> 
