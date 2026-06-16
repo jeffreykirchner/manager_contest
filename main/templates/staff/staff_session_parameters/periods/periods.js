@@ -75,5 +75,9 @@ send_copy_forward_parameter_set_period: function send_copy_forward_parameter_set
  */
 get_player_number: function get_player_number(parameter_set_player_id)
 {
+    if(!app.parameter_set.parameter_set_players[parameter_set_player_id])
+    {
+        return null;
+    }
     return app.parameter_set.parameter_set_players[parameter_set_player_id].player_number;
 },

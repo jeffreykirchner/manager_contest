@@ -73,32 +73,41 @@
         </div>
     </div>
 
-    <!-- phase 1 -->
-    <div class="row justify-content-lg-center mt-4" v-cloak v-if="session.started && get_current_group().phase == 'Phase 1'">
+    <div class="row">
         <div class="col-md">
-            {%include "subject/subject_home/phase_1/phase_1_card.html"%}
-        </div>
-    </div>  
+            <!-- phase 1 -->
+            <div class="row justify-content-lg-center" v-cloak 
+                 v-if="session.started && get_current_group().phase == 'Phase 1'">
+                <div class="col-md">
+                    {%include "subject/subject_home/phase_1/phase_1_card.html"%}
+                </div>
+            </div>  
 
-    <!-- phase 2 manager -->
-    <div class="row justify-content-lg-center mt-4" v-cloak 
-         v-if="session.started && 
-               (get_current_group().phase == 'Phase 2' || get_current_group().phase == 'Review') && 
-               get_role() == 'manager'">
-        <div class="col-md">
-            {%include "subject/subject_home/phase_2_manager/phase_2_manager_card.html"%}
-        </div>
-    </div>          
+            <!-- phase 2 manager -->
+            <div class="row justify-content-lg-center" v-cloak 
+                v-if="session.started && 
+                    (get_current_group().phase == 'Phase 2' || get_current_group().phase == 'Review') && 
+                    get_role() == 'manager'">
+                <div class="col-md">
+                    {%include "subject/subject_home/phase_2_manager/phase_2_manager_card.html"%}
+                </div>
+            </div>          
 
-    <!-- phase 2 worker -->
-    <div class="row justify-content-lg-center mt-4" v-cloak 
-         v-if="session.started && 
-               (get_current_group().phase == 'Phase 2' || get_current_group().phase == 'Review') && 
-               get_role() == 'worker'">
-        <div class="col-md">
-            {%include "subject/subject_home/phase_2_worker/phase_2_worker_card.html"%}
+            <!-- phase 2 worker -->
+            <div class="row justify-content-lg-center" v-cloak 
+                v-if="session.started && 
+                    (get_current_group().phase == 'Phase 2' || get_current_group().phase == 'Review') && 
+                    get_role() == 'worker'">
+                <div class="col-md">
+                    {%include "subject/subject_home/phase_2_worker/phase_2_worker_card.html"%}
+                </div>
+            </div> 
         </div>
-    </div>  
+        <div class="col-md-auto" v-if="session.started">
+            {%include "subject/subject_home/history/history_card.html"%}
+        </div>
+    </div>
+ 
 
     <div class="row justify-content-lg-center mt-4" v-cloak v-show="session.world_state.current_experiment_phase == 'Done'">
         <div class="col-12 fs-4 fw-bold text-center">

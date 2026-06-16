@@ -142,9 +142,6 @@ let app = Vue.createApp({
                 case "update_chat":
                     app.take_update_chat(message_data);
                     break;
-                case "update_time":
-                    app.take_update_time(message_data);
-                    break;
                 case "name":
                     app.take_name(message_data);
                     break;
@@ -177,6 +174,9 @@ let app = Vue.createApp({
                     break;
                 case "update_ready_to_go_on":
                     app.take_update_ready_to_go_on(message_data);
+                    break;
+                case "update_start_next_period":
+                    app.take_update_start_next_period(message_data);
                     break;
             }
 
@@ -323,76 +323,12 @@ let app = Vue.createApp({
             app.help_modal.hide();
         },
 
-        /**
-        * update time and start status
+        /** update start next period status
+        *    @param message_data {json} session day in json format
         */
-        take_update_time: function take_update_time(message_data){
-          
-            let status = message_data.value;
-
-            if(status == "fail") return;
-
-            let period_change = false;
-            let period_earnings = 0;
-
-            if (message_data.period_is_over)
-            {
-                period_earnings = message_data.earnings[app.session_player.id].period_earnings;
-                app.session.world_state.session_players[app.session_player.id].earnings = message_data.earnings[app.session_player.id].total_earnings;
-            }
-
-            app.session.started = message_data.started;
-
+        take_update_start_next_period: function take_update_start_next_period(message_data){
+            app.working = false;
             app.session.world_state.current_period = message_data.current_period;
-            app.session.world_state.time_remaining = message_data.time_remaining;
-            app.session.world_state.timer_running = message_data.timer_running;
-            app.session.world_state.started = message_data.started;
-            app.session.world_state.finished = message_data.finished;
-            app.session.world_state.current_experiment_phase = message_data.current_experiment_phase;
-
-            // app.session.world_state.finished = message_data.finished;
-        
-            //collect names
-            if(app.session.world_state.current_experiment_phase == 'Names')
-            {
-                app.show_end_game_modal();
-            }            
-
-            //period has changed
-            if(message_data.period_is_over)
-            {
-         
-            }
-
-            //update player states
-            for(let p in message_data.session_player_status)
-            {
-                let session_player = message_data.session_player_status[p];
-                app.session.world_state.session_players[p].interaction = session_player.interaction;
-                app.session.world_state.session_players[p].frozen = session_player.frozen;
-                app.session.world_state.session_players[p].cool_down = session_player.cool_down;
-                app.session.world_state.session_players[p].tractor_beam_target = session_player.tractor_beam_target;
-            }
-
-            //update player location
-            for(let p in message_data.current_locations)
-            {
-                if(p != app.session_player.id)
-                {
-                    let server_location = message_data.current_locations[p];
-
-                    if(app.get_distance(server_location, app.session.world_state.session_players[p].current_location) > 1000)
-                    {
-                        app.session.world_state.session_players[p].current_location = server_location;
-                    }
-                }
-            }
-
-            //update any notices on screen
-            app.update_notices();
-
-            //update help doc buttons
-            app.clock_tick_help_doc_buttons();
         },
 
         /**
@@ -478,6 +414,7 @@ let app = Vue.createApp({
         {%include "subject/subject_home/phase_1/phase_1.js"%}
         {%include "subject/subject_home/phase_2_manager/phase_2_manager.js"%}
         {%include "subject/subject_home/phase_2_worker/phase_2_worker.js"%}
+        {%include "subject/subject_home/history/history.js"%}
         {%include "subject/subject_home/helpers.js"%}
 
 

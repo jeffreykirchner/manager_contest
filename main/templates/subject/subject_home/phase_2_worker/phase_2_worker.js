@@ -50,8 +50,14 @@ show_ready_to_go_on_button: function show_ready_to_go_on_button()
     let group = app.get_current_group();
     let player_number = app.get_player_number();
 
-    if(player_number == 1 && group.player_1_review_complete) return false;
-    if(player_number == 2 && group.player_2_review_complete) return false;
+    if(player_number == 1 && group.player_1_review_complete)
+    {
+         return false;
+    }
+    if(player_number == 2 && group.player_2_review_complete) 
+    {
+        return false;
+    }
 
     return true;
 },

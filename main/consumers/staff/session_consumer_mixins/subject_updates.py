@@ -537,7 +537,7 @@ class SubjectUpdatesMixin():
         player_number = await self.get_world_state_player_number(player_id)
         session_period = await self.get_world_state_current_session_period()
 
-        group["player_" + str(player_number) + "player_1_review_complete"] = True
+        group["player_" + str(player_number) + "_review_complete"] = True
 
         #check if all players have completed their review in all groups
         all_players_review_complete = True
@@ -566,10 +566,43 @@ class SubjectUpdatesMixin():
             await self.send_message(message_to_self=None, message_to_group=result,
                                     message_type=event['type'], send_to_client=False,
                                     send_to_group=True, target_list=[player_id])
+        else:
+            #start next period or end the experiment if this is the last period
+
+            if world_state["current_period"] < len(world_state["session_periods_order"]):
+                world_state["current_period"] += 1
+                await self.store_world_state(force_store=True)
+
+                result = {"current_period": world_state["current_period"]}
+
+                self.session_events.append(SessionEvent(session_id=self.session_id,
+                                                    session_player_id=player_id,
+                                                    type="start_next_period",
+                                                    period_number=world_state["current_period"],
+                                                    time_remaining=world_state["time_remaining"],
+                                                    data=result))
+                await SessionEvent.objects.abulk_create(self.session_events, ignore_conflicts=True)
+                self.session_events = []
+
+                await self.send_message(message_to_self=None, message_to_group=result,
+                                    message_type="start_next_period", send_to_client=False,
+                                    send_to_group=True)
+            else:
+                #end the experiment
+                pass
     
     async def update_ready_to_go_on(self, event):
         '''
         update the ready to go on status for a session player
+        '''
+        event_data = json.loads(event["group_data"])
+
+        await self.send_message(message_to_self=event_data, message_to_group=None,
+                                message_type=event['type'], send_to_client=True, send_to_group=False)
+        
+    async def update_start_next_period(self, event):
+        '''
+        update the start next period status for a session player
         '''
         event_data = json.loads(event["group_data"])
 

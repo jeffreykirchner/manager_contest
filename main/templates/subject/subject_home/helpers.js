@@ -364,24 +364,3 @@ get_my_final_profit_string: function get_my_final_profit_string()
 
     return "$" + parseFloat(group["player_" + player_number + "_earnings"]).toFixed(2);
 },
-
-/**
- * get the ready to go on status for the current player
- */
-show_ready_to_go_on_button: function show_ready_to_go_on_button()
-{
-    if(!app.session) return false;
-    if(!app.session.started) return false;
-
-    let group = app.get_current_group();
-    let player_number = app.get_player_number();
-
-    if(player_number == 1)
-    {
-        return group.player_1_review_complete;
-    }
-    else
-    {
-        return group.player_2_review_complete;
-    }
-},
