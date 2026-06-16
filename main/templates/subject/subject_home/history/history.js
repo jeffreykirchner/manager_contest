@@ -25,6 +25,23 @@ get_history: function get_history()
         if(group.manager == app.session_player.id) my_role = "Manager";
         if(group.worker == app.session_player.id) my_role = "Non-manager";
 
+        let manager_profit = null;
+        let non_manager_profit = null;
+
+        if(group.phase != "Phase 1" && group.phase != "Phase 2")
+        {
+            if(group.manager == group_id.player_1)
+            {
+                manager_profit = group["player_1_earnings"];
+                non_manager_profit = group["player_2_earnings"];
+            }
+            else
+            {
+                manager_profit = group["player_2_earnings"];
+                non_manager_profit = group["player_1_earnings"];
+            }
+        }
+
         history.push({
             period_number: i + 1,
             my_type_a_phase_1_units: group["type_a_phase_1_units_player_" + player_number],
@@ -32,7 +49,11 @@ get_history: function get_history()
             my_role: my_role,
             group_id: group_id,
             player_number: player_number,
-            counterpart_number: counterpart_number
+            counterpart_number: counterpart_number,
+            manager_offer: group["manager_offer"],
+            non_manager_response: app.capitalize_first_letter(group["manager_offer_accepted"]),
+            manager_profit: manager_profit,
+            non_manager_profit: non_manager_profit
         });
     }
     

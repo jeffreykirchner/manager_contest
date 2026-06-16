@@ -364,3 +364,12 @@ get_my_final_profit_string: function get_my_final_profit_string()
 
     return "$" + parseFloat(group["player_" + player_number + "_earnings"]).toFixed(2);
 },
+
+/**
+ * capitalize the first letter of a string
+ */
+capitalize_first_letter: function capitalize_first_letter(string)
+{
+    if(!string) return "";
+    return string.charAt(0).toUpperCase() + string.slice(1);
+},
