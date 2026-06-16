@@ -1,0 +1,185 @@
+<div class="card" v-show="first_load_done" id="phase_2_manager_card">                  
+    <div class="card-header fw-bold">                
+        <span class="align-middle">Phase 2: You are the manager.</span>       
+            
+        <span class="float-end">
+            
+        </span>
+        
+    </div>
+    <div class="card-body"> 
+        <!-- units table -->
+        <div class="row justify-content-center" >
+            <div class="col-auto">
+                <table class="table table-condensed"> 
+                    <thead>
+                        <tr>
+                            <th scope="col" class = "">
+                               
+                            </th>
+                            <th scope="col" class = "">
+                                My Units
+                            </th>
+                            <th scope="col" class = "">
+                                Counterpart Units
+                            </th>                            
+                                                     
+                        </tr>
+                    </thead>
+                    <tbody >
+                        <tr>
+                            <td class="fw-bold" >
+                               Type A Units Remaining (Spent in Phase 1)
+                            </td>
+                            <td class="text-center">
+                               [[get_my_type_a_units()]] ([[get_my_type_a_units_spent_in_phase_1()]])
+                            </td>
+                            <td class="text-center">
+                                [[get_counterpart_type_a_units()]] ([[get_counterpart_type_a_units_spent_in_phase_1()]])
+                            </td>                                               
+                        </tr>
+                        <tr>
+                            <td class="fw-bold" >
+                               Type B Units
+                            </td>
+                            <td class="text-center">
+                                [[get_my_type_b_units()]]
+                            </td>
+                            <td class="text-center">
+                                [[get_counterpart_type_b_units()]]
+                            </td>                                               
+                        </tr>
+                    </tbody>
+                    
+                </table>
+            </div>
+        </div>
+
+         <!-- units values -->
+        <div class="row justify-content-center mt-4" >
+            <div class="col-auto text-center">
+                One Type A and one Type B unit together is worth $[[get_current_parameter_set_period().work_payout]].
+            </div>
+        </div>
+
+        <div class="row justify-content-center mt-2" >
+            <div class="col-auto text-center">
+                One Type B unit alone is worth $[[get_current_parameter_set_period().outside_option_payout]].
+            </div>
+        </div>
+
+        <div class="row justify-content-center mt-4" >
+            <div class="col-auto text-center">
+                My potential profit if I work alone: $<span v-html="get_total_player_value_string(get_player_number())"></span>
+            </div>
+        </div>
+
+        <div class="row justify-content-center mt-2" >
+            <div class="col-auto text-center">
+                Counterpart's potential profit if they work alone: $<span v-html="get_total_player_value_string(get_player_number() == 1 ? 2 : 1)"></span><br>
+            </div>
+        </div>
+
+        <div class="row justify-content-center mt-2" >
+            <div class="col-auto text-center">
+                Total potential profit for the group if we work together: $<span v-html="get_total_value_value_string()"></span><br>
+                (You propose how to split, your counterpart decides to accept or reject your proposal)
+            </div>
+        </div>
+
+        <div v-if="get_current_group().phase == 'Phase 2'">
+            <!-- offer form -->
+            <div v-show="get_current_group().manager_offer == null">
+                <div class="row justify-content-center fw-bold mt-4">
+                    <div class="col-auto text-center" id="div_id_type_a_bid">
+                        Submit your purchase offer($) to your counterpart for their remaining type A and type B units.
+                    </div>
+                </div>
+                <div class="row justify-content-center fw-bold mt-2">                
+                    <div class="col-auto text-start" id="div_id_type_a_bid">
+                        <span class="fs-4 pe-1">$</span>
+                        <input type="number" 
+                            class="transfer_model_input form-control-lg fw-bold"
+                            v-model="manager_offer_to_worker"
+                            min="0"
+                            max="999"
+                            step="0.01"
+                            id="manager_offer_to_worker">     
+                    </div>
+                </div>
+
+                <div class="row justify-content-center fw-bold mt-2">
+                    <div class="col-auto text-center" id="div_id_type_a_bid">
+                        You keep [[get_manager_share_if_worker_accepts_offers_string()]] if your counterpart accepts your offer and you work together.
+                    </div>
+                </div>
+                
+                <!-- button -->
+                <div class="row justify-content-center fw-bold mt-2">
+                    <div class="col-auto text-start">
+                        <button type="button"
+                                class="btn btn-outline-primary"
+                                v-on:click = "submit_manager_offer_to_worker()"
+                                title="Submit your offer."                       
+                                v-bind:disabled="reconnecting || working">
+                            Submit <i class="fas fa-sign-in-alt"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- error message -->
+                <div class="row justify-content-center fw-bold mt-2">
+                    <div class="col-auto text-start">
+                        <div class="text-danger" role="alert" v-if="manager_offer_to_worker_error">
+                            [[manager_offer_to_worker_error]]
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div v-show="get_manager_offer_to_worker() != null">
+                <div class="row justify-content-center fw-bold mt-4">
+                    <div class="col-auto text-center" id="div_id_manager_offer_to_worker">
+                    Waiting for counterpart.
+                    </div>
+                </div>  
+            </div>
+        </div>
+        <div v-if="get_current_group().phase == 'Review'">
+            <div class="row justify-content-center mt-4">
+                <div class="col-auto text-center">
+                    <span v-if="get_current_group().manager_offer_accepted == 'accept'">
+                        Your counterpart has accepted your offer.
+                    </span>
+                    <span v-else>
+                        Your counterpart has rejected your offer.
+                    </span>
+                </div>
+            </div>
+
+            <div class="row justify-content-center mt-4">
+                <div class="col-auto text-center">
+                    Your profit, if this period is chosen payment, is [[get_my_final_profit_string()]].
+                </div>
+            </div>
+
+            <div class="row justify-content-center fw-bold mt-4">
+                <div class="col-auto text-center">
+                    <div v-if="show_ready_to_go_on_button()">
+                        <button type="button"
+                                class="btn btn-outline-success"
+                                v-on:click = "ready_to_go_on()"
+                                title="Ready to go on."                       
+                                v-bind:disabled="reconnecting || working">
+                                                    
+                            Ready to go on
+                        </button>
+                    </div>
+                    <div v-else>
+                        Waiting for others.
+                    </div>
+                </div>
+            </div>
+           
+        </div>
+    </div>                    
+</div> 

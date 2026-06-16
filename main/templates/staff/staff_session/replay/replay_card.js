@@ -42,7 +42,6 @@ replay_load_world_state: function replay_load_world_state()
            
             app.session.world_state["current_experiment_phase"] = "Done";
 
-            app.destroy_setup_pixi_subjects();
             app.do_reload();  
 
             break;

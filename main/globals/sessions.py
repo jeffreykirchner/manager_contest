@@ -30,3 +30,12 @@ class ChatGPTMode(models.TextChoices):
     OFF = 'Off', _('Off')
     WITH_CONTEXT = 'With Context', _('With Context')
     WITHOUT_CONTEXT = 'Without Context', _('Without Context')
+
+class GroupPhase(models.TextChoices):
+    '''
+    group phases
+    '''
+    PHASE_1 = 'Phase 1', _('Phase 1')
+    PHASE_2 = 'Phase 2', _('Phase 2')
+    REVIEW = 'Review', _('Review')
+    WAITING = 'Waiting', _('Waiting')

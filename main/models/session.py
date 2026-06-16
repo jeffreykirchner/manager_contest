@@ -34,6 +34,9 @@ from main.models import ParameterSet
 
 from main.globals import ExperimentPhase
 from main.globals import round_up
+from main.globals import GroupPhase
+from main.globals import get_total_group_value
+from main.globals import get_total_player_value
 
 #experiment sessoin
 class Session(models.Model):
@@ -119,7 +122,7 @@ class Session(models.Model):
         
         session_periods = []
 
-        for i in range(self.parameter_set.period_count):
+        for i in range(self.parameter_set.parameter_set_periods.count()):
             session_periods.append(main.models.SessionPeriod(session=self, period_number=i+1))
         
         main.models.SessionPeriod.objects.bulk_create(session_periods)
@@ -179,27 +182,68 @@ class Session(models.Model):
                             "session_periods":{str(i.id) : i.json() for i in self.session_periods.all()},
                             "session_periods_order" : list(self.session_periods.all().values_list('id', flat=True)),
                             "tokens":{},}
-        
-        inventory = {str(i):0 for i in list(self.session_periods.all().values_list('id', flat=True))}
 
         #session periods
         for i in self.world_state["session_periods"]:
-            self.world_state["session_periods"][i]["consumption_completed"] = False
-        
+            session_period = self.world_state["session_periods"][i]
+            groups = {}
+            group_map = {}
+
+            parameter_set_period = self.parameter_set.parameter_set_periods.get(period_number=session_period["period_number"])
+            parameter_set_period_json = parameter_set_period.json()
+            pairs = parameter_set_period.pairs
+
+            session_period["parameter_set_period_id"] = parameter_set_period.id
+
+            for p_id in pairs:
+                pair = pairs[p_id]
+                p = {}
+
+                p["player_1"] = self.session_players.get(parameter_set_player__id=pair[0]).id
+                p["player_2"] = self.session_players.get(parameter_set_player__id=pair[1]).id
+
+                p["type_a_units_player_1"] = parameter_set_period.type_a_units_player_1
+                p["type_a_units_player_2"] = parameter_set_period.type_a_units_player_2
+                p["type_b_units_player_1"] = parameter_set_period.type_b_units_player_1
+                p["type_b_units_player_2"] = parameter_set_period.type_b_units_player_2
+
+                p["type_a_phase_1_units_player_1"] = None
+                p["type_a_phase_1_units_player_2"] = None
+                
+                p["type_a_phase_1_units_player_1_prediction"] = None
+                p["type_a_phase_1_units_player_2_prediction"] = None
+
+                p["manager"] = None
+                p["worker"] = None
+                p["manager_offer"] = None
+                p["manager_offer_accepted"] = None
+
+                p["player_1_total_value"] = async_to_sync(get_total_player_value)(p, 1, parameter_set_period_json)
+                p["player_2_total_value"] = async_to_sync(get_total_player_value)(p, 2, parameter_set_period_json)
+                p["group_total_value"] = async_to_sync(get_total_group_value)(p, parameter_set_period_json)
+
+                p["player_1_earnings"] = 0
+                p["player_2_earnings"] = 0
+
+                p["player_1_review_complete"] = False
+                p["player_2_review_complete"] = False
+
+                p["phase"] = GroupPhase.PHASE_1
+
+                groups[str(p_id)] = p
+
+                group_map[str(p["player_1"])] = p_id
+                group_map[str(p["player_2"])] = p_id
+
+            session_period["groups"] = groups
+            session_period["group_map"] = group_map
+            session_period["paid"] = None
+
         #session players
         for i in self.session_players.prefetch_related('parameter_set_player').all().values('id', 
-                                                                                            'parameter_set_player__start_x',
-                                                                                            'parameter_set_player__start_y',
                                                                                             'parameter_set_player__id' ):
             v = {}
 
-            v['current_location'] = {'x':i['parameter_set_player__start_x'], 'y':i['parameter_set_player__start_y']}
-            v['target_location'] = v['current_location']
-            v['inventory'] = inventory
-            v['tractor_beam_target'] = None
-            v['frozen'] = False
-            v['cool_down'] = 0
-            v['interaction'] = 0
             v['earnings'] = 0
             v['parameter_set_player_id'] = i['parameter_set_player__id']
             v['id'] = i['id']
@@ -207,37 +251,6 @@ class Session(models.Model):
             self.world_state["session_players"][str(i['id'])] = v
             self.world_state["session_players_order"].append(i['id'])
         
-        parameter_set  = self.parameter_set.json_for_session
-
-        #tokens
-        tokens = {}
-        for i in self.session_periods.all():
-            tokens[str(i)] = {}
-
-            for j in range(self.parameter_set.tokens_per_period):
-                
-                go = True
-
-                #place token in random location over a grass area
-                while go:
-                    token = {"current_location" : {
-                            "x":random.randint(25, self.parameter_set.world_width-25),
-                            "y":random.randint(25, self.parameter_set.world_height-25)},
-                            "status":"available",}
-                    
-                    for g in parameter_set["parameter_set_grounds"]:
-                        ground = parameter_set["parameter_set_grounds"][g]
-                        if ground["texture"] == "grass_tex":
-                            if (token["current_location"]["x"] > ground["x"] and token["current_location"]["x"] < ground["x"] + ground["width"]) and \
-                               (token["current_location"]["y"] > ground["y"] and token["current_location"]["y"] < ground["y"] + ground["height"]):
-                                go = False
-                                break
-                
-                tokens[str(i)][str(j)] = token
-            
-
-        self.world_state["tokens"] = tokens
-
         self.save()
 
     def reset_experiment(self):

@@ -11,6 +11,9 @@ from main.models import SessionEvent
 from main.globals import ExperimentPhase
 from main.globals import round_up
 
+TOKEN_VALUE_CENTS = Decimal("1.0")
+COOLDOWN_SECONDS = 10
+
 class TimerMixin():
     '''
     timer mixin for staff session consumer
@@ -104,8 +107,7 @@ class TimerMixin():
             last_period["consumption_completed"] = True
             
             for i in self.world_state_local["session_players"]:
-                period_earnings = (self.world_state_local["session_players"][i]["inventory"][last_period_id_s] * 
-                                           Decimal(self.parameter_set_local["token_cents_value"]))
+                period_earnings = self.world_state_local["session_players"][i]["inventory"][last_period_id_s] * TOKEN_VALUE_CENTS
                 
                 self.world_state_local["session_players"][i]["earnings"] += period_earnings
 
@@ -174,8 +176,7 @@ class TimerMixin():
                     
                     for i in self.world_state_local["session_players"]:
 
-                        period_earnings = Decimal(self.world_state_local["session_players"][i]["inventory"][last_period_id_s]) * \
-                                          Decimal(self.parameter_set_local["token_cents_value"])
+                        period_earnings = Decimal(self.world_state_local["session_players"][i]["inventory"][last_period_id_s]) * TOKEN_VALUE_CENTS
 
                         self.world_state_local["session_players"][i]["earnings"] = Decimal(self.world_state_local["session_players"][i]["earnings"]) + period_earnings
 
@@ -197,42 +198,10 @@ class TimerMixin():
             result["started"] = self.world_state_local["started"]
             result["finished"] = self.world_state_local["finished"]
             result["current_experiment_phase"] = self.world_state_local["current_experiment_phase"]
-            result["period_is_over"] = period_is_over
-
-            #locations
-            result["current_locations"] = {}
-            result["target_locations"] = {}
-            for i in self.world_state_local["session_players"]:
-                result["current_locations"][i] = self.world_state_local["session_players"][i]["current_location"]
-                result["target_locations"][i] = self.world_state_local["session_players"][i]["target_location"]
 
             session_player_status = {}
 
-            #decrement waiting and interaction time
-            for p in self.world_state_local["session_players"]:
-                session_player = self.world_state_local["session_players"][p]
-
-                if session_player["cool_down"] > 0:
-                    session_player["cool_down"] -= 1
-
-                if session_player["interaction"] > 0:
-                    session_player["interaction"] -= 1
-
-                    if session_player["interaction"] == 0:
-                        session_player["cool_down"] = self.parameter_set_local["cool_down_length"]
-                
-                if session_player["interaction"] == 0:
-                    session_player["frozen"] = False
-                    session_player["tractor_beam_target"] = None
-
-                session_player_status[p] = {"interaction": session_player["interaction"], 
-                                            "frozen": session_player["frozen"], 
-                                            "cool_down": session_player["cool_down"],
-                                            "tractor_beam_target" : session_player["tractor_beam_target"]}                
-            
-            result["session_player_status"] = session_player_status
-
-           
+            #decrement waiting and interaction time           
             self.session_events.append(SessionEvent(session_id=self.session_id, 
                                                     type="time",
                                                     period_number=self.world_state_local["current_period"],

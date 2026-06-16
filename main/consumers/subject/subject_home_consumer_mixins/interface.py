@@ -37,69 +37,6 @@ class InterfaceMixin():
         await self.send_message(message_to_self=event_data, message_to_subjects=None, message_to_staff=None, 
                                 message_type=event['type'], send_to_client=True, send_to_group=False)
     
-    async def collect_token(self, event):
-        '''
-        subject collects token, handled by staff consumer
-        '''
-        pass
-
-    async def update_collect_token(self, event):
-        '''
-        subject collects token update
-        '''
-        event_data = json.loads(event["group_data"])
-
-        await self.send_message(message_to_self=event_data, message_to_subjects=None, message_to_staff=None, 
-                                message_type=event['type'], send_to_client=True, send_to_group=False)
-    
-    async def tractor_beam(self, event):
-        '''
-        subject activates tractor beam, handled by staff consumer
-        '''
-        pass
-
-    async def update_tractor_beam(self, event):
-        '''
-        subject activates tractor beam update
-        '''
-
-        event_data = json.loads(event["group_data"])
-
-        await self.send_message(message_to_self=event_data, message_to_subjects=None, message_to_staff=None, 
-                                message_type=event['type'], send_to_client=True, send_to_group=False)
-        
-    async def interaction(self, event):
-        '''
-        a subject has submitted an interaction, handled by staff consumer
-        '''
-        pass
-
-    async def update_interaction(self, event):
-        '''
-        a subject has submitted an interaction, update
-        '''
-
-        event_data = json.loads(event["group_data"])
-
-        await self.send_message(message_to_self=event_data, message_to_subjects=None, message_to_staff=None, 
-                                message_type=event['type'], send_to_client=True, send_to_group=False)
-        
-    async def cancel_interaction(self, event):
-        '''
-        a subject has canceled an interaction, handled by staff consumer
-        '''
-        pass
-
-    async def update_cancel_interaction(self, event):
-        '''
-        a subject has canceled an interaction, update
-        '''
-
-        event_data = json.loads(event["group_data"])
-
-        await self.send_message(message_to_self=event_data, message_to_subjects=None, message_to_staff=None, 
-                                message_type=event['type'], send_to_client=True, send_to_group=False)
-    
     async def update_rescue_subject(self, event):
         '''
         update rescue subject
@@ -118,7 +55,7 @@ class InterfaceMixin():
 
         event_data = event["message_text"]
 
-        session_player = await SessionPlayer.objects.select_related('parameter_set_player__parameter_set_group').aget(id=self.session_player_id)
+        session_player = await SessionPlayer.objects.aget(id=self.session_player_id)
 
         prompt = strip_tags(event_data["prompt"]).strip()
 
@@ -203,9 +140,63 @@ class InterfaceMixin():
 
     @check_message_for_me
     async def update_show_help_doc(self, event):
+        '''
+        show help doc from subject screen
+        '''
         event_data = json.loads(event["group_data"])
 
         await self.send_message(message_to_self=event_data, message_to_subjects=None, message_to_staff=None, 
                                 message_type=event['type'], send_to_client=True, send_to_group=False)
+
+    @check_message_for_me  
+    async def update_submit_type_a_bid(self, event):
+        '''
+        submit type A bid from subject screen
+        '''
+        event_data = json.loads(event["group_data"])
+
+        await self.send_message(message_to_self=event_data, message_to_subjects=None, message_to_staff=None, 
+                                message_type=event['type'], send_to_client=True, send_to_group=False)
+        
+    @check_message_for_me
+    async def update_submit_manager_offer_to_worker(self, event):
+        '''
+        manager offer to worker from subject screen
+        '''
+        event_data = json.loads(event["group_data"])
+
+        await self.send_message(message_to_self=event_data, message_to_subjects=None, message_to_staff=None, 
+                                message_type=event['type'], send_to_client=True, send_to_group=False)
+        
+    @check_message_for_me
+    async def update_submit_worker_response_to_manager(self, event):
+        '''
+        worker response to manager offer from subject screen
+        '''
+        event_data = json.loads(event["group_data"])
+
+        await self.send_message(message_to_self=event_data, message_to_subjects=None, message_to_staff=None, 
+                                message_type=event['type'], send_to_client=True, send_to_group=False)
+    
+    @check_message_for_me
+    async def update_ready_to_go_on(self, event):
+        '''
+        the ready to go on button is clicked
+        '''
+        event_data = json.loads(event["group_data"])
+
+        await self.send_message(message_to_self=event_data, message_to_subjects=None, message_to_staff=None, 
+                                message_type=event['type'], send_to_client=True, send_to_group=False)
+    
+    @check_message_for_me
+    async def update_start_next_period(self, event):
+        '''
+        the start next period button is clicked
+        '''
+        event_data = json.loads(event["group_data"])
+
+        await self.send_message(message_to_self=event_data, message_to_subjects=None, message_to_staff=None, 
+                                message_type=event['type'], send_to_client=True, send_to_group=False)
+    
 
         

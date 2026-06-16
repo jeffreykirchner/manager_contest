@@ -1,15 +1,15 @@
-echo "Setup multi user socket template"
+echo "Setup manager_contest environment"
 sudo service postgresql restart
 sudo service redis-server start
 echo "Drop template db: enter db password"
-dropdb template_experiment -U dbadmin -h localhost -i -p 5432
+dropdb manager_contest -U dbadmin -h localhost -i -p 5432
 echo "Create database: enter db password"
-createdb -h localhost -p 5432 -U dbadmin -O dbadmin template_experiment
+createdb -h localhost -p 5432 -U dbadmin -O dbadmin manager_contest
 echo "Restore database? (y/n)"
 read restore
 if [ "$restore" = "y" ]; then
     echo "Restore database: enter db password"
-    pg_restore -v --no-owner --role=dbowner --host=localhost --port=5432 --username=dbadmin --dbname=template_experiment database_dumps/template_experiment.sql
+    pg_restore -v --no-owner --role=dbowner --host=localhost --port=5432 --username=dbadmin --dbname=manager_contest database_dumps/manager_contest.sql
 else
     python manage.py migrate
     echo "Create Super User:"

@@ -21,24 +21,8 @@ let app = Vue.createApp({
                     current_parameter_set_player : {
                         id:0,
                     },        
-                    
-                    current_parameter_set_notice : {
-                        id:0,
-                    },
 
-                    current_parameter_set_wall : {
-                        id:0,
-                    },
-
-                    current_parameter_set_group : {
-                        id:0,
-                    },
-
-                    current_parameter_set_barrier : {
-                        id:0,
-                    },
-
-                    current_parameter_set_ground : {
+                    current_parameter_set_period : {
                         id:0,
                     },
 
@@ -54,10 +38,7 @@ let app = Vue.createApp({
                     import_parameters_modal : null,
                     edit_parameterset_modal : null,
                     edit_parameterset_player_modal : null,
-                    edit_parameterset_notice_modal : null,
-                    edit_parameterset_wall_modal : null,
-                    edit_parameterset_group_modal : null,
-                    edit_parameterset_ground_modal : null,
+                    edit_parameterset_period_modal : null,
                     upload_parameter_set_modal : null,
 
                     //form paramters
@@ -135,11 +116,7 @@ let app = Vue.createApp({
             app.edit_parameterset_modal = bootstrap.Modal.getOrCreateInstance(document.getElementById('edit_parameterset_modal'), {keyboard: false})            
             app.edit_parameterset_player_modal = bootstrap.Modal.getOrCreateInstance(document.getElementById('edit_parameterset_player_modal'), {keyboard: false})
             app.upload_parameter_set_modal = bootstrap.Modal.getOrCreateInstance(document.getElementById('upload_parameter_set_modal'), {keyboard: false})   
-            app.edit_parameterset_notice_modal = bootstrap.Modal.getOrCreateInstance(document.getElementById('edit_parameterset_notice_modal'), {keyboard: false})
-            app.edit_parameterset_wall_modal = bootstrap.Modal.getOrCreateInstance(document.getElementById('edit_parameterset_wall_modal'), {keyboard: false})
-            app.edit_parameterset_group_modal = bootstrap.Modal.getOrCreateInstance(document.getElementById('edit_parameterset_group_modal'), {keyboard: false})
-            app.edit_parameterset_barrier_modal = bootstrap.Modal.getOrCreateInstance(document.getElementById('edit_parameterset_barrier_modal'), {keyboard: false})
-            app.edit_parameterset_ground_modal = bootstrap.Modal.getOrCreateInstance(document.getElementById('edit_parameterset_ground_modal'), {keyboard: false})
+            app.edit_parameterset_period_modal = bootstrap.Modal.getOrCreateInstance(document.getElementById('edit_parameterset_period_modal'), {keyboard: false})
 
             document.getElementById('import_parameters_modal').addEventListener('hidden.bs.modal', app.hide_import_parameters);
             document.getElementById('edit_parameterset_modal').addEventListener('hidden.bs.modal', app.hide_edit_parameter_set);
@@ -154,6 +131,12 @@ let app = Vue.createApp({
         take_get_parameter_set: function take_get_parameter_set(message_data){
             
             app.parameter_set = message_data.parameter_set;
+
+            if(!app.parameter_set.parameter_set_periods)
+                app.parameter_set.parameter_set_periods = {};
+
+            if(!app.parameter_set.parameter_set_periods_order)
+                app.parameter_set.parameter_set_periods_order = [];
 
             if(app.session.started)
             {
@@ -179,12 +162,7 @@ let app = Vue.createApp({
         {%include "staff/staff_session_parameters/general_settings/general_settings.js"%}
         {%include "staff/staff_session_parameters/control/control.js"%}
         {%include "staff/staff_session_parameters/players/players.js"%}
-        {%include "staff/staff_session_parameters/notices/notices.js"%}
-        {%include "staff/staff_session_parameters/walls/walls.js"%}
-        {%include "staff/staff_session_parameters/groups/groups.js"%}
-        {%include "staff/staff_session_parameters/barriers/barriers.js"%}
-        {%include "staff/staff_session_parameters/grounds/grounds.js"%}
-
+        {%include "staff/staff_session_parameters/periods/periods.js"%}
 
         {%include "js/help_doc.js"%}
     

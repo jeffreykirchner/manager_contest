@@ -1,0 +1,158 @@
+<div class="card" v-show="first_load_done" id="phase_1_card">                  
+    <div class="card-header fw-bold">                
+        <span class="align-middle">Phase 1: Bid to become the unit manager.</span>       
+            
+        <span class="float-end">
+            
+        </span>
+        
+    </div>
+    <div class="card-body"> 
+        <!-- units table -->
+        <div class="row justify-content-center" >
+            <div class="col-auto">
+                <table class="table table-condensed"> 
+                    <thead>
+                        <tr>
+                            <th scope="col" class = "">
+                               
+                            </th>
+                            <th scope="col" class = "">
+                                My Units
+                            </th>
+                            <th scope="col" class = "">
+                                Counterpart Units
+                            </th>                            
+                                                     
+                        </tr>
+                    </thead>
+                    <tbody >
+                        <tr>
+                            <td class="fw-bold" >
+                               Type A Units
+                            </td>
+                            <td class="text-center">
+                               [[get_my_type_a_units()]]
+                            </td>
+                            <td class="text-center">
+                                [[get_counterpart_type_a_units()]]
+                            </td>                                               
+                        </tr>
+                        <tr>
+                            <td class="fw-bold" >
+                               Type B Units
+                            </td>
+                            <td class="text-center">
+                                [[get_my_type_b_units()]]
+                            </td>
+                            <td class="text-center">
+                                [[get_counterpart_type_b_units()]]
+                            </td>                                               
+                        </tr>
+                    </tbody>
+                    
+                </table>
+            </div>
+        </div>
+
+        <!-- units values -->
+        <div class="row justify-content-center mt-4" >
+            <div class="col-auto text-center">
+                One Type A and one Type B unit together is worth $[[get_current_parameter_set_period().work_payout]].
+            </div>
+        </div>
+
+        <div class="row justify-content-center mt-2" >
+            <div class="col-auto text-center">
+                One Type B unit alone is worth $[[get_current_parameter_set_period().outside_option_payout]].
+            </div>
+        </div>
+
+        <div class="row justify-content-center mt-4" >
+            <div class="col-auto text-center">
+                My potential profit if I work alone: $<span v-html="get_total_player_value_string(get_player_number())"></span>
+            </div>
+        </div>
+
+        <div class="row justify-content-center mt-2" >
+            <div class="col-auto text-center">
+                Counterpart's potential profit if they work alone: $<span v-html="get_total_player_value_string(get_player_number() == 1 ? 2 : 1)"></span><br>
+            </div>
+        </div>
+
+        <div class="row justify-content-center mt-2" >
+            <div class="col-auto text-center">
+                Total potential profit for the group if we work together: $<span v-html="get_total_value_value_string()"></span><br>
+                (the unit manager proposes how to split, their counterpart decides to work together or separately)
+            </div>
+        </div>
+
+        <!-- bid form -->
+        <div v-show="get_type_a_bid() == null">
+            <div class="row justify-content-center fw-bold mt-4">
+                <div class="col-auto text-center" id="div_id_type_a_bid">
+                    Submit how many Type A Units you want to spend to compete for the unit manager role
+                </div>
+            </div>
+            <div class="row justify-content-center fw-bold mt-2">
+                <div class="col-auto text-start" id="div_id_type_a_bid">
+                    <input type="number" 
+                        class="transfer_model_input form-control-lg fw-bold"
+                        v-model="type_a_bid"
+                        min="0"
+                        max="999"
+                        step="1"
+                        id="type_a_bid">     
+                </div>
+            </div>
+
+            <div class="row justify-content-center fw-bold mt-4">
+                <div class="col-auto text-center" id="div_id_type_a_bid">
+                    Submit how many Type A Units you think your counterpart will spend to compete for the unit manager role
+                </div>
+            </div>
+            <div class="row justify-content-center fw-bold mt-2">
+                <div class="col-auto text-start" id="div_id_type_a_bid">
+                    <input type="number" 
+                        class="transfer_model_input form-control-lg fw-bold"
+                        v-model="type_a_bid_counterpart"
+                        min="0"
+                        max="999"
+                        step="1"
+                        id="type_a_bid_counterpart">     
+                </div>
+            </div>
+            
+            <!-- button -->
+            <div class="row justify-content-center fw-bold mt-4">
+                <div class="col-auto text-start">
+                    <button type="button"
+                            class="btn btn-outline-primary"
+                            v-on:click = "submit_type_a_bid()"
+                            title="Submit your bid."                       
+                            v-bind:disabled="reconnecting || working">
+                                               
+
+                        Submit <i class="fas fa-sign-in-alt"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- error message -->
+            <div class="row justify-content-center fw-bold mt-2">
+                <div class="col-auto text-start">
+                    <div class="text-danger" role="alert" v-if="type_a_bid_error">
+                        [[type_a_bid_error]]
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div v-show="get_type_a_bid() != null">
+            <div class="row justify-content-center fw-bold mt-4">
+                <div class="col-auto text-center" id="div_id_type_a_bid">
+                   Waiting for counterpart.
+                </div>
+            </div>  
+        </div>
+    </div>                    
+</div> 

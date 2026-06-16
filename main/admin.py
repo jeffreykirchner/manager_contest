@@ -44,7 +44,7 @@ class ParameterSetPlayerAdmin(admin.ModelAdmin):
         return False
 
     readonly_fields=['parameter_set']
-    list_display = ['id_label']
+    list_display = ['player_number']
 
     inlines = [
         
@@ -59,7 +59,7 @@ class ParameterSetPlayerInline(admin.TabularInline):
     model = ParameterSetPlayer
     can_delete = True   
     show_change_link = True
-    fields = ['id_label', 'player_number']
+    fields = ['player_number']
 
 @admin.register(ParameterSet)
 class ParameterSetAdmin(admin.ModelAdmin):
