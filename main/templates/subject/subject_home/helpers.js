@@ -187,8 +187,10 @@ get_type_a_bid: function get_type_a_bid()
  */
 get_total_player_value_string: function get_total_player_value_string(player_number)
 {
-    if(!app.session) return "---<br>---";
-    if(!app.session.started) return "---<br>---";
+    let place_holder = `<span class="fs-4">---</span><br>---`;
+
+    if(!app.session) return place_holder;
+    if(!app.session.started) return place_holder;
 
     let group = app.get_current_group();
 
@@ -196,8 +198,6 @@ get_total_player_value_string: function get_total_player_value_string(player_num
     let type_b_units = group["type_b_units_player_" + player_number];
 
     let parameter_set_period = app.get_current_parameter_set_period();
-
-    let place_holder = `<span class="fs-4">---</span><br>---`;
 
     if(!parameter_set_period) return ;
 
@@ -266,8 +266,10 @@ get_total_player_value_string: function get_total_player_value_string(player_num
  */
 get_total_value_value_string : function get_total_value_value_string()
 {
-    if(!app.session) return "---<br>---";
-    if(!app.session.started) return "---<br>---";
+    let place_holder = `<span class="fs-4">---</span><br>---`;
+
+    if(!app.session) return place_holder;
+    if(!app.session.started) return place_holder;
 
     let group = app.get_current_group();
 
@@ -278,33 +280,33 @@ get_total_value_value_string : function get_total_value_value_string()
 
     if(group.phase =="Phase 1")
     {
-        if(!parameter_set_period) return "---<br>---";
-        if(app.type_a_bid == null) return "---<br>---";
-        if(app.type_a_bid_counterpart == null) return "---<br>---";
+        if(!parameter_set_period) return place_holder;
+        if(app.type_a_bid == null) return place_holder;
+        if(app.type_a_bid_counterpart == null) return place_holder;
 
         //check if type_a_bid is a number
-        if(!Number.isFinite(app.type_a_bid)) return "---<br>---";
-        if(!Number.isFinite(app.type_a_bid_counterpart)) return "---<br>---";
+        if(!Number.isFinite(app.type_a_bid)) return place_holder;
+        if(!Number.isFinite(app.type_a_bid_counterpart)) return place_holder;
 
         //check if type_a_bid is greater than or equal to 0
-        if(app.type_a_bid < 0) return "---<br>---";
-        if(app.type_a_bid_counterpart < 0) return "---<br>---";
+        if(app.type_a_bid < 0) return place_holder;
+        if(app.type_a_bid_counterpart < 0) return place_holder;
 
         //chec if bids are greater than total type a units for players
         if(app.get_player_number() == 1)   
         {
-        if(parseInt(app.type_a_bid) > group["type_a_units_player_1"]) return "---<br>---";
-        if(parseInt(app.type_a_bid_counterpart) > group["type_a_units_player_2"]) return "---<br>---";
+        if(parseInt(app.type_a_bid) > group["type_a_units_player_1"]) return place_holder;
+        if(parseInt(app.type_a_bid_counterpart) > group["type_a_units_player_2"]) return place_holder;
         }
         else
         {
-        if(parseInt(app.type_a_bid) > group["type_a_units_player_2"]) return "---<br>---";
-        if(parseInt(app.type_a_bid_counterpart) > group["type_a_units_player_1"]) return "---<br>---";
+        if(parseInt(app.type_a_bid) > group["type_a_units_player_2"]) return place_holder;
+        if(parseInt(app.type_a_bid_counterpart) > group["type_a_units_player_1"]) return place_holder;
         }
 
         type_a_units -= (parseInt(app.type_a_bid) + parseInt(app.type_a_bid_counterpart));
 
-        if(type_a_units < 0) return `<span class="fs-4">---</span><br>---`;
+        if(type_a_units < 0) return place_holder;
     }
 
     let work_payout = parseFloat(parameter_set_period.work_payout);

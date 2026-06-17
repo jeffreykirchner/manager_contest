@@ -56,7 +56,7 @@
         </div>
 
         <!-- units values -->
-        <div class="row justify-content-center mt-4 fs-5" >
+        <div class="row justify-content-center mt-2 fs-5" >
             <div class="col-6 text-center">
                 One Type A + one Type B is worth 
                 <div class="row justify-content-center" >
@@ -76,6 +76,7 @@
             </div>
         </div>
 
+        <!-- potential profits alone-->
         <div class="row justify-content-center mt-4 fs-5" >
             <div class="col-6 text-center">
                 My potential profit if I work alone
@@ -95,49 +96,65 @@
             </div>
         </div>
 
-        <div class="row justify-content-center mt-2" >
-            <div class="col-auto text-center">
-                Total potential profit for the group if we work together: $<span v-html="get_total_value_value_string()"></span><br>
-                (the unit manager proposes how to split, their counterpart decides to work together or separately)
+        <!-- potential profits together -->
+        <div class="row justify-content-center mt-4" >
+            <div class="col-auto text-center fs-5">
+                Total potential profit for the group if we work together
+                <div class="row justify-content-center" >
+                     <div class="col-10 text-center border rounded">
+                        <span v-html="get_total_value_value_string()"></span>
+                     </div>
+                </div>
+                <div class="row justify-content-center" >
+                     <div class="col-auto text-center">
+                        (The manager proposes how to split, the non-manager decides to work together or separately)
+                     </div>
+                </div>                
             </div>
         </div>
 
         <!-- bid form -->
         <div v-show="get_type_a_bid() == null">
-            <div class="row justify-content-center fw-bold mt-4">
-                <div class="col-auto text-center" id="div_id_type_a_bid">
-                    Submit how many Type A Units you want to spend to compete for the unit manager role
+            <div class="row justify-content-center mt-4">
+                <div class="col-6">
+                    <div class="row justify-content-center fw-bold">
+                        <div class="col-auto text-center fs-5" id="div_id_type_a_bid">
+                            Type A Units you want to spend to compete for the manager role
+                        </div>
+                    </div>
+                    <div class="row justify-content-center fw-bold mt-2">
+                        <div class="col-auto text-start" id="div_id_type_a_bid">
+                            <input type="number" 
+                                class="transfer_model_input form-control-lg fw-bold"
+                                v-model="type_a_bid"
+                                min="0"
+                                max="999"
+                                step="1"
+                                id="type_a_bid">     
+                        </div>
+                    </div>
                 </div>
-            </div>
-            <div class="row justify-content-center fw-bold mt-2">
-                <div class="col-auto text-start" id="div_id_type_a_bid">
-                    <input type="number" 
-                        class="transfer_model_input form-control-lg fw-bold"
-                        v-model="type_a_bid"
-                        min="0"
-                        max="999"
-                        step="1"
-                        id="type_a_bid">     
-                </div>
-            </div>
 
-            <div class="row justify-content-center fw-bold mt-4">
-                <div class="col-auto text-center" id="div_id_type_a_bid">
-                    Submit how many Type A Units you think your counterpart will spend to compete for the unit manager role
+                <div class="col-6">
+                    <div class="row justify-content-center fw-bold">
+                        <div class="col-auto text-center fs-5" id="div_id_type_a_bid">
+                            Type A Units you <i>think</i> your counterpart will spend to compete for the manager role
+                        </div>
+                    </div>
+                    <div class="row justify-content-center fw-bold mt-2">
+                        <div class="col-auto text-start" id="div_id_type_a_bid">
+                            <input type="number" 
+                                class="transfer_model_input form-control-lg fw-bold"
+                                v-model="type_a_bid_counterpart"
+                                min="0"
+                                max="999"
+                                step="1"
+                                id="type_a_bid_counterpart">     
+                        </div>
+                    </div>
                 </div>
-            </div>
-            <div class="row justify-content-center fw-bold mt-2">
-                <div class="col-auto text-start" id="div_id_type_a_bid">
-                    <input type="number" 
-                        class="transfer_model_input form-control-lg fw-bold"
-                        v-model="type_a_bid_counterpart"
-                        min="0"
-                        max="999"
-                        step="1"
-                        id="type_a_bid_counterpart">     
-                </div>
-            </div>
-            
+             </div>
+
             <!-- button -->
             <div class="row justify-content-center fw-bold mt-4">
                 <div class="col-auto text-start">
@@ -146,13 +163,13 @@
                             v-on:click = "submit_type_a_bid()"
                             title="Submit your bid."                       
                             v-bind:disabled="reconnecting || working">
-                                               
+                                            
 
                         Submit <i class="fas fa-sign-in-alt"></i>
                     </button>
                 </div>
             </div>
-
+                
             <!-- error message -->
             <div class="row justify-content-center fw-bold mt-2">
                 <div class="col-auto text-start">
@@ -163,7 +180,7 @@
             </div>
         </div>
         <div v-show="get_type_a_bid() != null">
-            <div class="row justify-content-center fw-bold mt-4">
+            <div class="row justify-content-center fw-bold mt-4 fs-5">
                 <div class="col-auto text-center" id="div_id_type_a_bid">
                    Waiting for counterpart.
                 </div>
