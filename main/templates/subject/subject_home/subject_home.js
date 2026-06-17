@@ -58,6 +58,10 @@ let app = Vue.createApp({
                     //forms
                     interaction_form : {direction:null, amount:null},
 
+                    //tick tock
+                    tick_tock : "tick",
+                    tick_tock_interval : 300,
+
                     //test mode
                     test_mode_location_target : null,
 
@@ -232,6 +236,9 @@ let app = Vue.createApp({
 
                 app.scroll_update();
             }
+
+            //start tick tock
+            app.run_tick_tock();
 
         },
 
@@ -449,6 +456,41 @@ let app = Vue.createApp({
                     document.getElementById("div_id_" + e).scrollIntoView(); 
                 }
         }, 
+
+        /**
+         * run tick tock at a set interval
+         */
+        run_tick_tock: function run_tick_tock() {
+            if(app.tick_tock == "tick")
+            {
+                app.tick_tock = "tock";
+            }
+            else
+            {
+                app.tick_tock = "tick";
+            }
+
+            //if one second has passed, decrease time remaining by one second
+            if(app.timer_running)
+            {
+                let now = Date.now();
+                if(app.timer_last_pulse && (now - app.timer_last_pulse) >= 1000)
+                {
+                    app.timer_last_pulse = now;
+                    if(app.time_remaining > 0)
+                    {
+                        app.time_remaining -= 1;
+                    }
+                    else
+                    {
+                        app.timer_running = false;
+                        app.timer_expired();
+                    }
+                }
+            }
+
+            setTimeout(app.run_tick_tock, app.tick_tock_interval);
+        },
 
     },
 
