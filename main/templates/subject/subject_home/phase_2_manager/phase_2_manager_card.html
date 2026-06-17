@@ -70,13 +70,13 @@
 
         <div class="row justify-content-center mt-4" >
             <div class="col-auto text-center">
-                My potential profit if I work alone: $<span v-html="get_total_player_value_string(get_player_number())"></span>
+                My potential profit if I work alone: <span v-html="get_total_player_value_string(get_player_number())"></span>
             </div>
         </div>
 
         <div class="row justify-content-center mt-2" >
             <div class="col-auto text-center">
-                Counterpart's potential profit if they work alone: $<span v-html="get_total_player_value_string(get_player_number() == 1 ? 2 : 1)"></span><br>
+                Counterpart's potential profit if they work alone: <span v-html="get_total_player_value_string(get_player_number() == 1 ? 2 : 1)"></span><br>
             </div>
         </div>
 
@@ -118,7 +118,7 @@
                 <div class="row justify-content-center fw-bold mt-2">
                     <div class="col-auto text-start">
                         <button type="button"
-                                class="btn btn-outline-primary"
+                                v-bind:class="tick_tock=='tick' ? 'btn btn-primary btn-lg' : 'btn btn btn-outline-primary btn-lg'"
                                 v-on:click = "submit_manager_offer_to_worker()"
                                 title="Submit your offer."                       
                                 v-bind:disabled="reconnecting || working">
@@ -166,7 +166,7 @@
                 <div class="col-auto text-center">
                     <div v-if="show_ready_to_go_on_button()">
                         <button type="button"
-                                class="btn btn-outline-success"
+                                v-bind:class="tick_tock=='tick' ? 'btn btn-success btn-lg' : 'btn btn btn-outline-success btn-lg'"
                                 v-on:click = "ready_to_go_on()"
                                 title="Ready to go on."                       
                                 v-bind:disabled="reconnecting || working">

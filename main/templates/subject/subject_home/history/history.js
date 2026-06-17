@@ -18,28 +18,31 @@ get_history: function get_history()
         let group = session_period.groups[group_id];
 
         let player_number = 1;
-        if(group.player_2 == app.session_player_id) player_number = 2;
+        if(group.player_2 == app.session_player.id) player_number = 2;
         let counterpart_number = 3 - player_number;
         let my_role = "";
 
         if(group.manager == app.session_player.id) my_role = "Manager";
         if(group.worker == app.session_player.id) my_role = "Non-manager";
 
-        let manager_profit = null;
-        let non_manager_profit = null;
+        let manager_profit = "";
+        let non_manager_profit = "";
 
         if(group.phase != "Phase 1" && group.phase != "Phase 2")
         {
             if(group.manager == group_id.player_1)
             {
-                manager_profit = group["player_1_earnings"];
-                non_manager_profit = group["player_2_earnings"];
+                manager_profit = parseFloat(group["player_1_earnings"]).toFixed(2);
+                non_manager_profit = parseFloat(group["player_2_earnings"]).toFixed(2);
             }
             else
             {
-                manager_profit = group["player_2_earnings"];
-                non_manager_profit = group["player_1_earnings"];
+                manager_profit = parseFloat(group["player_2_earnings"]).toFixed(2);
+                non_manager_profit = parseFloat(group["player_1_earnings"]).toFixed(2);
             }
+
+            manager_profit = "$" + manager_profit;
+            non_manager_profit = "$" + non_manager_profit;
         }
 
         history.push({
@@ -52,7 +55,7 @@ get_history: function get_history()
             counterpart_number: counterpart_number,
             manager_offer: group["manager_offer"],
             non_manager_response: app.capitalize_first_letter(group["manager_offer_accepted"]),
-            manager_profit: manager_profit,
+            manager_profit:  manager_profit,
             non_manager_profit: non_manager_profit
         });
     }

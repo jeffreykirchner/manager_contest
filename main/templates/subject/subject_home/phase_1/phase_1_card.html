@@ -1,6 +1,6 @@
 <div class="card" v-show="first_load_done" id="phase_1_card">                  
     <div class="card-header fw-bold">                
-        <span class="align-middle">Phase 1: Bid to become the unit manager.</span>       
+        <span class="align-middle">Phase 1: Bid to become the manager.</span>       
             
         <span class="float-end">
             
@@ -9,7 +9,7 @@
     </div>
     <div class="card-body"> 
         <!-- units table -->
-        <div class="row justify-content-center" >
+        <div class="row justify-content-center fs-5" >
             <div class="col-auto">
                 <table class="table table-condensed"> 
                     <thead>
@@ -17,11 +17,11 @@
                             <th scope="col" class = "">
                                
                             </th>
-                            <th scope="col" class = "">
-                                My Units
+                            <th scope="col" class = "text-center">
+                                My<br>Units
                             </th>
-                            <th scope="col" class = "">
-                                Counterpart Units
+                            <th scope="col" class = "text-center">
+                                Counterpart's<br>Units
                             </th>                            
                                                      
                         </tr>
@@ -29,7 +29,7 @@
                     <tbody >
                         <tr>
                             <td class="fw-bold" >
-                               Type A Units
+                               Type A
                             </td>
                             <td class="text-center">
                                [[get_my_type_a_units()]]
@@ -40,7 +40,7 @@
                         </tr>
                         <tr>
                             <td class="fw-bold" >
-                               Type B Units
+                               Type B 
                             </td>
                             <td class="text-center">
                                 [[get_my_type_b_units()]]
@@ -56,27 +56,42 @@
         </div>
 
         <!-- units values -->
-        <div class="row justify-content-center mt-4" >
-            <div class="col-auto text-center">
-                One Type A and one Type B unit together is worth $[[get_current_parameter_set_period().work_payout]].
+        <div class="row justify-content-center mt-4 fs-5" >
+            <div class="col-6 text-center">
+                One Type A + one Type B is worth 
+                <div class="row justify-content-center" >
+                    <div class="col-6 text-center border rounded fs-4 pt-2 pb-2">
+                        $[[get_current_parameter_set_period().work_payout]]
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-6 text-center">
+                One Type B alone is worth 
+                <div class="row justify-content-center" >
+                    <div class="col-6 text-center border rounded fs-4 pt-2 pb-2">
+                        $[[get_current_parameter_set_period().outside_option_payout]]
+                    </div>
+                </div>
             </div>
         </div>
 
-        <div class="row justify-content-center mt-2" >
-            <div class="col-auto text-center">
-                One Type B unit alone is worth $[[get_current_parameter_set_period().outside_option_payout]].
+        <div class="row justify-content-center mt-4 fs-5" >
+            <div class="col-6 text-center">
+                My potential profit if I work alone
+                <div class="row justify-content-center" >
+                     <div class="col-10 text-center border rounded">
+                         <span v-html="get_total_player_value_string(get_player_number())"></span>
+                     </div>
+                </div>
             </div>
-        </div>
-
-        <div class="row justify-content-center mt-4" >
-            <div class="col-auto text-center">
-                My potential profit if I work alone: $<span v-html="get_total_player_value_string(get_player_number())"></span>
-            </div>
-        </div>
-
-        <div class="row justify-content-center mt-2" >
-            <div class="col-auto text-center">
-                Counterpart's potential profit if they work alone: $<span v-html="get_total_player_value_string(get_player_number() == 1 ? 2 : 1)"></span><br>
+            <div class="col-6 text-center">
+                Counterpart's potential profit if they work alone
+                <div class="row justify-content-center" >
+                     <div class="col-10 text-center border rounded">
+                         <span v-html="get_total_player_value_string(get_player_number() == 1 ? 2 : 1)"></span>
+                     </div>
+                </div>
             </div>
         </div>
 
@@ -127,7 +142,7 @@
             <div class="row justify-content-center fw-bold mt-4">
                 <div class="col-auto text-start">
                     <button type="button"
-                            class="btn btn-outline-primary"
+                            v-bind:class="tick_tock=='tick' ? 'btn btn-primary btn-lg' : 'btn btn btn-outline-primary btn-lg'"
                             v-on:click = "submit_type_a_bid()"
                             title="Submit your bid."                       
                             v-bind:disabled="reconnecting || working">

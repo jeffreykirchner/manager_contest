@@ -197,20 +197,22 @@ get_total_player_value_string: function get_total_player_value_string(player_num
 
     let parameter_set_period = app.get_current_parameter_set_period();
 
-    if(!parameter_set_period) return "---<br>---";
+    let place_holder = `<span class="fs-4">---</span><br>---`;
+
+    if(!parameter_set_period) return ;
 
     if(group.phase =="Phase 1")
-    {
-        if(app.type_a_bid == null) return "---<br>---";
-        if(app.type_a_bid_counterpart == null) return "---<br>---";
+        {
+            if(app.type_a_bid == null) return place_holder;
+        if(app.type_a_bid_counterpart == null) return place_holder;
     
         //check if type_a_bid is a number
-        if(!Number.isFinite(app.type_a_bid)) return "---<br>---";
-        if(!Number.isFinite(app.type_a_bid_counterpart)) return "---<br>---";
+        if(!Number.isFinite(app.type_a_bid)) return place_holder;
+        if(!Number.isFinite(app.type_a_bid_counterpart)) return place_holder;
 
         //check if type_a_bid is greater than or equal to 0
-        if(app.type_a_bid < 0) return "---<br>---";
-        if(app.type_a_bid_counterpart < 0) return "---<br>---";
+        if(app.type_a_bid < 0) return place_holder;
+        if(app.type_a_bid_counterpart < 0) return place_holder;
 
         //remove type a units from calculation if used for bid
         if(player_number == app.get_player_number())
@@ -222,7 +224,7 @@ get_total_player_value_string: function get_total_player_value_string(player_num
             type_a_units -= parseInt(app.type_a_bid_counterpart);
         }
 
-        if(type_a_units < 0) return "---<br>---";
+        if(type_a_units < 0) return place_holder;
     }
 
     let work_payout = parseFloat(parameter_set_period.work_payout);
@@ -244,11 +246,13 @@ get_total_player_value_string: function get_total_player_value_string(player_num
 
     if(value_from_work_total > value_from_outside_option)
     {
-        return `${value_from_work_total.toFixed(2)}<br>(${units_for_work}ABs * ${work_payout.toFixed(2)} + ${unused_b_units}Bs * ${outside_option_payout.toFixed(2)})`;
+        return `<span class="fs-4">$${value_from_work_total.toFixed(2)}</span>
+                <br>
+                (${units_for_work}ABs * ${work_payout.toFixed(2)} + ${unused_b_units}Bs * ${outside_option_payout.toFixed(2)})`;
     }
     else
     {
-        return `${value_from_outside_option.toFixed(2)}<br>(${type_b_units}Bs * ${outside_option_payout.toFixed(2)})`;
+        return `<span class="fs-4">$${value_from_outside_option.toFixed(2)}</span><br>(${type_b_units}Bs * ${outside_option_payout.toFixed(2)})`;
     }
 
 },
@@ -300,7 +304,7 @@ get_total_value_value_string : function get_total_value_value_string()
 
         type_a_units -= (parseInt(app.type_a_bid) + parseInt(app.type_a_bid_counterpart));
 
-        if(type_a_units < 0) return "---<br>---";
+        if(type_a_units < 0) return `<span class="fs-4">---</span><br>---`;
     }
 
     let work_payout = parseFloat(parameter_set_period.work_payout);
@@ -320,11 +324,11 @@ get_total_value_value_string : function get_total_value_value_string()
 
     if(value_from_work_total > value_from_outside_option)
     {
-        return `${value_from_work_total.toFixed(2)}<br>(${units_for_work}ABs * ${work_payout.toFixed(2)} + ${unused_b_units}Bs * ${outside_option_payout.toFixed(2)})`;
+        return `<span class="fs-4">$${value_from_work_total.toFixed(2)}</span><br>(${units_for_work}ABs * ${work_payout.toFixed(2)} + ${unused_b_units}Bs * ${outside_option_payout.toFixed(2)})`;
     }
     else
     {
-        return `${value_from_outside_option.toFixed(2)}<br>(${type_b_units}Bs * ${outside_option_payout.toFixed(2)})`;
+        return `<span class="fs-4">$${value_from_outside_option.toFixed(2)}</span><br>(${type_b_units}Bs * ${outside_option_payout.toFixed(2)})`;
     }
 },
 
