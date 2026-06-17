@@ -116,9 +116,9 @@
         <div v-if="get_current_group().phase == 'Phase 2'">
             <!-- offer form -->
             <div v-show="get_current_group().manager_offer == null">
-                <div class="row justify-content-center fw-bold mt-4">
+                <div class="row justify-content-center fw-bold fs-5 mt-4">
                     <div class="col-auto text-center" id="div_id_type_a_bid">
-                        Submit your purchase offer($) to your counterpart for their remaining type A and type B units.
+                        Your purchase offer($) to your counterpart for their remaining type A and type B units.
                     </div>
                 </div>
                 <div class="row justify-content-center fw-bold mt-2">                
@@ -134,7 +134,7 @@
                     </div>
                 </div>
 
-                <div class="row justify-content-center fw-bold mt-2">
+                <div class="row justify-content-center fw-bold fs-5 mt-2">
                     <div class="col-auto text-center" id="div_id_type_a_bid">
                         You keep [[get_manager_share_if_worker_accepts_offers_string()]] if your counterpart accepts your offer and you work together.
                     </div>
@@ -163,7 +163,7 @@
                 </div>
             </div>
             <div v-show="get_manager_offer_to_worker() != null">
-                <div class="row justify-content-center fw-bold mt-4">
+                <div class="row justify-content-center fw-bold fs-5 mt-4">
                     <div class="col-auto text-center" id="div_id_manager_offer_to_worker">
                     Waiting for counterpart.
                     </div>
