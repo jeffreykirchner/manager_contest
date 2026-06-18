@@ -48,4 +48,23 @@ take_submit_type_a_bid: function take_submit_type_a_bid(message_data)
         group.group_total_value = message_data.group.group_total_value;
     }
 },
+
+/**
+ * get probablity of becoming the manager
+ * (my bid)/(my bid + counterpart's bid)
+ */
+get_manager_probability: function get_manager_probability()
+{
+    if(!app.session.started) return;  
+    
+    if(app.type_a_bid == null) return "---";
+    if(app.type_a_bid_counterpart == null) return "---";
+    
+    let win_probability = app.type_a_bid / (app.type_a_bid + app.type_a_bid_counterpart);
+    
+    win_probability *= 100;
+    win_probability = Math.round(win_probability * 10) / 10;
+    
+    return win_probability + "%";
+},
     

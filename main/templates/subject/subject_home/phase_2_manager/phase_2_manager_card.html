@@ -35,7 +35,7 @@
                                [[get_my_type_a_units()]] ([[get_my_type_a_units_spent_in_phase_1()]])
                             </td>
                             <td class="text-center">
-                                [[get_counterpart_type_a_units()]]
+                                [[get_counterpart_type_a_units()]] ([[get_counterpart_type_a_units_spent_in_phase_1()]])
                             </td>                                               
                         </tr>
                         <tr>
@@ -43,7 +43,7 @@
                                Type B 
                             </td>
                             <td class="text-center">
-                                [[get_my_type_b_units()]] ([[get_counterpart_type_a_units_spent_in_phase_1()]])
+                                [[get_my_type_b_units()]]
                             </td>
                             <td class="text-center">
                                 [[get_counterpart_type_b_units()]]
@@ -57,20 +57,29 @@
 
         <!-- units values -->
         <div class="row justify-content-center mt-2 fs-5" >
-            <div class="col-6 text-center">
-                One Type A + one Type B is worth 
+            <div class="col-4 text-center">
+                One Type A alone is worth 
                 <div class="row justify-content-center" >
                     <div class="col-6 text-center border rounded fs-4 pt-2 pb-2">
-                        $[[get_current_parameter_set_period().work_payout]]
+                        $0.00
                     </div>
                 </div>
             </div>
 
-            <div class="col-6 text-center">
+            <div class="col-4 text-center">
                 One Type B alone is worth 
                 <div class="row justify-content-center" >
                     <div class="col-6 text-center border rounded fs-4 pt-2 pb-2">
                         $[[get_current_parameter_set_period().outside_option_payout]]
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-4 text-center">
+                One Type AB is worth 
+                <div class="row justify-content-center" >
+                    <div class="col-6 text-center border rounded fs-4 pt-2 pb-2">
+                        $[[get_current_parameter_set_period().work_payout]]
                     </div>
                 </div>
             </div>
@@ -81,7 +90,7 @@
             <div class="col-6 text-center">
                 My potential profit if I work alone
                 <div class="row justify-content-center" >
-                     <div class="col-10 text-center border rounded">
+                     <div class="col-11 text-center border rounded">
                          <span v-html="get_total_player_value_string(get_player_number())"></span>
                      </div>
                 </div>
@@ -89,7 +98,7 @@
             <div class="col-6 text-center">
                 Counterpart's potential profit if they work alone
                 <div class="row justify-content-center" >
-                     <div class="col-10 text-center border rounded">
+                     <div class="col-11 text-center border rounded">
                          <span v-html="get_total_player_value_string(get_player_number() == 1 ? 2 : 1)"></span>
                      </div>
                 </div>
@@ -99,14 +108,14 @@
         <!-- potential profits together -->
         <div class="row justify-content-center mt-4" >
             <div class="col-auto text-center fs-5">
-                Total potential profit for the group if we work together
+                Total potential profit for the group if we pool units and work together
                 <div class="row justify-content-center" >
                      <div class="col-10 text-center border rounded">
                         <span v-html="get_total_value_value_string()"></span>
                      </div>
                 </div>
                 <div class="row justify-content-center" >
-                     <div class="col-auto text-center">
+                     <div class="col-auto text-center fs-6">
                         (You propose how to split, the non-manager decides to work together or separately)
                      </div>
                 </div>                
