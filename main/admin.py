@@ -67,7 +67,7 @@ class ParameterSetAdmin(admin.ModelAdmin):
         ParameterSetPlayerInline,
       ]
 
-    list_display = ['id', 'period_count', 'period_length']
+    list_display = ['id', 'period_length']
 
 @admin.register(Parameters)
 class ParametersAdmin(admin.ModelAdmin):

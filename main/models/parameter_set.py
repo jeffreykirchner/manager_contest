@@ -18,7 +18,7 @@ class ParameterSet(models.Model):
     '''
     parameter set
     '''    
-    period_count = models.IntegerField(verbose_name='Number of periods', default=20)                          #number of periods in the experiment
+
     number_of_periods_paid = models.IntegerField(verbose_name='Number of periods paid', default=4)
     period_length = models.IntegerField(verbose_name='Period Length, Production', default=60           )      #period length in seconds
     break_frequency = models.IntegerField(verbose_name='Break Frequency', default=7)                          #frequency of breaks
@@ -61,7 +61,6 @@ class ParameterSet(models.Model):
         status = "success"
 
         try:
-            self.period_count = new_ps.get("period_count")
             self.number_of_periods_paid = new_ps.get("number_of_periods_paid", 4)
             self.period_length = new_ps.get("period_length")
             self.break_frequency = new_ps.get("break_frequency", 7)
@@ -175,7 +174,6 @@ class ParameterSet(models.Model):
         '''
         self.json_for_session["id"] = self.id
                 
-        self.json_for_session["period_count"] = self.period_count
         self.json_for_session["number_of_periods_paid"] = self.number_of_periods_paid
         self.json_for_session["period_length"] = self.period_length
         self.json_for_session["break_frequency"] = self.break_frequency

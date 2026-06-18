@@ -67,32 +67,7 @@ update_replay_mode: function update_replay_mode(new_replay_mode)
  */
 replay_mode_play: function replay_mode_play()
 {
-    if(app.replay_mode == "paused") return;
-
-    app.process_replay_events();
-
-    if(app.replay_time_remaining > 0)
-    {
-        app.replay_time_remaining--;
-    }
-    else if(app.replay_current_period == app.session.parameter_set.period_count)
-    {
-        //end of the session
-        return;
-    }
-    else
-    {
-        app.replay_current_period++;
-
-        app.replay_time_remaining = app.session.parameter_set.period_length;
-
-        if(app.replay_current_period % app.session.parameter_set.break_frequency == 0)
-        {
-            app.replay_time_remaining += app.session.parameter_set.break_length;
-        }
-    }
-
-    app.replay_timeout = setTimeout(app.replay_mode_play, 1000);
+    
 },
 
 /**
@@ -171,27 +146,5 @@ move_avatars_to_current_location: function move_avatars_to_current_location()
  */
 advance_period: function advance_period(direction)
 {
-    if(direction == 1)
-    {
-        if(app.replay_current_period < app.session.parameter_set.period_count)
-        {
-            app.replay_current_period++;
-        }
-    }
-    else
-    {
-        if(app.replay_current_period > 1)
-        {
-            app.replay_current_period--;
-        }
-    }
-
-    app.replay_time_remaining = app.session.parameter_set.period_length;
-
-    if(app.replay_current_period % app.session.parameter_set.break_frequency == 0)
-    {
-        app.replay_time_remaining += app.session.parameter_set.break_length;
-    }
-
-    app.process_replay_events(true);
+    
 },
