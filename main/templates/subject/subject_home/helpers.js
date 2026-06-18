@@ -236,6 +236,7 @@ get_total_player_value_string: function get_total_player_value_string(player_num
 
     //add value for unused type B units
     let unused_b_units = Math.max(0, type_b_units - type_a_units);
+    let unused_a_units = Math.max(0, type_a_units - type_b_units);
     let value_from_unused_b_units = parseFloat(unused_b_units) * outside_option_payout;
 
     let value_from_work_total = value_from_work + value_from_unused_b_units;
@@ -248,11 +249,13 @@ get_total_player_value_string: function get_total_player_value_string(player_num
     {
         return `<span class="fs-4">$${value_from_work_total.toFixed(2)}</span>
                 <br>
-                (${units_for_work}ABs * ${work_payout.toFixed(2)} + ${unused_b_units}Bs * ${outside_option_payout.toFixed(2)})`;
+                (${units_for_work}AB x $${work_payout.toFixed(2)} + ${unused_a_units}A x $0.00 + ${unused_b_units}B x $${outside_option_payout.toFixed(2)})`;
     }
     else
     {
-        return `<span class="fs-4">$${value_from_outside_option.toFixed(2)}</span><br>(${type_b_units}Bs * ${outside_option_payout.toFixed(2)})`;
+        return `<span class="fs-4">$${value_from_outside_option.toFixed(2)}</span>
+                <br>
+               ( ${unused_a_units}A x $0.00 + ${type_b_units}B * ${outside_option_payout.toFixed(2)})`;
     }
 
 },
@@ -318,6 +321,7 @@ get_total_value_value_string : function get_total_value_value_string()
 
     //add value for unused type B units for player 1
     let unused_b_units = Math.max(0, type_b_units - type_a_units);
+    let unused_a_units = Math.max(0, type_a_units - type_b_units);
     let value_from_unused_b_units = parseFloat(unused_b_units) * outside_option_payout;
 
     let value_from_work_total = value_from_work + value_from_unused_b_units;
@@ -326,11 +330,15 @@ get_total_value_value_string : function get_total_value_value_string()
 
     if(value_from_work_total > value_from_outside_option)
     {
-        return `<span class="fs-4">$${value_from_work_total.toFixed(2)}</span><br>(${units_for_work}ABs * ${work_payout.toFixed(2)} + ${unused_b_units}Bs * ${outside_option_payout.toFixed(2)})`;
+        return `<span class="fs-4">$${value_from_work_total.toFixed(2)}</span>
+                <br>
+                (${units_for_work}AB x $${work_payout.toFixed(2)} + ${unused_a_units}A x $0.00 + ${unused_b_units}B x $${outside_option_payout.toFixed(2)})`;
     }
     else
     {
-        return `<span class="fs-4">$${value_from_outside_option.toFixed(2)}</span><br>(${type_b_units}Bs * ${outside_option_payout.toFixed(2)})`;
+        return `<span class="fs-4">$${value_from_outside_option.toFixed(2)}</span>
+                <br>
+                (${unused_a_units}A x $0.00 + ${type_b_units}Bs * ${outside_option_payout.toFixed(2)})`;
     }
 },
 

@@ -45,6 +45,12 @@ get_history: function get_history()
             non_manager_profit = "$" + non_manager_profit;
         }
 
+        let manager_offer = null;
+        if(group["manager_offer"] != null)
+        {
+            manager_offer = "$" + group["manager_offer"].toFixed(2);
+        }
+
         history.push({
             period_number: i + 1,
             my_type_a_phase_1_units: group["type_a_phase_1_units_player_" + player_number],
@@ -53,7 +59,7 @@ get_history: function get_history()
             group_id: group_id,
             player_number: player_number,
             counterpart_number: counterpart_number,
-            manager_offer: group["manager_offer"],
+            manager_offer: manager_offer,
             non_manager_response: app.capitalize_first_letter(group["manager_offer_accepted"]),
             manager_profit:  manager_profit,
             non_manager_profit: non_manager_profit

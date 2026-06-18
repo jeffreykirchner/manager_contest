@@ -11,7 +11,7 @@
         <!-- units table -->
         <div class="row justify-content-center fs-5" >
             <div class="col-auto">
-                <table class="table table-condensed"> 
+                <table class="table table-condensed mb-0 pb-0"> 
                     <thead>
                         <tr>
                             <th scope="col" class = "">
@@ -49,28 +49,42 @@
                                 [[get_counterpart_type_b_units()]]
                             </td>                                               
                         </tr>
-                    </tbody>
-                    
+                    </tbody>                    
                 </table>
             </div>
         </div>
 
+        <div class="row justify-content-center mt-0 pt-0 fs-6" >
+            <div class="col-auto text-center"> 
+                (A and B units can be combined into AB units or used separately. The system automatically calculates the best combination.)
+            </div>
+        </div>
+
         <!-- units values -->
-        <div class="row justify-content-center mt-2 fs-5" >
-            <div class="col-6 text-center">
-                One Type A + one Type B is worth 
+        <div class="row justify-content-center mt-4 fs-5" >
+            <div class="col-4 text-center">
+                One Type A alone is worth 
                 <div class="row justify-content-center" >
                     <div class="col-6 text-center border rounded fs-4 pt-2 pb-2">
-                        $[[get_current_parameter_set_period().work_payout]]
+                        $0.00
                     </div>
                 </div>
             </div>
 
-            <div class="col-6 text-center">
+            <div class="col-4 text-center">
                 One Type B alone is worth 
                 <div class="row justify-content-center" >
                     <div class="col-6 text-center border rounded fs-4 pt-2 pb-2">
                         $[[get_current_parameter_set_period().outside_option_payout]]
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-4 text-center">
+                One Type AB is worth 
+                <div class="row justify-content-center" >
+                    <div class="col-6 text-center border rounded fs-4 pt-2 pb-2">
+                        $[[get_current_parameter_set_period().work_payout]]
                     </div>
                 </div>
             </div>
@@ -81,7 +95,7 @@
             <div class="col-6 text-center">
                 My potential profit if I work alone
                 <div class="row justify-content-center" >
-                     <div class="col-10 text-center border rounded">
+                     <div class="col-11 text-center border rounded">
                          <span v-html="get_total_player_value_string(get_player_number())"></span>
                      </div>
                 </div>
@@ -89,7 +103,7 @@
             <div class="col-6 text-center">
                 Counterpart's potential profit if they work alone
                 <div class="row justify-content-center" >
-                     <div class="col-10 text-center border rounded">
+                     <div class="col-11 text-center border rounded">
                          <span v-html="get_total_player_value_string(get_player_number() == 1 ? 2 : 1)"></span>
                      </div>
                 </div>
@@ -99,14 +113,14 @@
         <!-- potential profits together -->
         <div class="row justify-content-center mt-4" >
             <div class="col-auto text-center fs-5">
-                Total potential profit for the group if we work together
+                Total potential profit for the group if we pool units and work together
                 <div class="row justify-content-center" >
                      <div class="col-10 text-center border rounded">
                         <span v-html="get_total_value_value_string()"></span>
                      </div>
                 </div>
                 <div class="row justify-content-center" >
-                     <div class="col-auto text-center">
+                     <div class="col-auto text-center fs-6">
                         (The manager proposes how to split, the non-manager decides to work together or separately)
                      </div>
                 </div>                
@@ -121,7 +135,21 @@
                         <div class="col-auto text-center fs-5" id="div_id_type_a_bid">
                             Type A Units you want to spend to compete for the manager role
                         </div>
+                    </div>                   
+                </div>
+
+                <div class="col-6">
+                    <div class="row justify-content-center fw-bold">
+                        <div class="col-auto text-center fs-5" id="div_id_type_a_bid">
+                            Type A Units you <i>think</i> your counterpart will spend to compete for the manager role
+                        </div>
                     </div>
+                </div>
+            </div>
+
+            <div class="row justify-content-center mt-0">
+                <div class="col-auto">
+                    
                     <div class="row justify-content-center fw-bold mt-2">
                         <div class="col-auto text-start" id="div_id_type_a_bid">
                             <input type="number" 
@@ -133,14 +161,14 @@
                                 id="type_a_bid">     
                         </div>
                     </div>
+                    
                 </div>
-
-                <div class="col-6">
-                    <div class="row justify-content-center fw-bold">
-                        <div class="col-auto text-center fs-5" id="div_id_type_a_bid">
-                            Type A Units you <i>think</i> your counterpart will spend to compete for the manager role
-                        </div>
-                    </div>
+                <div class="col-auto text-center">
+                    <span class="fs-4"> [[get_manager_probability()]]</span><br>
+                    My likelihood of winning the manager role<br>
+                    My Bid / (My Bid + Counterpart's Bid)
+                </div>
+                <div class="col-auto">
                     <div class="row justify-content-center fw-bold mt-2">
                         <div class="col-auto text-start" id="div_id_type_a_bid">
                             <input type="number" 
@@ -153,7 +181,7 @@
                         </div>
                     </div>
                 </div>
-             </div>
+            </div>
 
             <!-- button -->
             <div class="row justify-content-center fw-bold mt-4">
