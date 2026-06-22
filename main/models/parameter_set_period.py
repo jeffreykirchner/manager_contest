@@ -36,9 +36,9 @@ class ParameterSetPeriod(models.Model):
         verbose_name = 'Parameter Set Period'
         verbose_name_plural = 'Parameter Set Periods'
         ordering = ['period_number']
-        constraints = [
-            models.UniqueConstraint(fields=['parameter_set', 'period_number'], name='unique_parameter_set_period_number')
-        ]
+        # constraints = [
+        #     models.UniqueConstraint(fields=['parameter_set', 'period_number'], name='unique_parameter_set_period_number')
+        # ]
 
     def from_dict(self, new_ps):
         '''

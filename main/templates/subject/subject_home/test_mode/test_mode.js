@@ -106,78 +106,95 @@ do_test_mode_instructions: function do_test_mode_instructions()
  */
 do_test_mode_run: function do_test_mode_run()
 {
-    //do chat
-    let go = true;
-
-    if(go)
-        if(app.chat_text != "")
-        {
-            document.getElementById("send_chat_id").click();
-            go=false;
-        }
     
     if(app.session.world_state.finished) return;
-        
-    if(go)
-        switch (app.random_number(1, 3)){
-            case 1:
-                app.do_test_mode_chat();
-                break;
-            
-            case 2:                
-                app.test_mode_move();
-                break;
-            case 3:
-                
-                break;
-        }
-},
+    if(app.working) return;
 
-/**
- * test mode chat
- */
-do_test_mode_chat: function do_test_mode_chat(){
+    let world_state = app.session.world_state;
+    let group = app.get_current_group();
 
-    app.chat_text = app.random_string(5, 20);
-},
-
-/**
- * test mode move to a location
- */
-test_mode_move: function test_mode_move(){
-
-    if(app.session.world_state.finished) return;
-
-    let obj = app.session.world_state.session_players[app.session_player.id];
-    let current_period_id = app.session.world_state.session_periods_order[app.session.world_state.current_period-1];
-
-    if(!current_period_id) return;
-   
-    if(!app.test_mode_location_target || 
-        app.get_distance(app.test_mode_location_target,  obj.current_location) <= 25)
+    if(group.phase == "Phase 1")
     {
-         //if near target location, move to a new one
-
-        let rn = app.random_number(0, Object.keys(app.session.world_state.tokens[current_period_id]).length-1);
-        let r = Object.keys(app.session.world_state.tokens[current_period_id])[rn];
-        
-        app.test_mode_location_target = app.session.world_state.tokens[current_period_id][r].current_location;
+        app.do_test_mode_phase_1();
     }
-    else if(app.get_distance(app.test_mode_location_target,  obj.current_location)<1000)
+    else if(group.phase == "Phase 2")
     {
-        //object is close move to it
-        obj.target_location = app.test_mode_location_target;
+        app.do_test_mode_phase_2();
+    }
+    else if(group.phase == "Review")
+    {
+        app.do_test_mode_review();
+    }
+
+},
+
+/**
+ * test mode phase 1 action
+ */
+do_test_mode_phase_1: function do_test_mode_phase_1()
+{
+    if(app.get_type_a_bid() != null) return;
+
+    let world_state = app.session.world_state;
+    let group = app.get_current_group();
+    let type_a_units = app.get_my_type_a_units();
+    let type_a_units_counterpart = app.get_counterpart_type_a_units();
+
+    //random number of type a units
+    app.type_a_bid = app.random_number(0, type_a_units);
+    app.type_a_bid_counterpart = app.random_number(0, type_a_units_counterpart);
+
+    app.submit_type_a_bid();
+},
+
+/**
+ * test mode phase 2 action
+ */
+do_test_mode_phase_2: function do_test_mode_phase_2()
+{
+
+    let world_state = app.session.world_state;
+    let group = app.get_current_group();
+    let role = app.get_role();
+
+    if(role == "manager")
+    {
+        if(group.manager_offer == null)
+        {
+            app.manager_offer_to_worker = app.random_number(0, group["group_total_value"]);
+            app.submit_manager_offer_to_worker();
+        }
     }
     else
     {
-        //if far from target location, move to intermediate location
-        obj.target_location = app.get_point_from_angle_distance(obj.current_location.x, 
-                                                        obj.current_location.y,
-                                                        app.test_mode_location_target.x,
-                                                        app.test_mode_location_target.y,
-                                                        app.random_number(300,1000))
+        if(group.manager_offer != null)
+        {
+            if(app.random_number(0, 1) == 0)
+            {
+                app.submit_worker_response_to_manager("accept");
+            }
+            else
+            {
+                app.submit_worker_response_to_manager("reject");
+            }
+        }
     }
 
-    app.target_location_update();
+
 },
+
+/**
+ * test mode review action
+ */
+do_test_mode_review: function do_test_mode_review()
+{
+    if(app.show_ready_to_go_on_button())
+    {
+        app.ready_to_go_on();
+        return;
+    }
+},
+
+
+
 {%endif%}

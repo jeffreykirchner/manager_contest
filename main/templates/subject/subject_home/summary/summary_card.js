@@ -40,3 +40,33 @@ post_session_link: function post_session_link(){
     }
 
 },
+
+/**
+ * get periods paid string
+ */
+periods_paid_string: function periods_paid_string()
+{
+    let periods_paid = app.session.world_state.periods_paid;
+    let periods_paid_string = "";
+    let world_state = app.session.world_state;
+    let count=0;
+
+    for(let p in world_state.session_periods)
+    {
+        let session_period = world_state.session_periods[p];
+
+        if(session_period.paid)
+        {
+            count++;
+            if(count > 1)
+            {
+                if(count == app.session.parameter_set.number_of_periods_paid)
+                    periods_paid_string += " and ";
+                else
+                    periods_paid_string += ", ";
+            }
+            periods_paid_string += session_period.period_number;
+        }
+    }
+    return periods_paid_string;
+},

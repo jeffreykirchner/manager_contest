@@ -130,17 +130,6 @@ let app = Vue.createApp({
                 case "update_next_phase":
                     app.take_update_next_phase(message_data);
                     break; 
-                case "update_chat":
-                    app.take_update_chat(message_data);
-                    break;
-                case "update_time":
-                    app.take_update_time(message_data);
-                    break;
-                case "start_timer":
-                    app.take_start_timer(message_data);
-                    break;   
-                case "stop_timer_pulse":
-                    app.take_stop_timer_pulse(message_data);
                 case "update_connection_status":
                     app.take_update_connection_status(message_data);
                     break;   
@@ -209,6 +198,9 @@ let app = Vue.createApp({
                     break;
                 case "update_process_chat_gpt_prompt":
                     app.take_process_chat_gpt_prompt(message_data);
+                    break;
+                case "update_end_game":
+                    app.take_update_end_game(message_data);
                     break;
             }
             app.working = false;
@@ -367,54 +359,24 @@ let app = Vue.createApp({
         },
 
         /**
-         * update time and start status
+         * end game
          */
-        take_update_time: function take_update_time(message_data){
-           
-            let status = message_data.value;
+        take_update_end_game: function take_update_end_game(message_data){
+            let periods_paid = message_data.periods_paid;
+            let world_state = app.session.world_state;
 
-            if(status == "fail") return;
-
-            // app.session.started = result.started;
-            app.session.world_state.current_period = message_data.current_period;
-            app.session.world_state.time_remaining = message_data.time_remaining;
-            app.session.world_state.timer_running = message_data.timer_running;
-            app.session.world_state.started = message_data.started;
-            app.session.world_state.finished = message_data.finished;
-           
-            // app.session.finished = result.finished;
-            app.session.world_state.current_experiment_phase = message_data.current_experiment_phase;
-
-            app.update_phase_button_text();
-
-            //update player earnings and inventory if period has changed
-            if(message_data.period_is_over)
+            for(let i in periods_paid)
             {
-                app.update_player_inventory();              
-                app.take_update_earnings(message_data.earnings);  
+                world_state.session_periods[periods_paid[i]].paid = true;
             }
 
-            //update player status
-            for(let p in message_data.session_player_status)
+            for(let p in world_state.session_players)
             {
-                let session_player = message_data.session_player_status[p];
-                app.session.world_state.session_players[p].interaction = session_player.interaction;
-                app.session.world_state.session_players[p].frozen = session_player.frozen;
-                app.session.world_state.session_players[p].cool_down = session_player.cool_down;
-                app.session.world_state.session_players[p].tractor_beam_target = session_player.tractor_beam_target;
+                let session_player = world_state.session_players[p];
+                session_player.earnings = message_data.session_players[p].earnings;
             }
 
-            //update player location
-            for(let p in message_data.current_locations)
-            {
-                let server_location = message_data.current_locations[p];
-
-                if(app.get_distance(server_location, app.session.world_state.session_players[p].current_location) > 1000)
-                {
-                    app.session.world_state.session_players[p].current_location = server_location;
-                }
-            }
-
+            world_state.current_experiment_phase = message_data.current_experiment_phase;
         },
        
         //do nothing on when enter pressed for post

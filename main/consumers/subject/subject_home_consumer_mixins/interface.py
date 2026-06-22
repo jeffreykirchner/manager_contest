@@ -188,12 +188,20 @@ class InterfaceMixin():
         await self.send_message(message_to_self=event_data, message_to_subjects=None, message_to_staff=None, 
                                 message_type=event['type'], send_to_client=True, send_to_group=False)
     
-    @check_message_for_me
     async def update_start_next_period(self, event):
         '''
         the start next period button is clicked
         '''
         event_data = json.loads(event["group_data"])
+
+        await self.send_message(message_to_self=event_data, message_to_subjects=None, message_to_staff=None, 
+                                message_type=event['type'], send_to_client=True, send_to_group=False)
+    
+    async def update_end_game(self, event):
+        '''
+        the experiment is complete, subject must enter their names
+        '''
+        event_data = json.loads(event["group_data"])    
 
         await self.send_message(message_to_self=event_data, message_to_subjects=None, message_to_staff=None, 
                                 message_type=event['type'], send_to_client=True, send_to_group=False)

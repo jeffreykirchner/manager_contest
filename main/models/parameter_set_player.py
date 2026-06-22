@@ -24,7 +24,7 @@ class ParameterSetPlayer(models.Model):
     updated= models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return str(self.id_label)
+        return f"Player {self.player_number}"
     
     class Meta:
         verbose_name = 'Parameter Set Player'
@@ -37,7 +37,6 @@ class ParameterSetPlayer(models.Model):
         source : dict object of parameterset player
         '''
 
-        self.id_label = new_ps.get("id_label")[:2]
         self.player_number = new_ps.get("player_number")
 
         self.save()

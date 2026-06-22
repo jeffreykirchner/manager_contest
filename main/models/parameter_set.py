@@ -85,6 +85,7 @@ class ParameterSet(models.Model):
             self.parameter_set_players.all().delete()
 
             new_parameter_set_players = new_ps.get("parameter_set_players")
+            new_parameter_set_players_map = {}
 
             for i in new_parameter_set_players:
                 p = main.models.ParameterSetPlayer.objects.create(parameter_set=self)
@@ -96,6 +97,8 @@ class ParameterSet(models.Model):
                 
                 p.save()
 
+                new_parameter_set_players_map[i] = p.id
+
             self.update_player_count()
 
             #parameter set periods
@@ -106,6 +109,12 @@ class ParameterSet(models.Model):
                 p = main.models.ParameterSetPeriod.objects.create(parameter_set=self)
                 v = new_parameter_set_periods[i]
                 p.from_dict(v)
+
+                for pair_id in p.pairs:
+                    pair = p.pairs[pair_id]
+                    pair[0] = new_parameter_set_players_map.get(str(pair[0]), pair[0])
+                    pair[1] = new_parameter_set_players_map.get(str(pair[1]), pair[1])
+                p.save()
 
             self.json_for_session = None
             self.save()

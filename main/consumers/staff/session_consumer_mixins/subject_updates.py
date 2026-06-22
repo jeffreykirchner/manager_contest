@@ -588,12 +588,54 @@ class SubjectUpdatesMixin():
                                     message_type="start_next_period", send_to_client=False,
                                     send_to_group=True)
             else:
-                #end the experiment
-                pass
+                
+                #randomly select N session_periods from the experiment to pay the subjects on, where N is determined by the parameter set number_of_periods_paid
+                number_of_periods_paid = self.parameter_set_local["number_of_periods_paid"]
+
+                periods_paid = random.sample(self.world_state_local["session_periods_order"], min(number_of_periods_paid, len(self.world_state_local["session_periods_order"])))
+
+                for p in periods_paid:
+                    session_period = self.world_state_local["session_periods"][str(p)]                    
+                    session_period["paid"] = True
+
+                for session_player_id in self.world_state_local["session_players_order"]:
+                    session_player = self.world_state_local["session_players"][str(session_player_id)]
+                    session_player["earnings"] = 0
+
+                    for p in periods_paid:
+                        session_period = self.world_state_local["session_periods"][str(p)]
+                        group_id = session_period["group_map"][str(session_player_id)]
+                        group = session_period["groups"][str(group_id)]
+
+                        if group["player_1"] == session_player_id:
+                            session_player["earnings"] = Decimal(str(session_player["earnings"])) + Decimal(str(group["player_1_earnings"]))
+                        elif group["player_2"] == session_player_id:
+                            session_player["earnings"] = Decimal(str(session_player["earnings"])) + Decimal(str(group["player_2_earnings"]))
+
+                self.world_state_local["current_experiment_phase"] = ExperimentPhase.NAMES
+                
+                await self.store_world_state(force_store=True)
+
+                result = {"periods_paid": periods_paid,
+                          "session_players": self.world_state_local["session_players"],
+                          "current_experiment_phase": self.world_state_local["current_experiment_phase"]}
+
+                await self.send_message(message_to_self=None, message_to_group=result,
+                                    message_type="end_game", send_to_client=False,
+                                    send_to_group=True)
     
     async def update_ready_to_go_on(self, event):
         '''
         update the ready to go on status for a session player
+        '''
+        event_data = json.loads(event["group_data"])
+
+        await self.send_message(message_to_self=event_data, message_to_group=None,
+                                message_type=event['type'], send_to_client=True, send_to_group=False)
+    
+    async def update_end_game(self, event):
+        '''
+        update the end game status for a session player
         '''
         event_data = json.loads(event["group_data"])
 
@@ -608,8 +650,6 @@ class SubjectUpdatesMixin():
 
         await self.send_message(message_to_self=event_data, message_to_group=None,
                                 message_type=event['type'], send_to_client=True, send_to_group=False)
-
-
 
     # helpers
     async def get_world_state_current_session_period(self):
