@@ -18,7 +18,8 @@ class ParameterSet(models.Model):
     '''
     parameter set
     '''    
-    period_count = models.IntegerField(verbose_name='Number of periods', default=20)                          #number of periods in the experiment
+
+    number_of_periods_paid = models.IntegerField(verbose_name='Number of periods paid', default=4)
     period_length = models.IntegerField(verbose_name='Period Length, Production', default=60           )      #period length in seconds
     break_frequency = models.IntegerField(verbose_name='Break Frequency', default=7)                          #frequency of breaks
     break_length = models.IntegerField(verbose_name='Break Length', default=100)                              #length of breaks in seconds
@@ -60,7 +61,7 @@ class ParameterSet(models.Model):
         status = "success"
 
         try:
-            self.period_count = new_ps.get("period_count")
+            self.number_of_periods_paid = new_ps.get("number_of_periods_paid", 4)
             self.period_length = new_ps.get("period_length")
             self.break_frequency = new_ps.get("break_frequency", 7)
             self.break_length = new_ps.get("break_length", 100)
@@ -84,6 +85,7 @@ class ParameterSet(models.Model):
             self.parameter_set_players.all().delete()
 
             new_parameter_set_players = new_ps.get("parameter_set_players")
+            new_parameter_set_players_map = {}
 
             for i in new_parameter_set_players:
                 p = main.models.ParameterSetPlayer.objects.create(parameter_set=self)
@@ -95,6 +97,8 @@ class ParameterSet(models.Model):
                 
                 p.save()
 
+                new_parameter_set_players_map[i] = p.id
+
             self.update_player_count()
 
             #parameter set periods
@@ -105,6 +109,12 @@ class ParameterSet(models.Model):
                 p = main.models.ParameterSetPeriod.objects.create(parameter_set=self)
                 v = new_parameter_set_periods[i]
                 p.from_dict(v)
+
+                for pair_id in p.pairs:
+                    pair = p.pairs[pair_id]
+                    pair[0] = new_parameter_set_players_map.get(str(pair[0]), pair[0])
+                    pair[1] = new_parameter_set_players_map.get(str(pair[1]), pair[1])
+                p.save()
 
             self.json_for_session = None
             self.save()
@@ -173,7 +183,7 @@ class ParameterSet(models.Model):
         '''
         self.json_for_session["id"] = self.id
                 
-        self.json_for_session["period_count"] = self.period_count
+        self.json_for_session["number_of_periods_paid"] = self.number_of_periods_paid
         self.json_for_session["period_length"] = self.period_length
         self.json_for_session["break_frequency"] = self.break_frequency
         self.json_for_session["break_length"] = self.break_length

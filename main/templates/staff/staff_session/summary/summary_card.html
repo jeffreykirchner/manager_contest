@@ -23,7 +23,7 @@
             </div>
             <div class="col text-start ps-1">
                 <span v-if="session.world_state.hasOwnProperty('started')">
-                    [[session.world_state.current_period]] of [[session.parameter_set.period_count]]    
+                    [[session.world_state.current_period]] of [[session.parameter_set.parameter_set_periods_order.length]]    
                 </span>
                 <span v-else>
                    ---

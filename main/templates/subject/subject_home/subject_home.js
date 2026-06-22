@@ -182,6 +182,9 @@ let app = Vue.createApp({
                 case "update_start_next_period":
                     app.take_update_start_next_period(message_data);
                     break;
+                case "update_end_game":
+                    app.take_update_end_game(message_data);
+                    break;
             }
 
             app.first_load_done = true;
@@ -336,6 +339,29 @@ let app = Vue.createApp({
         take_update_start_next_period: function take_update_start_next_period(message_data){
             app.working = false;
             app.session.world_state.current_period = message_data.current_period;
+        },
+
+        /**
+         * end game
+         */
+        take_update_end_game: function take_update_end_game(message_data){
+            let periods_paid = message_data.periods_paid;
+            let world_state = app.session.world_state;
+
+            for(let i in periods_paid)
+            {
+                world_state.session_periods[periods_paid[i]].paid = true;
+            }
+
+            for(let p in world_state.session_players)
+            {
+                let session_player = world_state.session_players[p];
+                session_player.earnings = message_data.session_players[p].earnings;
+            }
+
+            world_state.current_experiment_phase = message_data.current_experiment_phase;
+
+            app.show_end_game_modal();
         },
 
         /**

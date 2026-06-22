@@ -387,3 +387,20 @@ capitalize_first_letter: function capitalize_first_letter(string)
     if(!string) return "";
     return string.charAt(0).toUpperCase() + string.slice(1);
 },
+
+/**
+ * generate a random string of characters with a length between min_length and max_length
+ */
+random_string: function random_string(min_length, max_length){
+
+    let s = "";
+    let r = app.random_number(min_length, max_length);
+
+    for(let i=0;i<r;i++)
+    {
+        let v = app.random_number(48, 122);
+        s += String.fromCharCode(v);
+    }
+
+    return s;
+},

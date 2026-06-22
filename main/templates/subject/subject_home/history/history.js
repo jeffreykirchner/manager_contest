@@ -30,7 +30,7 @@ get_history: function get_history()
 
         if(group.phase != "Phase 1" && group.phase != "Phase 2")
         {
-            if(group.manager == group_id.player_1)
+            if(group.manager == group.player_1)
             {
                 manager_profit = parseFloat(group["player_1_earnings"]).toFixed(2);
                 non_manager_profit = parseFloat(group["player_2_earnings"]).toFixed(2);
