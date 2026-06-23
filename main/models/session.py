@@ -213,6 +213,10 @@ class Session(models.Model):
                 p["type_a_phase_1_units_player_1_prediction"] = None
                 p["type_a_phase_1_units_player_2_prediction"] = None
 
+                p["player_1_probability"] = None
+                p["player_2_probability"] = None
+                p["manager_draw"] = None
+
                 p["manager"] = None
                 p["worker"] = None
                 p["manager_offer"] = None

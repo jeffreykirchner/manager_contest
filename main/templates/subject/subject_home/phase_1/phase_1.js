@@ -46,6 +46,14 @@ take_submit_type_a_bid: function take_submit_type_a_bid(message_data)
         group.player_1_total_value = message_data.group.player_1_total_value;
         group.player_2_total_value = message_data.group.player_2_total_value;
         group.group_total_value = message_data.group.group_total_value;
+        group.player_1_probability = message_data.group.player_1_probability;
+        group.player_2_probability = message_data.group.player_2_probability;
+        group.manager_draw = message_data.group.manager_draw;
+
+        if(app.is_subject)
+        {
+            app.pixi_setup_pie_graph();
+        }
     }
 },
 

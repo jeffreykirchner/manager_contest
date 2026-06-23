@@ -20,6 +20,8 @@ document.addEventListener('contextmenu', event => event.preventDefault());
 
 let worker = null;
 
+{%include "subject/subject_home/phase_2_spin/pixi_globals.js"%}
+
 //vue app
 let app = Vue.createApp({
     delimiters: ["[[", "]]"],
@@ -89,6 +91,11 @@ let app = Vue.createApp({
                     type_a_bid_error : null,
                     manager_offer_to_worker : null,
                     manager_offer_to_worker_error : null,
+
+                    //spinner
+                    spinner_complete : false,
+                    spinning : true,
+                    spin_wait : 5,
                     
                 }},
     methods: {
@@ -242,6 +249,7 @@ let app = Vue.createApp({
 
             //start tick tock
             app.run_tick_tock();
+            app.setup_pixi();
 
         },
 
@@ -449,6 +457,8 @@ let app = Vue.createApp({
         {%include "subject/subject_home/phase_2_worker/phase_2_worker.js"%}
         {%include "subject/subject_home/history/history.js"%}
         {%include "subject/subject_home/helpers.js"%}
+        {%include "subject/subject_home/phase_2_spin/phase_2_spin.js"%}
+        {%include "subject/subject_home/phase_2_spin/pixi_setup.js"%}
 
 
         /** clear form error messages

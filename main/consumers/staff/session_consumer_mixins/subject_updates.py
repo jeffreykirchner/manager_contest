@@ -318,10 +318,15 @@ class SubjectUpdatesMixin():
             if player_1_bid is not None and player_2_bid is not None:   
                 start_phase_2 = True     
                 if player_1_bid == 0 and player_2_bid == 0:
-                    player_1_win = random.choice([True, False])
+                    player_1_win_probability = 0.5
                 else:
                     player_1_win_probability = player_1_bid / (player_1_bid + player_2_bid)
-                    player_1_win = random.random() < player_1_win_probability
+                    
+                group["player_1_probability"] = player_1_win_probability
+                group["player_2_probability"] = 1 - player_1_win_probability
+                group["manager_draw"] = random.random()
+
+                player_1_win = group["manager_draw"] < player_1_win_probability
                 
                 if player_1_win:
                     group["manager"] = group["player_1"]

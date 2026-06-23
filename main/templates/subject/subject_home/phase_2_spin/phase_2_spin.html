@@ -1,0 +1,40 @@
+<div class="card" v-show="first_load_done" id="phase_2_spin_card">                  
+    <div class="card-header fw-bold">                
+        <span class="align-middle">Phase 2: Spin for Manager</span>       
+            
+        <span class="float-end">
+            
+        </span>
+        
+    </div>
+    <div class="card-body"> 
+        <!-- units table -->
+        <div class="row justify-content-center fs-5" >
+            <div class="col">
+                 <!-- the pixi stage -->
+                <div class="row">
+                    <div class="col">           
+                        <canvas class="field" 
+                                key="sd_graph" 
+                                id="sd_graph_id" 
+                                style="border-style: solid;border-width: 1px;"
+                                oncontextmenu="return false;"></canvas>                
+                    </div>
+                </div>
+            </div>
+        </div>
+
+         <div class="row justify-content-center fw-bold mt-4">
+            <div class="col-auto text-center">                    
+                <button type="button"
+                        v-bind:class="tick_tock=='tick' ? 'btn btn-success btn-lg' : 'btn btn btn-outline-success btn-lg'"
+                        v-on:click = "ready_to_go_on()"
+                        title="Ready to go on."                       
+                        v-bind:disabled="reconnecting || working">
+                                            
+                    Ready to go on
+                </button>
+            </div>
+        </div>
+    </div>                    
+</div> 

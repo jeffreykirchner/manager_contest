@@ -28,7 +28,7 @@
     }
 
     .field {
-        height: 800px;
+        height: 600px;
         background-color: white; 
         width: 100%;
         max-width: 1850px;
@@ -84,11 +84,22 @@
                 </div>
             </div>  
 
+            <!-- phase 2 spin -->
+            <div class="row justify-content-lg-center" v-cloak 
+                 v-if="session.started && 
+                       get_current_group().phase == 'Phase 2' && 
+                       !spinner_complete">
+                <div class="col-md">
+                    {%include "subject/subject_home/phase_2_spin/phase_2_spin.html"%}
+                </div>
+            </div>
+
             <!-- phase 2 manager -->
             <div class="row justify-content-lg-center" v-cloak 
                 v-if="session.started && 
                     (get_current_group().phase == 'Phase 2' || get_current_group().phase == 'Review') && 
-                    get_role() == 'manager'">
+                    get_role() == 'manager' &&
+                    spinner_complete">
                 <div class="col-md">
                     {%include "subject/subject_home/phase_2_manager/phase_2_manager_card.html"%}
                 </div>
@@ -98,7 +109,8 @@
             <div class="row justify-content-lg-center" v-cloak 
                 v-if="session.started && 
                     (get_current_group().phase == 'Phase 2' || get_current_group().phase == 'Review') && 
-                    get_role() == 'worker'">
+                    get_role() == 'worker' &&
+                    spinner_complete">
                 <div class="col-md">
                     {%include "subject/subject_home/phase_2_worker/phase_2_worker_card.html"%}
                 </div>
