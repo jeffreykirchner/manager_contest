@@ -59,6 +59,8 @@ get_manager_probability: function get_manager_probability()
     
     if(app.type_a_bid == null) return "---";
     if(app.type_a_bid_counterpart == null) return "---";
+
+    if(app.type_a_bid == 0 && app.type_a_bid_counterpart == 0) return "50%";
     
     let win_probability = app.type_a_bid / (app.type_a_bid + app.type_a_bid_counterpart);
     

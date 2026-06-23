@@ -132,9 +132,14 @@
         <div v-if="get_current_group().phase == 'Phase 2'">
             <!-- offer form -->
             <div v-show="get_current_group().manager_offer == null">
-                <div class="row justify-content-center fw-bold fs-5 mt-4">
+                <div class="row justify-content-center mt-4">
                     <div class="col-auto text-center" id="div_id_type_a_bid">
-                        Your purchase offer($) to your counterpart for their remaining type A and type B units.
+                        <div class="fw-bold fs-5">
+                            Your purchase offer($) to your counterpart for their remaining type A and type B units.
+                        </div>
+                        <div class="fw-normal fs-5">
+                            Counterpart's potential profit if they reject your offer and work alone: $[[get_counterpart_profit_if_working_alone()]]
+                        </div>
                     </div>
                 </div>
                 <div class="row justify-content-center fw-bold mt-2">                
@@ -150,9 +155,14 @@
                     </div>
                 </div>
 
-                <div class="row justify-content-center fw-bold fs-5 mt-2">
+                <div class="row justify-content-center  mt-2">
                     <div class="col-auto text-center" id="div_id_type_a_bid">
-                        You keep [[get_manager_share_if_worker_accepts_offers_string()]] if your counterpart accepts your offer and you work together.
+                        <div class="fw-bold fs-5">
+                            You keep [[get_manager_share_if_worker_accepts_offers_string()]] if your counterpart accepts your offer and you work together.
+                        </div>
+                        <div class="fw-normal fs-5">
+                            My potential profit if I work alone: $[[get_my_profit_if_working_alone()]].
+                        </div>
                     </div>
                 </div>
                 
