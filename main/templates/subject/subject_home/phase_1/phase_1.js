@@ -50,9 +50,11 @@ take_submit_type_a_bid: function take_submit_type_a_bid(message_data)
         group.player_2_probability = message_data.group.player_2_probability;
         group.manager_draw = message_data.group.manager_draw;
 
-        if(app.is_subject)
+        if(app.is_subject && group.phase == "Phase 2")
         {
             app.pixi_setup_pie_graph();
+            app.spinner_complete = false;
+            app.spinning = true;
         }
     }
 },

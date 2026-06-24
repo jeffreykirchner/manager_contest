@@ -157,7 +157,14 @@ do_test_mode_phase_2: function do_test_mode_phase_2()
     let group = app.get_current_group();
     let role = app.get_role();
 
-    if(role == "manager")
+    if(!app.spinner_complete)
+    {
+        if(!app.spinning)
+        {
+            app.spin_ready_to_go_on();
+        }
+    }
+    else if(role == "manager")
     {
         if(group.manager_offer == null)
         {

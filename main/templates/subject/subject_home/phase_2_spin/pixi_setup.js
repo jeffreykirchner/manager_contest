@@ -17,7 +17,7 @@ reset_pixi_app: async function reset_pixi_app(){
     await pixi_app.init({resizeTo : canvas,
                          backgroundColor : 0xFFFFFF,
                          autoResize: true,
-                         antialias: false,
+                         antialias: true,
                          resolution: 1,
                          canvas: canvas });
 
@@ -83,8 +83,11 @@ pixi_setup_pie_graph: function pixi_setup_pie_graph()
     let counterpart_player_number = 3 - my_player_number;
     
     //two part pie graph of group.player_1_probability and group.player_2_probability
-    let player_1_probability = group["player_" + my_player_number + "_probability"];
-    let player_2_probability = group["player_" + counterpart_player_number + "_probability"];
+    let player_1_probability = group["player_1_probability"];
+    let player_2_probability = group["player_2_probability"];
+
+    let my_probability = group["player_" + my_player_number + "_probability"];
+    let counterpart_probability = group["player_" + counterpart_player_number + "_probability"];
 
     if(player_1_probability == null || player_2_probability == null)
     {
@@ -110,7 +113,14 @@ pixi_setup_pie_graph: function pixi_setup_pie_graph()
 
     let pie_graph_player_1 = new PIXI.Graphics();
     pie_graph_player_1.stroke({width: 2, color: "dimgray", alignment: 0.5});
-    pie_graph_player_1.beginFill("cornflowerblue");
+    if(my_player_number === 1)
+    {
+        pie_graph_player_1.beginFill("cornflowerblue");
+    }
+    else
+    {
+        pie_graph_player_1.beginFill("crimson");
+    }
     pie_graph_player_1.moveTo(0, 0);
     pie_graph_player_1.arc(0, 0, 250, starting_angle, starting_angle + player_1_angle);
     pie_graph_player_1.lineTo(0, 0);
@@ -118,7 +128,14 @@ pixi_setup_pie_graph: function pixi_setup_pie_graph()
 
     let pie_graph_player_2 = new PIXI.Graphics();
     pie_graph_player_2.stroke({width: 2, color: "dimgray", alignment: 0.5});
-    pie_graph_player_2.beginFill("crimson");
+    if(my_player_number === 2)
+    {
+        pie_graph_player_2.beginFill("cornflowerblue");
+    }
+    else
+    {
+        pie_graph_player_2.beginFill("crimson");
+    }
     pie_graph_player_2.moveTo(0, 0);
     pie_graph_player_2.arc(0, 0, 250, starting_angle + player_1_angle, starting_angle + player_1_angle + player_2_angle);
     pie_graph_player_2.lineTo(0, 0);
@@ -140,8 +157,8 @@ pixi_setup_pie_graph: function pixi_setup_pie_graph()
         fill: {color:'crimson'},
     };
 
-    let player_1_text = "My Probability: " + (player_1_probability * 100).toFixed(1) + "%";
-    let player_2_text = "Counterpart Probability: " + (player_2_probability * 100).toFixed(1) + "%";
+    let player_1_text = "My Probability: " + (my_probability * 100).toFixed(1) + "%";
+    let player_2_text = "Counterpart Probability: " + (counterpart_probability * 100).toFixed(1) + "%";
 
     let player_1_label = new PIXI.Text(player_1_text, text_style_1);
     let player_2_label = new PIXI.Text(player_2_text, text_style_2);
@@ -158,8 +175,12 @@ pixi_setup_pie_graph: function pixi_setup_pie_graph()
     
     let spinner_arrow_shaft = new PIXI.Graphics();   
     spinner_arrow_shaft.rect(-2, -250, 4, 350);
-    spinner_arrow_shaft.fill('black'); 
-    spinner_arrow_shaft.stroke({width: 2, color: "dimgray", alignment:0, join: "bevel"});
+    spinner_arrow_shaft.fill({color:'black'}); 
+    spinner_arrow_shaft.stroke({width: 2, 
+                                color: "dimgray", 
+                                pixelLine: true,
+                                alignment: 0, 
+                                join: "bevel"});
 
     arrow_container.addChild(spinner_arrow_shaft);
 
@@ -219,9 +240,43 @@ game_loop: function game_loop(delta)
             app.pixi_tick_tock.value = "tick";
     }
 
-    if(pixi_pie_graph.arrow)
+    if(pixi_pie_graph.arrow && app.spinning)
     {
         //rotate arrow clockwise about its center point
-        pixi_pie_graph.arrow.rotation += 0.15;
+
+        if(app.spinning)
+        {
+
+            //if pixi_pie_graph.arrow.rotation > 4 * Math.PI, start slowing down the rotation until it reaches 4 * Math.PI + (2 * Math.PI * group.manager_draw)
+
+            let rotation_rate = 0.15;
+            let group = app.get_current_group();
+            let max_rotation = 4 * Math.PI + (2 * Math.PI * group.manager_draw);
+            
+            if(pixi_pie_graph.arrow.rotation > 4 * Math.PI)
+            {
+                let remaining_rotation = max_rotation - pixi_pie_graph.arrow.rotation;
+
+                if(remaining_rotation < 0.1)
+                {
+                    rotation_rate = 0.01;
+                }
+                else if(remaining_rotation < 1)
+                {
+                    rotation_rate = 0.05;
+                }
+            }
+
+            pixi_pie_graph.arrow.rotation += rotation_rate;
+
+            
+
+            if(pixi_pie_graph.arrow.rotation > max_rotation)
+            {
+                app.spinning = false;
+                // app.spinner_complete = true;
+                pixi_pie_graph.arrow.rotation = max_rotation;
+            }
+        }
     }
 },

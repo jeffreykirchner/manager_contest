@@ -86,10 +86,10 @@
 
             <!-- phase 2 spin -->
             <div class="row justify-content-lg-center" v-cloak 
-                 v-if="session.started && 
+                 v-show="session.started && 
                        get_current_group().phase == 'Phase 2' && 
                        !spinner_complete">
-                <div class="col-md">
+                <div class="col-6">
                     {%include "subject/subject_home/phase_2_spin/phase_2_spin.html"%}
                 </div>
             </div>
@@ -116,7 +116,7 @@
                 </div>
             </div> 
         </div>
-        <div class="col-md-auto" v-if="session.started">
+        <div class="col-md-auto" v-if="session.started && spinner_complete">
             {%include "subject/subject_home/history/history_card.html"%}
         </div>
     </div>
