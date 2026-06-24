@@ -174,9 +174,6 @@ class Session(models.Model):
                             "session_players_order":[],
                             "current_period":1,
                             "current_experiment_phase":ExperimentPhase.INSTRUCTIONS if self.parameter_set.show_instructions else ExperimentPhase.RUN,
-                            "time_remaining":self.parameter_set.period_length,
-                            "timer_running":False,
-                            "timer_history":[],
                             "started":True,
                             "finished":False,
                             "session_periods":{str(i.id) : i.json() for i in self.session_periods.all()},
@@ -262,9 +259,6 @@ class Session(models.Model):
         reset the experiment
         '''
         self.started = False
-
-        #self.time_remaining = self.parameter_set.period_length
-        #self.timer_running = False
         self.world_state ={}
         self.save()
 

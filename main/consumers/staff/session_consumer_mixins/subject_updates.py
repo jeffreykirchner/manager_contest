@@ -89,7 +89,6 @@ class SubjectUpdatesMixin():
                                                     session_player_id=result["sender_id"],
                                                     type="chat",
                                                     period_number=self.world_state_local["current_period"],
-                                                    time_remaining=self.world_state_local["time_remaining"],
                                                     data=result))
             
             target_list = self.world_state_local["session_players_order"]
@@ -218,7 +217,6 @@ class SubjectUpdatesMixin():
                                     session_player_id=player_id,
                                     type="clear_chat_gpt_history",
                                     period_number=self.world_state_local["current_period"],
-                                    time_remaining=self.world_state_local["time_remaining"],
                                     data=event_data,))
     
     async def show_help_doc(self, event):
@@ -240,7 +238,6 @@ class SubjectUpdatesMixin():
                                                     session_player_id=player_id,
                                                     type=event['type'],
                                                     period_number=world_state["current_period"],
-                                                    time_remaining=world_state["time_remaining"],
                                                     data=result))
 
         # logger.info(f"show_help_doc: player {player_id} requested help doc {event_data['help_doc']}")
@@ -355,7 +352,6 @@ class SubjectUpdatesMixin():
                                                         session_player_id=player_id,
                                                         type=event['type'],
                                                         period_number=world_state["current_period"],
-                                                        time_remaining=world_state["time_remaining"],
                                                         data=result))
             await SessionEvent.objects.abulk_create(self.session_events, ignore_conflicts=True)
             self.session_events = []
@@ -427,7 +423,6 @@ class SubjectUpdatesMixin():
                                                         session_player_id=player_id,
                                                         type=event['type'],
                                                         period_number=world_state["current_period"],
-                                                        time_remaining=world_state["time_remaining"],
                                                         data=result))
             await SessionEvent.objects.abulk_create(self.session_events, ignore_conflicts=True)
             self.session_events = []
@@ -504,7 +499,6 @@ class SubjectUpdatesMixin():
                                                         session_player_id=player_id,
                                                         type=event['type'],
                                                         period_number=world_state["current_period"],
-                                                        time_remaining=world_state["time_remaining"],
                                                         data=result))
             await SessionEvent.objects.abulk_create(self.session_events, ignore_conflicts=True)
             self.session_events = []
@@ -562,7 +556,6 @@ class SubjectUpdatesMixin():
                                                     session_player_id=player_id,
                                                     type=event['type'],
                                                     period_number=world_state["current_period"],
-                                                    time_remaining=world_state["time_remaining"],
                                                     data=result))
         await SessionEvent.objects.abulk_create(self.session_events, ignore_conflicts=True)
         self.session_events = []
@@ -584,7 +577,6 @@ class SubjectUpdatesMixin():
                                                     session_player_id=player_id,
                                                     type="start_next_period",
                                                     period_number=world_state["current_period"],
-                                                    time_remaining=world_state["time_remaining"],
                                                     data=result))
                 await SessionEvent.objects.abulk_create(self.session_events, ignore_conflicts=True)
                 self.session_events = []

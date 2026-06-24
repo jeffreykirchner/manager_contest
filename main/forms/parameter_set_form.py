@@ -20,24 +20,6 @@ class ParameterSetForm(forms.ModelForm):
                                                 widget=forms.NumberInput(attrs={"v-model":"parameter_set.number_of_periods_paid",
                                                                                 "step":"1",
                                                                                 "min":"0"}))
-
-    period_length = forms.IntegerField(label='Period Length (seconds)',
-                                       min_value=1,
-                                       widget=forms.NumberInput(attrs={"v-model":"parameter_set.period_length",
-                                                                       "step":"1",
-                                                                       "min":"1"}))
-    
-    break_frequency = forms.IntegerField(label='Break Frequency (periods)',
-                                         min_value=1,
-                                         widget=forms.NumberInput(attrs={"v-model":"parameter_set.break_frequency",
-                                                                         "step":"1",
-                                                                         "min":"1"}))
-    
-    break_length = forms.IntegerField(label='Break Length (seconds)',
-                                      min_value=1,
-                                      widget=forms.NumberInput(attrs={"v-model":"parameter_set.break_length",
-                                                                      "step":"1",
-                                                                      "min":"1"}))
     
     chat_gpt_mode = forms.ChoiceField(label='ChatGPT Mode',
                                       choices=ChatGPTMode.choices,
@@ -80,7 +62,7 @@ class ParameterSetForm(forms.ModelForm):
 
     class Meta:
         model=ParameterSet
-        fields =['number_of_periods_paid', 'period_length', 'break_frequency', 'break_length',
+        fields =['number_of_periods_paid',
                  'chat_gpt_mode', 'enable_chat', 'show_instructions', 
                  'survey_required', 'survey_link', 'prolific_mode', 'prolific_completion_link', 'reconnection_limit',
                   'test_mode']
