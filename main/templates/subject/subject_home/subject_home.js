@@ -332,6 +332,9 @@ let app = Vue.createApp({
 
             app.end_game_modal.hide();        
             app.help_modal.hide();
+
+            app.spinner_complete = true;
+            app.spinning = false;
         },
 
         /** update start next period status
@@ -353,6 +356,23 @@ let app = Vue.createApp({
         take_update_end_game: function take_update_end_game(message_data){
             let periods_paid = message_data.periods_paid;
             let world_state = app.session.world_state;
+            let source_player_id = message_data.source_player_id;
+
+            if(source_player_id == app.session.player_id)
+            {
+                app.working = false;
+                let player_number = app.get_player_number();
+                let group = app.get_current_group();
+
+                if(player_number == 1)
+                {
+                    group.player_1_review_complete = true;
+                }
+                else
+                {
+                    group.player_2_review_complete = true;
+                }
+            }
 
             for(let i in periods_paid)
             {

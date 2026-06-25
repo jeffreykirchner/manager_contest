@@ -614,6 +614,7 @@ class SubjectUpdatesMixin():
                 await self.store_world_state(force_store=True)
 
                 result = {"periods_paid": periods_paid,
+                          "session_player_id" : player_id,
                           "session_players": self.world_state_local["session_players"],
                           "current_experiment_phase": self.world_state_local["current_experiment_phase"]}
 
