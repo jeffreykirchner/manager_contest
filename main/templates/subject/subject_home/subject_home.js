@@ -57,9 +57,6 @@ let app = Vue.createApp({
                     //last time screen was tapped
                     last_subject_pointer_tap : Date.now(),
 
-                    //forms
-                    interaction_form : {direction:null, amount:null},
-
                     //tick tock
                     tick_tock : "tick",
                     tick_tock_interval : 300,
@@ -68,12 +65,7 @@ let app = Vue.createApp({
                     test_mode_location_target : null,
 
                     //errors
-                    interaction_start_error: null,
-                    interaction_error: null,
                     chat_gpt_error: null,
-
-                    //open modals
-                    interaction_start_modal_open : false,
 
                     //chat gpt
                     chat_gpt_text : "",
@@ -93,9 +85,10 @@ let app = Vue.createApp({
                     manager_offer_to_worker_error : null,
 
                     //spinner
-                    spinner_complete : false,
-                    spinning : true,
+                    spinner_complete : true,
+                    spinning : false,
                     spin_wait : 5,
+                    spinner_setup_complete : false,
                     
                 }},
     methods: {
@@ -347,6 +340,11 @@ let app = Vue.createApp({
         take_update_start_next_period: function take_update_start_next_period(message_data){
             app.working = false;
             app.session.world_state.current_period = message_data.current_period;
+            app.type_a_bid = null;
+            app.type_a_bid_counterpart = null;
+            app.type_a_bid_error = null;
+            app.manager_offer_to_worker = null;
+            app.manager_offer_to_worker_error = null;
         },
 
         /**

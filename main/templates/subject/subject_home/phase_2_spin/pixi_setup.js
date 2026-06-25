@@ -30,6 +30,7 @@ reset_pixi_app: async function reset_pixi_app(){
     app.last_collision_check = Date.now();
 
     app.setup_pixi_sheets();
+    app.spinner_setup_complete = true;
 },
 
 /** load pixi sprite sheets
