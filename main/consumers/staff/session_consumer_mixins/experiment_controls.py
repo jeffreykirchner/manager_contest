@@ -189,6 +189,8 @@ def take_start_experiment(session_id, data):
 
     if value=="success" and not session.started:
         session.start_experiment()
+    
+    session = Session.objects.get(id=session_id)
 
     return {"value" : value, 
             "message" : message,

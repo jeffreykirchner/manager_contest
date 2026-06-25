@@ -116,10 +116,6 @@ class Session(models.Model):
         '''
         setup and start experiment
         '''
-
-        self.started = True
-        self.start_date = datetime.now()
-        
         session_periods = []
 
         for i in range(self.parameter_set.parameter_set_periods.count()):
@@ -127,13 +123,15 @@ class Session(models.Model):
         
         main.models.SessionPeriod.objects.bulk_create(session_periods)
 
-        self.save()
-
         for i in self.session_players.all():
             i.start()
 
         self.setup_world_state()
         self.setup_summary_data()
+
+        self.started = True
+        self.start_date = datetime.now()
+        self.save()
 
     def setup_summary_data(self):
         '''

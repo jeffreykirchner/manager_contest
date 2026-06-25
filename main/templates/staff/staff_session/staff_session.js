@@ -315,7 +315,7 @@ let app = Vue.createApp({
             {
                 app.move_to_next_phase_text = '** Session complete **';
             }
-            else if( app.session.world_state.current_experiment_phase == "Names")
+            else if(app.session.world_state.current_experiment_phase == "Names")
             {
                 app.move_to_next_phase_text = 'Complete Session <i class="fas fa-flag-checkered"></i>';
             }
@@ -374,6 +374,7 @@ let app = Vue.createApp({
             }
 
             world_state.current_experiment_phase = message_data.current_experiment_phase;
+            app.update_phase_button_text();
         },
        
         //do nothing on when enter pressed for post

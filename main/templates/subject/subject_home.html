@@ -85,7 +85,7 @@
         </div>
     </div>
 
-    <div class="row">
+    <div class="row" v-show="session.world_state.current_experiment_phase != 'Done'">
         <div class="col-md">
             <!-- phase 1 -->
             <div class="row justify-content-lg-center" v-cloak 
