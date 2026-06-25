@@ -249,7 +249,7 @@ get_total_player_value_string: function get_total_player_value_string(player_num
     {
         return `<span class="fs-4">$${value_from_work_total.toFixed(2)}</span>
                 <br>
-                (${units_for_work}AB x $${work_payout.toFixed(2)} + ${unused_a_units}A x $0.00 + ${unused_b_units}B x $${outside_option_payout.toFixed(2)})`;
+                (${unused_a_units}A x $0.00 + ${unused_b_units}B x $${outside_option_payout.toFixed(2)} + ${units_for_work}AB x $${work_payout.toFixed(2)})`;
     }
     else
     {
@@ -332,7 +332,7 @@ get_total_value_value_string : function get_total_value_value_string()
     {
         return `<span class="fs-4">$${value_from_work_total.toFixed(2)}</span>
                 <br>
-                (${units_for_work}AB x $${work_payout.toFixed(2)} + ${unused_a_units}A x $0.00 + ${unused_b_units}B x $${outside_option_payout.toFixed(2)})`;
+                (${unused_a_units}A x $0.00 + ${unused_b_units}B x $${outside_option_payout.toFixed(2)} + ${units_for_work}AB x $${work_payout.toFixed(2)})`;
     }
     else
     {
@@ -354,6 +354,22 @@ get_my_profit_if_working_alone: function get_my_profit_if_working_alone()
     let player_number = app.get_player_number();
 
     return group["player_" + player_number + "_total_value"];
+},
+
+/**
+ * get conterpart profit if they work alone
+ */
+get_counterpart_profit_if_working_alone: function get_counterpart_profit_if_working_alone()
+{
+    if(!app.session) return "---";
+    if(!app.session.started) return "---";
+    
+    let group = app.get_current_group();
+    let player_number = app.get_player_number();
+
+    let counterpart_player_number = player_number == 1 ? 2 : 1;
+
+    return group["player_" + counterpart_player_number + "_total_value"];
 },
 
 /**

@@ -20,6 +20,8 @@ document.addEventListener('contextmenu', event => event.preventDefault());
 
 let worker = null;
 
+{%include "subject/subject_home/phase_2_spin/pixi_globals.js"%}
+
 //vue app
 let app = Vue.createApp({
     delimiters: ["[[", "]]"],
@@ -55,9 +57,6 @@ let app = Vue.createApp({
                     //last time screen was tapped
                     last_subject_pointer_tap : Date.now(),
 
-                    //forms
-                    interaction_form : {direction:null, amount:null},
-
                     //tick tock
                     tick_tock : "tick",
                     tick_tock_interval : 300,
@@ -66,12 +65,7 @@ let app = Vue.createApp({
                     test_mode_location_target : null,
 
                     //errors
-                    interaction_start_error: null,
-                    interaction_error: null,
                     chat_gpt_error: null,
-
-                    //open modals
-                    interaction_start_modal_open : false,
 
                     //chat gpt
                     chat_gpt_text : "",
@@ -89,6 +83,12 @@ let app = Vue.createApp({
                     type_a_bid_error : null,
                     manager_offer_to_worker : null,
                     manager_offer_to_worker_error : null,
+
+                    //spinner
+                    spinner_complete : true,
+                    spinning : false,
+                    spin_wait : 5,
+                    spinner_setup_complete : false,
                     
                 }},
     methods: {
@@ -242,6 +242,7 @@ let app = Vue.createApp({
 
             //start tick tock
             app.run_tick_tock();
+            app.setup_pixi();
 
         },
 
@@ -339,6 +340,11 @@ let app = Vue.createApp({
         take_update_start_next_period: function take_update_start_next_period(message_data){
             app.working = false;
             app.session.world_state.current_period = message_data.current_period;
+            app.type_a_bid = null;
+            app.type_a_bid_counterpart = null;
+            app.type_a_bid_error = null;
+            app.manager_offer_to_worker = null;
+            app.manager_offer_to_worker_error = null;
         },
 
         /**
@@ -449,6 +455,8 @@ let app = Vue.createApp({
         {%include "subject/subject_home/phase_2_worker/phase_2_worker.js"%}
         {%include "subject/subject_home/history/history.js"%}
         {%include "subject/subject_home/helpers.js"%}
+        {%include "subject/subject_home/phase_2_spin/phase_2_spin.js"%}
+        {%include "subject/subject_home/phase_2_spin/pixi_setup.js"%}
 
 
         /** clear form error messages
@@ -494,25 +502,6 @@ let app = Vue.createApp({
             else
             {
                 app.tick_tock = "tick";
-            }
-
-            //if one second has passed, decrease time remaining by one second
-            if(app.timer_running)
-            {
-                let now = Date.now();
-                if(app.timer_last_pulse && (now - app.timer_last_pulse) >= 1000)
-                {
-                    app.timer_last_pulse = now;
-                    if(app.time_remaining > 0)
-                    {
-                        app.time_remaining -= 1;
-                    }
-                    else
-                    {
-                        app.timer_running = false;
-                        app.timer_expired();
-                    }
-                }
             }
 
             setTimeout(app.run_tick_tock, app.tick_tock_interval);

@@ -28,7 +28,7 @@
     }
 
     .field {
-        height: 800px;
+        height: 600px;
         background-color: white; 
         width: 100%;
         max-width: 1850px;
@@ -74,6 +74,17 @@
         </div>
     </div>
 
+     <!-- phase 2 spin -->
+    <div class="row justify-content-lg-center"
+            v-show="(session.started && 
+                get_current_group().phase == 'Phase 2' && 
+                !spinner_complete) ||
+                !spinner_setup_complete">
+        <div class="col-6">
+            {%include "subject/subject_home/phase_2_spin/phase_2_spin.html"%}
+        </div>
+    </div>
+
     <div class="row">
         <div class="col-md">
             <!-- phase 1 -->
@@ -88,7 +99,8 @@
             <div class="row justify-content-lg-center" v-cloak 
                 v-if="session.started && 
                     (get_current_group().phase == 'Phase 2' || get_current_group().phase == 'Review') && 
-                    get_role() == 'manager'">
+                    get_role() == 'manager' &&
+                    spinner_complete">
                 <div class="col-md">
                     {%include "subject/subject_home/phase_2_manager/phase_2_manager_card.html"%}
                 </div>
@@ -98,13 +110,14 @@
             <div class="row justify-content-lg-center" v-cloak 
                 v-if="session.started && 
                     (get_current_group().phase == 'Phase 2' || get_current_group().phase == 'Review') && 
-                    get_role() == 'worker'">
+                    get_role() == 'worker' &&
+                    spinner_complete">
                 <div class="col-md">
                     {%include "subject/subject_home/phase_2_worker/phase_2_worker_card.html"%}
                 </div>
             </div> 
         </div>
-        <div class="col-md-auto" v-if="session.started">
+        <div class="col-md-auto" v-if="session.started && spinner_complete" v-cloak>
             {%include "subject/subject_home/history/history_card.html"%}
         </div>
     </div>

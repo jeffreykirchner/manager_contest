@@ -20,10 +20,7 @@ class ParameterSet(models.Model):
     '''    
 
     number_of_periods_paid = models.IntegerField(verbose_name='Number of periods paid', default=4)
-    period_length = models.IntegerField(verbose_name='Period Length, Production', default=60           )      #period length in seconds
-    break_frequency = models.IntegerField(verbose_name='Break Frequency', default=7)                          #frequency of breaks
-    break_length = models.IntegerField(verbose_name='Break Length', default=100)                              #length of breaks in seconds
-
+    
     chat_gpt_mode = models.CharField(max_length=20, choices=ChatGPTMode.choices, default=ChatGPTMode.OFF, verbose_name='ChatGPT Mode')
     enable_chat = models.BooleanField(default=True, verbose_name='Enable Chat')
 
@@ -62,9 +59,6 @@ class ParameterSet(models.Model):
 
         try:
             self.number_of_periods_paid = new_ps.get("number_of_periods_paid", 4)
-            self.period_length = new_ps.get("period_length")
-            self.break_frequency = new_ps.get("break_frequency", 7)
-            self.break_length = new_ps.get("break_length", 100)
 
             self.chat_gpt_mode = new_ps.get("chat_gpt_mode", ChatGPTMode.OFF)
             self.enable_chat = True if new_ps.get("enable_chat", True) else False
@@ -184,9 +178,6 @@ class ParameterSet(models.Model):
         self.json_for_session["id"] = self.id
                 
         self.json_for_session["number_of_periods_paid"] = self.number_of_periods_paid
-        self.json_for_session["period_length"] = self.period_length
-        self.json_for_session["break_frequency"] = self.break_frequency
-        self.json_for_session["break_length"] = self.break_length
         self.json_for_session["chat_gpt_mode"] = self.chat_gpt_mode
         self.json_for_session["enable_chat"] = 1 if self.enable_chat else 0
 

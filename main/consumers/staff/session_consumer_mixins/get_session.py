@@ -28,14 +28,9 @@ class GetSessionMixin():
         self.world_state_local = result["world_state"]
         self.session_players_local = {}
         
-        if self.controlling_channel == self.channel_name and result["started"]:
-            if "timer_history" in self.world_state_local:
-                self.world_state_local["timer_history"].append({"time": datetime.now().strftime("%Y-%m-%dT%H:%M:%S.%f"),
-                                                                "count": 0})
-                await self.store_world_state(force_store=True)   
-            else:         
-                result["started"] = False
-                await Session.objects.filter(id=self.session_id).aupdate(started=False)
+        if self.controlling_channel == self.channel_name and result["started"]:           
+            result["started"] = False
+            await Session.objects.filter(id=self.session_id).aupdate(started=False)
 
         for p in result["session_players"]:
             session_player = result["session_players"][p]

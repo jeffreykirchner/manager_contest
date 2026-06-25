@@ -46,6 +46,16 @@ take_submit_type_a_bid: function take_submit_type_a_bid(message_data)
         group.player_1_total_value = message_data.group.player_1_total_value;
         group.player_2_total_value = message_data.group.player_2_total_value;
         group.group_total_value = message_data.group.group_total_value;
+        group.player_1_probability = message_data.group.player_1_probability;
+        group.player_2_probability = message_data.group.player_2_probability;
+        group.manager_draw = message_data.group.manager_draw;
+
+        if(app.is_subject && group.phase == "Phase 2")
+        {
+            app.pixi_setup_pie_graph();
+            app.spinner_complete = false;
+            app.spinning = true;
+        }
     }
 },
 
@@ -59,6 +69,8 @@ get_manager_probability: function get_manager_probability()
     
     if(app.type_a_bid == null) return "---";
     if(app.type_a_bid_counterpart == null) return "---";
+
+    if(app.type_a_bid == 0 && app.type_a_bid_counterpart == 0) return "50%";
     
     let win_probability = app.type_a_bid / (app.type_a_bid + app.type_a_bid_counterpart);
     
