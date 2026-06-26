@@ -33,7 +33,7 @@
                     <span class="fs-3 mt-4" v-else>
                         Bonus Earnings: 
                     </span>
-                    <span class="fs-3 mt-4" v-if="session.started">$[[(Math.ceil(Number(session.world_state.session_players[session_player.id].earnings))).toFixed(2)]]</span>
+                    <span class="fs-3 mt-4" v-if="session.started">$[[(Number(session.world_state.session_players[session_player.id].earnings)).toFixed(2)]]</span>
                 </div>
 
                 <div class="text-center mt-2 fs-5" v-if="session.started && (session_player.name_submitted || session.parameter_set.prolific_mode)">

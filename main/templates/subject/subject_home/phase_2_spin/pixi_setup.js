@@ -69,6 +69,8 @@ setup_pixi_sheets: function setup_pixi_sheets(){
  */
 pixi_setup_pie_graph: function pixi_setup_pie_graph()
 {
+    if(!app.session.started) return;
+    
     if(pixi_pie_graph.container != null)
     {
         pixi_container_main.removeChild(pixi_pie_graph.container);
