@@ -307,12 +307,14 @@ let app = Vue.createApp({
             {
                 Vue.nextTick(() => {
                     app.do_first_load();
+                    app.update_graphs();
                 });
             }
             else
             {
                 Vue.nextTick(() => {
                     app.do_reload();
+                    app.update_graphs();
                 });
             }
         },
@@ -348,6 +350,31 @@ let app = Vue.createApp({
             app.type_a_bid_error = null;
             app.manager_offer_to_worker = null;
             app.manager_offer_to_worker_error = null;
+        },
+
+        /**
+         * update graphs based on phase and role
+         */
+        update_graphs: function update_graphs()
+        {
+            if(!app.session) return;
+            
+            let world_state = app.session.world_state;
+            let group = app.get_current_group();
+
+            let player_number = app.get_player_number();
+            let total_player_value_string = app.get_total_player_value_string(player_number, "json");
+            let scale_max = 30;
+
+            if(group.phase == "Phase 1")
+            {
+                // Update graphs for Phase 1
+                app.draw_units_graph("phase_1_my_unit_graph", 
+                                      total_player_value_string.type_a_units,
+                                      total_player_value_string.type_b_units,
+                                      total_player_value_string.type_ab_units,
+                                      scale_max);
+            }
         },
 
         /**
