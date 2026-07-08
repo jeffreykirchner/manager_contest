@@ -1,0 +1,47 @@
+<div class="row justify-content-center mt-4 fs-5" >
+    <div class="col-6 text-center">
+
+        <!-- caption -->
+        <div class="row justify-content-center">
+            <div class="col text-center">
+                I work alone
+            </div>
+        </div>
+        
+        <!-- graph -->
+        <div class="row justify-content-center">
+            <div class="col-11 p-0">
+                <canvas id="phase_1_my_unit_graph" class="unit_graph" width="400" height="100"></canvas>
+            </div>
+        </div>
+
+        <!-- formula -->
+        <div class="row justify-content-center" >
+                <div class="col-11 text-center border rounded">
+                My profit: <span v-html="get_total_player_value_string(get_player_number())"></span>
+                </div>
+        </div>
+    </div>
+    <div class="col-6 text-center">
+        <!-- caption -->
+        <div class="row justify-content-center">
+            <div class="col text-center">
+                Counterpart works alone
+            </div>
+        </div>
+
+        <!-- graph -->
+        <div class="row justify-content-center">
+            <div class="col-11 p-0">
+                <canvas id="phase_1_counterpart_unit_graph" class="unit_graph" width="400" height="100"></canvas>
+            </div>
+        </div>
+
+        <!-- formula -->
+        <div class="row justify-content-center" >
+                <div class="col-11 text-center border rounded">
+                Counterpart's profit: <span v-html="get_total_player_value_string(get_player_number() == 1 ? 2 : 1)"></span>
+                </div>
+        </div>
+    </div>
+</div>

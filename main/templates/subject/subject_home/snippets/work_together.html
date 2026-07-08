@@ -1,0 +1,30 @@
+<div class="row justify-content-center mt-1" >
+    <div class="col-auto text-center fs-5">
+
+        <!-- caption -->
+        <div class="row justify-content-center">
+            <div class="col text-center">
+                Pool units and work together
+            </div>
+        </div>
+
+            <!-- graph -->
+        <div class="row justify-content-center">
+            <div class="col-10 p-0">
+                <canvas id="phase_1_group_unit_graph" class="unit_graph" width="400" height="100"></canvas>
+            </div>
+        </div>
+
+        <!-- formula -->
+        <div class="row justify-content-center" >
+                <div class="col-8 text-center border rounded">
+                Total profit: <span v-html="get_total_value_value_string()"></span>
+                </div>
+        </div>
+        <div class="row justify-content-center" >
+                <div class="col-auto text-center fs-6">
+                The manager proposes how to split the profits, the non-manager decides to work together or separately
+                </div>
+        </div>                
+    </div>
+</div>

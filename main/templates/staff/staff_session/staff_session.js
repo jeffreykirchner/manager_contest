@@ -45,8 +45,6 @@ let app = Vue.createApp({
                     csv_email_list : "",           //csv email list
                     csv_collaborators_list : "",   //csv collaborators list
 
-                    last_world_state_update : null,
-
                     //modals
                     edit_subject_modal : null,
                     edit_session_modal : null,

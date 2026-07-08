@@ -307,12 +307,14 @@ let app = Vue.createApp({
             {
                 Vue.nextTick(() => {
                     app.do_first_load();
+                    app.update_graphs();
                 });
             }
             else
             {
                 Vue.nextTick(() => {
                     app.do_reload();
+                    app.update_graphs();
                 });
             }
         },
@@ -348,6 +350,54 @@ let app = Vue.createApp({
             app.type_a_bid_error = null;
             app.manager_offer_to_worker = null;
             app.manager_offer_to_worker_error = null;
+            Vue.nextTick(() => {
+                app.update_graphs();
+            });
+        },
+
+        /**
+         * update graphs based on phase and role
+         */
+        update_graphs: function update_graphs()
+        {
+            if(!app.session) return;
+            
+            let world_state = app.session.world_state;
+            let group = app.get_current_group();
+
+            let player_number = app.get_player_number();
+            let parameter_set_period = app.get_current_parameter_set_period();
+            let total_player_value_string = app.get_total_player_value_string(player_number, "json");
+            let total_counterpart_value_string = app.get_total_player_value_string(3-player_number, "json");
+            let total_value_value_string = app.get_total_value_value_string("json");
+            let scale_max = 0;
+
+            if(scale_max < (parameter_set_period.type_a_units_player_1 + parameter_set_period.type_a_units_player_2)) scale_max = (parameter_set_period.type_a_units_player_1 + parameter_set_period.type_a_units_player_2);
+            if(scale_max < (parameter_set_period.type_b_units_player_1 + parameter_set_period.type_b_units_player_2)) scale_max = (parameter_set_period.type_b_units_player_1 + parameter_set_period.type_b_units_player_2);
+
+      
+            app.draw_units_graph("phase_1_my_unit_graph", 
+                                    total_player_value_string.type_a_units,
+                                    total_player_value_string.type_b_units,
+                                    total_player_value_string.type_ab_units,
+                                    scale_max);
+
+            app.draw_units_graph("phase_1_counterpart_unit_graph",
+                                    total_counterpart_value_string.type_a_units,
+                                    total_counterpart_value_string.type_b_units,
+                                    total_counterpart_value_string.type_ab_units,
+                                    scale_max);
+
+            let clear_canvas_only = false;     
+            if(total_value_value_string.type_ab_units == null) clear_canvas_only = true;  //if no type AB units, clear canvas only
+
+            app.draw_units_graph("phase_1_group_unit_graph",
+                                            total_value_value_string.type_a_units,
+                                            total_value_value_string.type_b_units,
+                                            total_value_value_string.type_ab_units,
+                                            scale_max,
+                                            clear_canvas_only);
+            
         },
 
         /**
