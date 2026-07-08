@@ -1,0 +1,28 @@
+<div class="row justify-content-center fs-5" >
+    <div class="col-4 text-center">
+        One Type A alone is worth 
+        <div class="row justify-content-center" >
+            <div class="col-6 text-center border rounded fs-4 pt-1 pb-1" style="color:crimson">
+                $0.00
+            </div>
+        </div>
+    </div>
+
+    <div class="col-4 text-center">
+        One Type B alone is worth 
+        <div class="row justify-content-center" >
+            <div class="col-6 text-center border rounded fs-4 pt-1 pb-1" style="color:cornflowerblue">
+                $[[get_current_parameter_set_period().outside_option_payout]]
+            </div>
+        </div>
+    </div>
+
+    <div class="col-4 text-center">
+        One Type AB is worth 
+        <div class="row justify-content-center" >
+            <div class="col-6 text-center border rounded fs-4 pt-1 pb-1" style="color:purple">
+                $[[get_current_parameter_set_period().work_payout]]
+            </div>
+        </div>
+    </div>
+</div>

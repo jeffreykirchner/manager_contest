@@ -201,7 +201,7 @@ get_total_player_value_string: function get_total_player_value_string(player_num
         place_holder = {
             "type_a_units": type_a_units,
             "type_b_units": type_b_units,
-            "type_ab_units": 0,
+            "type_ab_units": null,
         };
     }
 
@@ -280,13 +280,16 @@ get_total_player_value_string: function get_total_player_value_string(player_num
         {
             return `<span class="fs-4">$${value_from_work_total.toFixed(2)}</span>
                     <br>
-                    (${unused_a_units}A x $0.00 + ${unused_b_units}B x $${outside_option_payout.toFixed(2)} + ${units_for_work}AB x $${work_payout.toFixed(2)})`;
+                    (<span style="color:crimson">${unused_a_units}A x $0.00</span> + 
+                     <span style="color:cornflowerblue">${unused_b_units}B x $${outside_option_payout.toFixed(2)}</span> + 
+                     <span style="color:purple">${units_for_work}AB x $${work_payout.toFixed(2)}</span>)`;
         }
         else
         {
             return `<span class="fs-4">$${value_from_outside_option.toFixed(2)}</span>
                     <br>
-                ( ${unused_a_units}A x $0.00 + ${type_b_units}B * ${outside_option_payout.toFixed(2)})`;
+                    (<span style="color:crimson">${type_a_units}A x $0.00</span> + 
+                     <span style="color:cornflowerblue">${type_b_units}B * $${outside_option_payout.toFixed(2)}</span>)`;
         }
     }
 
@@ -299,17 +302,26 @@ get_total_player_value_string: function get_total_player_value_string(player_num
     unused type A units have no value.
     if the type B are more valuable as all outside option, then the total value is the total number of type B units multiplied by the outside option payout from the ParameterSetPeriod for the current period in the world state local.
  */
-get_total_value_value_string : function get_total_value_value_string()
+get_total_value_value_string : function get_total_value_value_string(format = "string")
 {
-    let place_holder = `<span class="fs-4">---</span><br>---`;
-
-    if(!app.session) return place_holder;
-    if(!app.session.started) return place_holder;
-
     let group = app.get_current_group();
 
     let type_a_units = group["type_a_units_player_1"] + group["type_a_units_player_2"];
     let type_b_units = group["type_b_units_player_1"] + group["type_b_units_player_2"];
+
+    let place_holder = `<span class="fs-4">---</span><br>---`;
+
+    if(format == "json")
+    {
+        place_holder = {
+            "type_a_units": type_a_units,
+            "type_b_units": type_b_units,
+            "type_ab_units": null,
+        };
+    }
+
+    if(!app.session) return place_holder;
+    if(!app.session.started) return place_holder;
 
     let parameter_set_period = app.get_current_parameter_set_period();
 
@@ -360,17 +372,42 @@ get_total_value_value_string : function get_total_value_value_string()
 
     let value_from_outside_option = parseFloat(type_b_units) * outside_option_payout;
 
-    if(value_from_work_total > value_from_outside_option)
+    if(format == "json")
     {
-        return `<span class="fs-4">$${value_from_work_total.toFixed(2)}</span>
-                <br>
-                (${unused_a_units}A x $0.00 + ${unused_b_units}B x $${outside_option_payout.toFixed(2)} + ${units_for_work}AB x $${work_payout.toFixed(2)})`;
+        if(value_from_work_total > value_from_outside_option)
+        {
+            return {
+                "type_a_units": unused_a_units,
+                "type_b_units": unused_b_units,
+                "type_ab_units": units_for_work,
+            };
+        }
+        else
+        {
+            return {
+                "type_a_units": unused_a_units,
+                "type_b_units": type_b_units,
+                "type_ab_units": 0,
+            };
+        }
     }
     else
     {
-        return `<span class="fs-4">$${value_from_outside_option.toFixed(2)}</span>
-                <br>
-                (${unused_a_units}A x $0.00 + ${type_b_units}Bs * ${outside_option_payout.toFixed(2)})`;
+        if(value_from_work_total > value_from_outside_option)
+        {
+            return `<span class="fs-4">$${value_from_work_total.toFixed(2)}</span>
+                    <br>
+                    (<span style="color:crimson">${unused_a_units}A x $0.00</span> + 
+                     <span style="color:cornflowerblue">${unused_b_units}B x $${outside_option_payout.toFixed(2)}</span> + 
+                     <span style="color:purple">${units_for_work}AB x $${work_payout.toFixed(2)})</span>`;
+        }
+        else
+        {
+            return `<span class="fs-4">$${value_from_outside_option.toFixed(2)}</span>
+                    <br>
+                    (<span style="color:crimson">${type_a_units}A x $0.00</span> + 
+                     <span style="color:cornflowerblue">${type_b_units}B x $${outside_option_payout.toFixed(2)}</span>)`;
+        }
     }
 },
 
