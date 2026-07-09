@@ -43,7 +43,35 @@ class InstructionSetForm(forms.ModelForm):
                                        widget=forms.NumberInput(attrs={"min":"1", 
                                                                        "v-model":"instruction_set.action_page_6",
                                                                        "placeholder" : "Page Number"}))
+    
+    ex1_type_a_units_player_1 = forms.IntegerField(label='Type A Units - Player 1',
+                                                  widget=forms.NumberInput(attrs={"min":"0",
+                                                                                  "v-model":"instruction_set.ex1_type_a_units_player_1"}))
+    
+    ex1_type_a_units_player_2 = forms.IntegerField(label='Type A Units - Player 2',
+                                                  widget=forms.NumberInput(attrs={"min":"0",
+                                                                                  "v-model":"instruction_set.ex1_type_a_units_player_2"}))
+    
+    ex1_type_b_units_player_1 = forms.IntegerField(label='Type B Units - Player 1',
+                                                  widget=forms.NumberInput(attrs={"min":"0",
+                                                                                  "v-model":"instruction_set.ex1_type_b_units_player_1"}))  
+    
+    ex1_type_b_units_player_2 = forms.IntegerField(label='Type B Units - Player 2',
+                                                  widget=forms.NumberInput(attrs={"min":"0",
+                                                                                  "v-model":"instruction_set.ex1_type_b_units_player_2"}))
+    
+    ex1_work_payout = forms.DecimalField(label='Work Payout', max_digits=10, decimal_places=2,
+                                        widget=forms.NumberInput(attrs={"min":"0", 
+                                                                        "step":"0.01",
+                                                                        "v-model":"instruction_set.ex1_work_payout"}))
+    
+    ex1_outside_option_payout = forms.DecimalField(label='Outside Option Payout', max_digits=10, decimal_places=2,
+                                                  widget=forms.NumberInput(attrs={"min":"0",
+                                                                                  "step":"0.01",
+                                                                                  "v-model":"instruction_set.ex1_outside_option_payout"}))
 
     class Meta:
         model=InstructionSet
-        fields = ('label', 'action_page_1', 'action_page_2', 'action_page_3', 'action_page_4', 'action_page_5', 'action_page_6')
+        fields = ('label', 'action_page_1', 'action_page_2', 'action_page_3', 'action_page_4', 'action_page_5', 'action_page_6',
+                  'ex1_type_a_units_player_1', 'ex1_type_a_units_player_2', 'ex1_type_b_units_player_1', 'ex1_type_b_units_player_2', 
+                  'ex1_work_payout', 'ex1_outside_option_payout')
