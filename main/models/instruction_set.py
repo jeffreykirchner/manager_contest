@@ -21,6 +21,14 @@ class InstructionSet(models.Model):
     action_page_4 = models.IntegerField(verbose_name='Required Action: 4', default=4)
     action_page_5 = models.IntegerField(verbose_name='Required Action: 5', default=5)
     action_page_6 = models.IntegerField(verbose_name='Required Action: 6', default=6)
+
+    ex1_type_a_units_player_1 = models.IntegerField(verbose_name='Type A Player 1', default=0)            #starting number of type a units for player 1
+    ex1_type_a_units_player_2 = models.IntegerField(verbose_name='Type A Player 2', default=0)            #starting number of type a units for player 2    
+    ex1_type_b_units_player_1 = models.IntegerField(verbose_name='Type B Player 1', default=0)            #starting number of type b units for player 1
+    ex1_type_b_units_player_2 = models.IntegerField(verbose_name='Type B Player 2', default=0)            #starting number of type b units for player 2
+
+    ex1_work_payout = models.DecimalField(verbose_name='Work Payout', max_digits=10, decimal_places=2, default=1.00)                       #payout per unit of work, for both types and both players 
+    ex1_outside_option_payout = models.DecimalField(verbose_name='Outside Option Payout', max_digits=10, decimal_places=2, default=0.75)   #payout for outside option, for type b units
         
     timestamp = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
@@ -49,6 +57,14 @@ class InstructionSet(models.Model):
         self.action_page_4 = new_ps.get("action_page_4")
         self.action_page_5 = new_ps.get("action_page_5")
         self.action_page_6 = new_ps.get("action_page_6")
+
+        self.ex1_type_a_units_player_1 = new_ps.get("ex1_type_a_units_player_1")
+        self.ex1_type_a_units_player_2 = new_ps.get("ex1_type_a_units_player_2")
+        self.ex1_type_b_units_player_1 = new_ps.get("ex1_type_b_units_player_1")
+        self.ex1_type_b_units_player_2 = new_ps.get("ex1_type_b_units_player_2")
+
+        self.ex1_work_payout = new_ps.get("ex1_work_payout")
+        self.ex1_outside_option_payout = new_ps.get("ex1_outside_option_payout")
 
         self.save()
         
@@ -125,6 +141,13 @@ class InstructionSet(models.Model):
             "action_page_5" : self.action_page_5,
             "action_page_6" : self.action_page_6,
 
+            "ex1_type_a_units_player_1" : self.ex1_type_a_units_player_1,
+            "ex1_type_a_units_player_2" : self.ex1_type_a_units_player_2,
+            "ex1_type_b_units_player_1" : self.ex1_type_b_units_player_1,
+            "ex1_type_b_units_player_2" : self.ex1_type_b_units_player_2,
+            "ex1_work_payout" : self.ex1_work_payout,
+            "ex1_outside_option_payout" : self.ex1_outside_option_payout,
+
             "instruction_pages" : [i.json() for i in self.instructions.all()],
             "help_docs_subject" : [i.json() for i in self.help_docs_subject.all()],
         }
@@ -145,6 +168,13 @@ class InstructionSet(models.Model):
             "action_page_4" : self.action_page_4,
             "action_page_5" : self.action_page_5,
             "action_page_6" : self.action_page_6,
+
+            "ex1_type_a_units_player_1" : self.ex1_type_a_units_player_1,
+            "ex1_type_a_units_player_2" : self.ex1_type_a_units_player_2,
+            "ex1_type_b_units_player_1" : self.ex1_type_b_units_player_1,
+            "ex1_type_b_units_player_2" : self.ex1_type_b_units_player_2,
+            "ex1_work_payout" : self.ex1_work_payout,
+            "ex1_outside_option_payout" : self.ex1_outside_option_payout,
 
             "instruction_pages" : [await i.ajson() async for i in self.instructions.all()],
             "help_docs_subject" : [await i.ajson() async for i in self.help_docs_subject.all()],

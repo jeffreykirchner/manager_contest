@@ -300,6 +300,21 @@ let app = Vue.createApp({
                 Vue.nextTick(() => {
                     app.process_instruction_page();
                     app.instruction_display_scroll();
+                    
+
+                    let group = app.get_current_group();
+                    let parameter_set_period = app.get_current_parameter_set_period();
+
+                    group.type_a_units_player_1 = app.instructions.ex1_type_a_units_player_1;
+                    group.type_a_units_player_2 = app.instructions.ex1_type_a_units_player_2;
+                    group.type_b_units_player_1 = app.instructions.ex1_type_b_units_player_1;
+                    group.type_b_units_player_2 = app.instructions.ex1_type_b_units_player_2;
+
+                    parameter_set_period.outside_option_payout = app.instructions.ex1_outside_option_payout;
+                    parameter_set_period.work_payout = app.instructions.ex1_work_payout;
+
+                    group.player_1 = app.session_player.id;
+                    group.player_2 = app.session_player.id+1;
                 });
             }
 
