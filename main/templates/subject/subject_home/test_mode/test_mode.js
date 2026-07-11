@@ -168,7 +168,8 @@ do_test_mode_phase_2: function do_test_mode_phase_2()
     {
         if(group.manager_offer == null)
         {
-            app.manager_offer_to_worker = app.random_number(0, group["group_total_value"]);
+            let total_value_string = app.get_total_value_value_string("json");
+            app.manager_offer_to_worker = app.random_number(0, total_value_string.profit);
             app.submit_manager_offer_to_worker();
         }
     }

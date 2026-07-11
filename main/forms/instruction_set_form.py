@@ -14,17 +14,17 @@ class InstructionSetForm(forms.ModelForm):
                                                           "v-model":"instruction_set.label",
                                                           "placeholder" : "Instruction Set Name"}))
     
-    action_page_1 = forms.IntegerField(label='Required Action: Move Avatar', 
+    action_page_1 = forms.IntegerField(label='Required Action: Phase 1 bid', 
                                        widget=forms.NumberInput(attrs={"min":"1", 
                                                                        "v-model":"instruction_set.action_page_1",
                                                                        "placeholder" : "Page Number"}))
     
-    action_page_2 = forms.IntegerField(label='Required Action: Interaction', 
+    action_page_2 = forms.IntegerField(label='Required Action: Phase 2 manager', 
                                        widget=forms.NumberInput(attrs={"min":"1", 
                                                                         "v-model":"instruction_set.action_page_2",
                                                                        "placeholder" : "Page Number"}))
     
-    action_page_3 = forms.IntegerField(label='Required Action: Chat', 
+    action_page_3 = forms.IntegerField(label='Required Action: Phase 2 non-manager', 
                                        widget=forms.NumberInput(attrs={"min":"1", 
                                                                        "v-model":"instruction_set.action_page_3",
                                                                        "placeholder" : "Page Number"}))

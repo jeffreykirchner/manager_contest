@@ -202,6 +202,7 @@ get_total_player_value_string: function get_total_player_value_string(player_num
             "type_a_units": type_a_units,
             "type_b_units": type_b_units,
             "type_ab_units": null,
+            "profit": null,
         };
     }
 
@@ -263,6 +264,7 @@ get_total_player_value_string: function get_total_player_value_string(player_num
                 "type_a_units": unused_a_units,
                 "type_b_units": unused_b_units,
                 "type_ab_units": units_for_work,
+                "profit": value_from_work_total,
             };
         }
         else
@@ -271,6 +273,7 @@ get_total_player_value_string: function get_total_player_value_string(player_num
                 "type_a_units": unused_a_units,
                 "type_b_units": type_b_units,
                 "type_ab_units": 0,
+                "profit": value_from_outside_option,
             };
         }
     }
@@ -317,6 +320,7 @@ get_total_value_value_string : function get_total_value_value_string(format = "s
             "type_a_units": type_a_units,
             "type_b_units": type_b_units,
             "type_ab_units": null,
+            "profit": null,
         };
     }
 
@@ -380,6 +384,7 @@ get_total_value_value_string : function get_total_value_value_string(format = "s
                 "type_a_units": unused_a_units,
                 "type_b_units": unused_b_units,
                 "type_ab_units": units_for_work,
+                "profit": value_from_work_total,
             };
         }
         else
@@ -388,6 +393,7 @@ get_total_value_value_string : function get_total_value_value_string(format = "s
                 "type_a_units": unused_a_units,
                 "type_b_units": type_b_units,
                 "type_ab_units": 0,
+                "profit": value_from_outside_option,
             };
         }
     }
@@ -421,8 +427,9 @@ get_my_profit_if_working_alone: function get_my_profit_if_working_alone()
     
     let group = app.get_current_group();
     let player_number = app.get_player_number();
+    let total_player_value_string = app.get_total_player_value_string(player_number, "json");
 
-    return group["player_" + player_number + "_total_value"];
+    return total_player_value_string.profit;
 },
 
 /**
@@ -438,7 +445,9 @@ get_counterpart_profit_if_working_alone: function get_counterpart_profit_if_work
 
     let counterpart_player_number = player_number == 1 ? 2 : 1;
 
-    return group["player_" + counterpart_player_number + "_total_value"];
+    let total_player_value_string = app.get_total_player_value_string(counterpart_player_number, "json");
+
+    return total_player_value_string.profit;
 },
 
 /**
