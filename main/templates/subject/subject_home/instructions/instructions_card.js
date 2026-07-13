@@ -173,7 +173,11 @@ process_instruction_page: function process_instruction_page(){
 
              if(app.session_player.current_instruction_complete == app.instructions.action_page_3)
             {
-                group.manager_offer_accepted = true;                
+                group.manager_offer_accepted = "accept";      
+                group.phase = "Review";          
+                group.manager_offer = app.get_my_profit_if_working_alone() + 0.5;
+                group.player_2_earnings = group.manager_offer;
+                group.player_1_earnings = app.get_total_value_value_string("json").profit - group.manager_offer;
             }
             else if(app.session_player.current_instruction_complete < app.instructions.action_page_3)
             {

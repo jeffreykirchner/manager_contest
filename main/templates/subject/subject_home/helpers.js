@@ -478,8 +478,15 @@ get_my_final_profit_string: function get_my_final_profit_string()
  */
 capitalize_first_letter: function capitalize_first_letter(string)
 {
-    if(!string) return "";
-    return string.charAt(0).toUpperCase() + string.slice(1);
+    try
+    {
+        if(!string) return "";
+        return string.charAt(0).toUpperCase() + string.slice(1);
+    }
+    catch(e)
+    {
+        return string;
+    }
 },
 
 /**

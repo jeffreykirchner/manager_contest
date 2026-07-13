@@ -83,6 +83,7 @@ let app = Vue.createApp({
                     type_a_bid_error : null,
                     manager_offer_to_worker : null,
                     manager_offer_to_worker_error : null,
+                    worker_response_to_manager_error : null,
 
                     //spinner
                     spinner_complete : true,

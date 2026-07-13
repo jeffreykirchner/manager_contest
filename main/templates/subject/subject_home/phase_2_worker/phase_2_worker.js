@@ -8,11 +8,52 @@ submit_worker_response_to_manager: function submit_worker_response_to_manager(wo
 
     app.worker_response_to_manager_error = null;
 
-    app.working = true;
-    app.send_message("submit_worker_response_to_manager", 
-                    {"worker_response_to_manager" : worker_response_to_manager,},
-                    "group");
+    if(app.session.world_state.current_experiment_phase == 'Instructions')
+    {
+        app.submit_worker_response_to_manager_instructions(worker_response_to_manager);
+    }
+    else
+    {
+        app.working = true;
+        app.send_message("submit_worker_response_to_manager", 
+                        {"worker_response_to_manager" : worker_response_to_manager,},
+                        "group"); 
+    }
+},
 
+/**
+ * send worker response to manager for instructions
+ */
+submit_worker_response_to_manager_instructions: function submit_worker_response_to_manager_instructions(worker_response_to_manager)
+{
+    if(app.session_player.current_instruction != app.instructions.action_page_3) return;
+
+    let group = app.get_current_group();
+
+    if(worker_response_to_manager != "accept")
+    {
+        app.worker_response_to_manager_error = "Error: You must select Accept to proceed.";
+        return;
+    }
+
+    group.manager_offer_accepted = (worker_response_to_manager == "accept");
+    group.phase = "Phase 2";
+    group.player_1_earnings = app.get_total_value_value_string("json").profit - group.manager_offer;
+    group.player_2_earnings = group.manager_offer;
+
+    app.session_player.current_instruction_complete = app.instructions.action_page_3;
+    app.send_current_instruction_complete();
+
+    let message_data = {
+            group: {
+                manager_offer_accepted: group.manager_offer_accepted,
+                phase: "Review",
+                player_1_earnings: group.player_1_earnings,
+                player_2_earnings: group.player_2_earnings,
+            }
+    };
+
+    app.take_submit_worker_response_to_manager(message_data)
 },
 
 /**
