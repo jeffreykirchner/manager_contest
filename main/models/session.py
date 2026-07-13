@@ -403,26 +403,24 @@ class Session(models.Model):
 
             writer = csv.writer(output, quoting=csv.QUOTE_NONNUMERIC)
 
-            writer.writerow(["Session ID", "Period", "Time", "Client #", "Label", "Action","Info (Plain)", "Info (JSON)", "Timestamp"])
+            writer.writerow(["Session ID", "Period", "Client #", "Action","Info (Plain)", "Info (JSON)", "Timestamp"])
 
             # session_events =  main.models.SessionEvent.objects.filter(session__id=self.id).prefetch_related('period_number', 'time_remaining', 'type', 'data', 'timestamp')
             # session_events = session_events.select_related('session_player')
 
             world_state = self.world_state
             parameter_set_players = {}
-            for i in self.session_players.all().values('id','player_number','parameter_set_player__id_label'):
+            for i in self.session_players.all().values('id','player_number'):
                 parameter_set_players[str(i['id'])] = i
 
             session_players = {}
-            for i in self.session_players.all().values('id','player_number','parameter_set_player__id_label'):
+            for i in self.session_players.all().values('id','player_number'):
                 session_players[str(i['id'])] = i
 
-            for p in self.session_events.exclude(type="time").exclude(type="world_state").exclude(type='target_locations'):
+            for p in self.session_events.exclude(type="world_state"):
                 writer.writerow([self.id,
                                 p.period_number, 
-                                p.time_remaining, 
                                 parameter_set_players[str(p.session_player_id)]["player_number"], 
-                                parameter_set_players[str(p.session_player_id)]["parameter_set_player__id_label"], 
                                 p.type, 
                                 self.action_data_parse(p.type, p.data, session_players),
                                 p.data, 
