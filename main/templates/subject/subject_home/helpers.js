@@ -264,7 +264,7 @@ get_total_player_value_string: function get_total_player_value_string(player_num
                 "type_a_units": unused_a_units,
                 "type_b_units": unused_b_units,
                 "type_ab_units": units_for_work,
-                "profit": value_from_work_total,
+                "profit": Math.round(value_from_work_total * 100) / 100,
             };
         }
         else
@@ -273,7 +273,7 @@ get_total_player_value_string: function get_total_player_value_string(player_num
                 "type_a_units": unused_a_units,
                 "type_b_units": type_b_units,
                 "type_ab_units": 0,
-                "profit": value_from_outside_option,
+                "profit": Math.round(value_from_outside_option * 100) / 100,
             };
         }
     }

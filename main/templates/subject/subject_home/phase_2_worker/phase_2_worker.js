@@ -48,8 +48,8 @@ submit_worker_response_to_manager_instructions: function submit_worker_response_
             group: {
                 manager_offer_accepted: group.manager_offer_accepted,
                 phase: "Review",
-                player_1_earnings: group.player_1_earnings,
-                player_2_earnings: group.player_2_earnings,
+                player_1_earnings:app.get_total_value_value_string("json").profit - group.manager_offer,
+                player_2_earnings: group.manager_offer,
             }
     };
 
@@ -110,8 +110,36 @@ ready_to_go_on: function ready_to_go_on()
 {
     if(!app.session.started) return;
 
-    app.working = true;
-    app.send_message("ready_to_go_on", {}, "group");
+    if(app.session.world_state.current_experiment_phase == 'Instructions')
+    {
+        app.ready_to_go_on_instructions();
+    }
+    else
+    {
+        app.working = true;
+        app.send_message("ready_to_go_on", {}, "group");
+    }
+},
+
+
+/**
+ * ready to go on for instructions
+ */
+ready_to_go_on_instructions: function ready_to_go_on_instructions()
+{
+    if(!app.session.started) return;
+
+    let group = app.get_current_group();
+    let player_number = app.get_player_number();
+
+    let message_data = {
+        group: {
+            player_1_review_complete: group.player_1_review_complete,
+            player_2_review_complete: true,
+        }
+    };
+
+    app.take_update_ready_to_go_on(message_data);
 },
 
 /**

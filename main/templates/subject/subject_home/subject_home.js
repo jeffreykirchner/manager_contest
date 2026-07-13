@@ -526,9 +526,17 @@ let app = Vue.createApp({
             if(app.session.world_state.current_experiment_phase == 'Run' || 
                 app.session.world_state.current_experiment_phase == 'Instructions')
             {
-                app.session.world_state = message_data.world_state;
-                
+                app.session.world_state = message_data.world_state;                
                 app.do_reload();
+
+                Vue.nextTick(() => {
+                    app.type_a_bid = null;
+                    app.type_a_bid_counterpart = null;
+                    app.type_a_bid_error = null;
+                    app.manager_offer_to_worker = null;
+                    app.manager_offer_to_worker_error = null;
+                    app.update_graphs();
+                });
             }
         },
 
