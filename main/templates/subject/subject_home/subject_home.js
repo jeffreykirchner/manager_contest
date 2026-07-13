@@ -83,6 +83,7 @@ let app = Vue.createApp({
                     type_a_bid_error : null,
                     manager_offer_to_worker : null,
                     manager_offer_to_worker_error : null,
+                    worker_response_to_manager_error : null,
 
                     //spinner
                     spinner_complete : true,
@@ -295,33 +296,17 @@ let app = Vue.createApp({
                                 
             }
 
-            if(app.session.world_state.current_experiment_phase == 'Instructions')
-            {
-                Vue.nextTick(() => {
-                    app.process_instruction_page();
-                    app.instruction_display_scroll();
-                    
-
-                    let group = app.get_current_group();
-                    let parameter_set_period = app.get_current_parameter_set_period();
-
-                    group.type_a_units_player_1 = app.instructions.ex1_type_a_units_player_1;
-                    group.type_a_units_player_2 = app.instructions.ex1_type_a_units_player_2;
-                    group.type_b_units_player_1 = app.instructions.ex1_type_b_units_player_1;
-                    group.type_b_units_player_2 = app.instructions.ex1_type_b_units_player_2;
-
-                    parameter_set_period.outside_option_payout = app.instructions.ex1_outside_option_payout;
-                    parameter_set_period.work_payout = app.instructions.ex1_work_payout;
-
-                    group.player_1 = app.session_player.id;
-                    group.player_2 = app.session_player.id+1;
-                });
-            }
-
+            
             if(!app.first_load_done)
             {
                 Vue.nextTick(() => {
                     app.do_first_load();
+
+                    if(app.session.world_state.current_experiment_phase == 'Instructions')
+                    {
+                        app.setup_instructions();
+                    }
+
                     app.update_graphs();
                 });
             }
@@ -332,6 +317,34 @@ let app = Vue.createApp({
                     app.update_graphs();
                 });
             }
+        },
+
+        /**
+         * setup the instructions for the subject
+         */
+        setup_instructions : function setup_instructions()
+        {
+            
+            Vue.nextTick(() => {               
+
+                let group = app.get_current_group();
+                let parameter_set_period = app.get_current_parameter_set_period();
+
+                group.type_a_units_player_1 = app.instructions.ex1_type_a_units_player_1;
+                group.type_a_units_player_2 = app.instructions.ex1_type_a_units_player_2;
+                group.type_b_units_player_1 = app.instructions.ex1_type_b_units_player_1;
+                group.type_b_units_player_2 = app.instructions.ex1_type_b_units_player_2;
+
+                parameter_set_period.outside_option_payout = app.instructions.ex1_outside_option_payout;
+                parameter_set_period.work_payout = app.instructions.ex1_work_payout;
+
+                group.player_1 = app.session_player.id;
+                group.player_2 = app.session_player.id+1;
+
+                app.process_instruction_page();
+                app.instruction_display_scroll();
+            });
+            
         },
 
         /** update start status
@@ -513,9 +526,17 @@ let app = Vue.createApp({
             if(app.session.world_state.current_experiment_phase == 'Run' || 
                 app.session.world_state.current_experiment_phase == 'Instructions')
             {
-                app.session.world_state = message_data.world_state;
-                
+                app.session.world_state = message_data.world_state;                
                 app.do_reload();
+
+                Vue.nextTick(() => {
+                    app.type_a_bid = null;
+                    app.type_a_bid_counterpart = null;
+                    app.type_a_bid_error = null;
+                    app.manager_offer_to_worker = null;
+                    app.manager_offer_to_worker_error = null;
+                    app.update_graphs();
+                });
             }
         },
 

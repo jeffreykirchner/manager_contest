@@ -5,11 +5,18 @@
  */
 get_instruction_page: function get_instruction_page(pageNumber){
 
+    let non_manager_total_value_50c = 0;
+    let counterpart_profit_if_working_alone = app.get_counterpart_profit_if_working_alone();
+    counterpart_profit_if_working_alone += 0.50;
+
+
     for(let i=0;i<app.instructions.instruction_pages.length;i++)
     {
         if(app.instructions.instruction_pages[i].page_number==pageNumber)
         {
-            return app.instructions.instruction_pages[i].text_html;
+            let text_html = app.instructions.instruction_pages[i].text_html;
+            text_html = text_html.replace("#non_manager_total_value_50c#", counterpart_profit_if_working_alone);
+            return text_html;
         }
     }
 
@@ -92,6 +99,7 @@ send_current_instruction_complete: function current_instruction_complete()
  * process instruction page
  */
 process_instruction_page: function process_instruction_page(){
+    let group = app.get_current_group();
 
     //update view when instructions changes
     switch(app.session_player.current_instruction){
@@ -99,9 +107,82 @@ process_instruction_page: function process_instruction_page(){
             return;        
             break; 
         case app.instructions.action_page_2:
+            if(app.session_player.current_instruction_complete > app.instructions.action_page_2) return;
+            
+            group.phase = "Phase 2";
+            group.worker = app.session_player.id+1;
+            group.manager = app.session_player.id;
+            group.player_1 = app.session_player.id;
+            group.player_2 = app.session_player.id+1;
+            group.manager_draw = 0.4;
+            group.manager_offer = null;
+            group.player_1_probability = 0.6666666666666666;
+            group.player_2_probability = 0.3333333333333333;
+            group.type_a_units_player_1 = app.instructions.ex1_type_a_units_player_1-2;
+            group.type_a_units_player_2 = app.instructions.ex1_type_a_units_player_2-1;
+            group.type_b_units_player_1 = app.instructions.ex1_type_b_units_player_1;
+            group.type_b_units_player_2 = app.instructions.ex1_type_b_units_player_2;
+            group.type_a_phase_1_units_player_1 = 2;
+            group.type_a_phase_1_units_player_2 = 1;
+
+            if(app.session_player.current_instruction_complete == app.instructions.action_page_2)
+            {
+                group.manager_offer = app.get_counterpart_profit_if_working_alone() + 0.5;
+
+                Vue.nextTick(() => {
+                    app.update_graphs();
+                });
+            }
+            else if(app.session_player.current_instruction_complete < app.instructions.action_page_2)
+            {
+                let message_data = {
+                                group: group,
+                                session_player_id: app.session_player.id,
+                                status: "success",
+                                error_message: ""};
+        
+                app.take_submit_type_a_bid(message_data)
+            }
+
             return; 
             break;
         case app.instructions.action_page_3:
+            if(app.session_player.current_instruction_complete > app.instructions.action_page_3) return;
+
+            group.phase = "Phase 2";
+            group.worker = app.session_player.id;
+            group.manager = app.session_player.id+1;
+            group.player_1 = app.session_player.id+1;
+            group.player_2 = app.session_player.id;
+            group.manager_draw = 0.4;
+            group.manager_offer = null;
+            group.player_1_probability = 0.6666666666666666;
+            group.player_2_probability = 0.3333333333333333;
+            group.type_a_units_player_1 = app.instructions.ex1_type_a_units_player_1-2;
+            group.type_a_units_player_2 = app.instructions.ex1_type_a_units_player_2-1;
+            group.type_b_units_player_1 = app.instructions.ex1_type_b_units_player_1;
+            group.type_b_units_player_2 = app.instructions.ex1_type_b_units_player_2;
+            group.type_a_phase_1_units_player_1 = 2;
+            group.type_a_phase_1_units_player_2 = 1;
+
+            group.manager_offer = app.get_my_profit_if_working_alone() + 0.5;
+
+            Vue.nextTick(() => {
+                app.update_graphs();
+            });
+
+             if(app.session_player.current_instruction_complete == app.instructions.action_page_3)
+            {
+                group.manager_offer_accepted = "accept";      
+                group.phase = "Review";          
+                group.manager_offer = app.get_my_profit_if_working_alone() + 0.5;
+                group.player_2_earnings = group.manager_offer;
+                group.player_1_earnings = app.get_total_value_value_string("json").profit - group.manager_offer;
+            }
+            else if(app.session_player.current_instruction_complete < app.instructions.action_page_3)
+            {
+               
+            }
             return; 
             break;
         case app.instructions.action_page_4:

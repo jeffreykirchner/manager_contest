@@ -7,13 +7,66 @@ submit_type_a_bid: function submit_type_a_bid()
 
     app.type_a_bid_error = null;
 
-    app.working = true;
-    app.send_message("submit_type_a_bid", 
-                    {"type_a_bid" : app.type_a_bid,
-                     "type_a_bid_counterpart" : app.type_a_bid_counterpart
-                    },
-                    "group"); 
+    if(app.session.world_state.current_experiment_phase == 'Instructions')
+    {
+        app.submit_type_a_bid_instructions();
+    }
+    else
+    {
+        app.working = true;
+        app.send_message("submit_type_a_bid", 
+                        {"type_a_bid" : app.type_a_bid,
+                        "type_a_bid_counterpart" : app.type_a_bid_counterpart
+                        },
+                        "group"); 
+    }
 
+    
+
+},
+
+submit_type_a_bid_instructions: function submit_type_a_bid_instructions()
+{
+        if(app.session_player.current_instruction != app.instructions.action_page_1) return;
+
+        if(app.type_a_bid != 2)
+        {
+            app.type_a_bid_error = "Error: You must bid 2 units to proceed.";
+             return;
+        }
+        if(app.type_a_bid_counterpart != 1)
+        {
+            app.type_a_bid_error = "Error: Your prediction must be 1 unit to proceed.";
+            return;
+        }
+
+        app.session_player.current_instruction_complete = app.instructions.action_page_1;
+        app.send_current_instruction_complete();
+
+        let group = app.get_current_group();
+
+        let message_data = {
+                group: {
+                    phase: "Phase 1",
+                    worker: app.session_player.id+1,
+                    manager: app.session_player.id,
+                    player_1: app.session_player.id,
+                    player_2: app.session_player.id+1,
+                    manager_draw: 0.4,
+                    manager_offer: null,
+                    player_1_probability: 0.6666666666666666,
+                    player_2_probability: 0.3333333333333333,
+                    type_a_units_player_1: group.type_a_units_player_1-2,
+                    type_a_units_player_2: group.type_a_units_player_2-1,
+                    type_b_units_player_1: group.type_b_units_player_1,
+                    type_b_units_player_2: group.type_b_units_player_2,
+                    type_a_phase_1_units_player_1: 2,
+                    type_a_phase_1_units_player_2: 1,},
+                session_player_id: app.session_player.id,
+                status: "success",
+                error_message: ""};
+        
+        app.take_submit_type_a_bid(message_data)
 },
 
 /**
@@ -43,19 +96,26 @@ take_submit_type_a_bid: function take_submit_type_a_bid(message_data)
         group.phase = message_data.group.phase;
         group.manager = message_data.group.manager; 
         group.worker = message_data.group.worker;
-        group.player_1_total_value = message_data.group.player_1_total_value;
-        group.player_2_total_value = message_data.group.player_2_total_value;
-        group.group_total_value = message_data.group.group_total_value;
         group.player_1_probability = message_data.group.player_1_probability;
         group.player_2_probability = message_data.group.player_2_probability;
         group.manager_draw = message_data.group.manager_draw;
 
         if(app.is_subject && group.phase == "Phase 2")
         {
-            app.pixi_setup_pie_graph();
-            app.spinner_complete = false;
-            app.spinning = true;
-            app.update_graphs();
+            
+             Vue.nextTick(() => {
+                app.update_graphs();
+
+                 try{
+                    app.pixi_setup_pie_graph();
+                    app.spinner_complete = false;
+                    app.spinning = true;
+                }
+                catch(err)
+                {
+                    console.log("Error setting up pie graph: " + err);
+                }
+            });
         }
     }
 },
