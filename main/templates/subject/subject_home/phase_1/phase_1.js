@@ -242,3 +242,24 @@ draw_units_graph: function draw_units_graph(canvas_id, units_a, units_b, units_a
     ctx.restore();
 
 },
+
+/**
+ * get wheather phase input is disabled
+ * if not during the instructions then enabled.
+ * if before the first action page, then disabled.
+ */
+is_phase_1_input_disabled: function is_phase_1_input_disabled()
+{
+    if(!app.session.started) return true;
+
+    if(app.session.world_state.current_experiment_phase == 'Instructions')
+    {
+        if(app.session_player.current_instruction < app.instructions.action_page_1)
+        {
+            return true;
+        }
+    }
+
+    return false;
+},
+

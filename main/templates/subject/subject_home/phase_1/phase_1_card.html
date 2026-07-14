@@ -112,6 +112,7 @@
                                 min="0"
                                 max="999"
                                 step="1"
+                                v-bind:disabled="is_phase_1_input_disabled()"
                                 v-on:input="update_graphs()"
                                 id="type_a_bid">     
                         </div>
@@ -132,6 +133,7 @@
                                 min="0"
                                 max="999"
                                 step="1"
+                                v-bind:disabled="is_phase_1_input_disabled()"
                                 v-on:input="update_graphs()"
                                 id="type_a_bid_counterpart">     
                         </div>
