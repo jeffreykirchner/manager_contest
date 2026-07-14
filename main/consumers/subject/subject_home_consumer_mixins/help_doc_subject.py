@@ -20,25 +20,27 @@ class GetHelpDocSubjectMixin():
         take help doc request
         '''        
 
+        logger = logging.getLogger(__name__)
+
         try:
             message_text = event["message_text"]
             title = message_text["title"]
 
-            session_player = await SessionPlayer.objects.select_related('parameter_set_player__instruction_set','session').aget(player_key=self.connection_uuid)
+            session_player = await SessionPlayer.objects.select_related('parameter_set_player__instruction_set',
+                                                                        'session').aget(player_key=self.connection_uuid)
             instruction_set = session_player.parameter_set_player.instruction_set
             help_doc_subject = await instruction_set.help_docs_subject.all().aget(title=title)
             text =  await sync_to_async(session_player.process_instruction_text, thread_sensitive=False)(help_doc_subject.text)
 
         except Exception as e:
             text = "Help doc not found"
+            logger.error("Error occurred while fetching help doc: %s", str(e))
 
         await SessionEvent.objects.acreate(session_id=session_player.session.id, 
                                            session_player_id=session_player.id,
                                            type="help_doc",
                                            period_number=session_player.session.world_state["current_period"],
-                                           time_remaining=session_player.session.world_state["time_remaining"],
                                            data=title)
-
 
         result =  {"value" : "success",
                    "result" : {"text" : text}}

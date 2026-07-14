@@ -307,7 +307,9 @@ let app = Vue.createApp({
                         app.setup_instructions();
                     }
 
-                    app.update_graphs();
+                    Vue.nextTick(() => {
+                        app.update_graphs();
+                    });
                 });
             }
             else
