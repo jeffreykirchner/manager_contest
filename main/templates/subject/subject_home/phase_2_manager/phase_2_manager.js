@@ -33,7 +33,7 @@ submit_manager_offer_to_worker_instructions: function submit_manager_offer_to_wo
         if(app.manager_offer_to_worker != counterpart_profit_if_working_alone)
         {
             app.manager_offer_to_worker_error = "Error: You must offer $" + counterpart_profit_if_working_alone.toFixed(2) + " to the non-manager to proceed.";
-             return;
+            return;
         }
 
         app.session_player.current_instruction_complete = app.instructions.action_page_2;

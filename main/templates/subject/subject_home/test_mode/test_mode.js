@@ -82,18 +82,34 @@ do_test_mode_instructions: function do_test_mode_instructions()
         //take action if needed to complete page
         switch (app.session_player.current_instruction)
         {
-            case 1:
+            case app.instructions.action_page_1:
+                //phase 1
+                app.type_a_bid = 2;
+                app.type_a_bid_counterpart = 1
+                app.submit_type_a_bid();
+        
                 break;
-            case 2:
+            case app.instructions.action_page_2:
+                //spinner
+                if(!app.spinning && !app.spinner_complete)
+                {
+                    app.spin_ready_to_go_on();
+                }
+                else if(app.spinner_complete)
+                {
+                    let counterpart_profit_if_working_alone = app.get_counterpart_profit_if_working_alone();
+                    counterpart_profit_if_working_alone += 0.5;
+                    app.manager_offer_to_worker = counterpart_profit_if_working_alone;
+                    app.submit_manager_offer_to_worker();
+                }
+                break;
+            case app.instructions.action_page_3:
+                app.submit_worker_response_to_manager("accept");
+                break;
+            case app.instructions.action_page_4:
                 
                 break;
-            case 3:
-                
-                break;
-            case 4:
-                
-                break;
-            case 5:
+            case app.instructions.action_page_5:
                 break;
         }   
     }
