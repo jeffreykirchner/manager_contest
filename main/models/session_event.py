@@ -32,6 +32,7 @@ class SessionEvent(models.Model):
 
         verbose_name = 'Session Event'
         verbose_name_plural = 'Session Events'
+        ordering = ['period_number', 'timestamp']
 
     def json(self):
         '''
