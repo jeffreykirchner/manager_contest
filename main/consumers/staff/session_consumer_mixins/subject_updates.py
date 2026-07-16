@@ -336,8 +336,8 @@ class SubjectUpdatesMixin():
                 group["type_a_units_player_1"] -= player_1_bid
                 group["type_a_units_player_2"] -= player_2_bid
 
-                # group["player_1_total_value"] = await get_total_player_value(group, 1, parameter_set_period)
-                # group["player_2_total_value"] = await get_total_player_value(group, 2, parameter_set_period)
+                group["player_1_total_value"] = await get_total_player_value(group, 1, parameter_set_period)
+                group["player_2_total_value"] = await get_total_player_value(group, 2, parameter_set_period)
                 group["group_total_value"] =  await get_total_group_value(group, parameter_set_period)
         
         result = {"group" : group,
