@@ -221,6 +221,10 @@ class Session(models.Model):
                 p["player_2_total_value"] = async_to_sync(get_total_player_value)(p, 2, parameter_set_period_json)
                 p["group_total_value"] = async_to_sync(get_total_group_value)(p, parameter_set_period_json)
 
+                p["player_1_start_total_value"] = p["player_1_total_value"]
+                p["player_2_start_total_value"] = p["player_2_total_value"]
+                p["group_start_total_value"] = p["group_total_value"]
+
                 p["player_1_earnings"] = 0
                 p["player_2_earnings"] = 0
 
@@ -348,47 +352,86 @@ class Session(models.Model):
 
             writer = csv.writer(output, quoting=csv.QUOTE_NONNUMERIC)
 
-            session_players_list = self.session_players.all().values('id','parameter_set_player__id_label')
-           
-            top_row = ["Session ID", "Period", "Client #", "Label", "Earnings ¢"]
-            for i in session_players_list:
-
-                top_row.append(f'Cherries I Sent To {i["parameter_set_player__id_label"]}')
-                top_row.append(f'Cherries I Took From {i["parameter_set_player__id_label"]}')
-
-                top_row.append(f'Cherries {i["parameter_set_player__id_label"]} Sent To Me')
-                top_row.append(f'Cherries {i["parameter_set_player__id_label"]} Took From Me')
-
-            writer.writerow(top_row)
+            session_players_list = {}
+            for i in self.session_players.all().values('id','player_number'):
+                session_players_list[str(i['id'])] = i
 
             world_state = self.world_state
-            parameter_set_players = {}
-            for i in self.session_players.all().values('id','parameter_set_player__id_label'):
-                parameter_set_players[str(i['id'])] = i
+            parameter_set = self.parameter_set.json_for_session
+            
+           
+            top_row = ["Session ID", "Period", "Group", "Player 1", "Player 2", "Player 1 Start A", "Player 2 Start A", "Player 1 Start B", "Player 2 Start B", 
+                       "AB Value", "B Value",
+                       "Phase 1, Player 1 Separate Value", "Phase 1, Player 2 Separate Value", "Phase 1, Group Total Value",
+                       "Player 1 A Bid", "Player 2 A Bid", "Player 1 A Bid Prediction", "Player 2 A Bid Prediction",
+                       "Phase 2, Player 1 Separate Value", "Phase 2, Player 2 Separate Value", "Phase 2, Group Total Value",
+                       "Manager", "Non-Manager", "Manager Offer", "Manager Offer Accepted",
+                       "Player 1 Earnings", "Player 2 Earnings"]
+
+            writer.writerow(top_row)
 
             # logger.info(parameter_set_players)
 
             for period_number, period in enumerate(world_state["session_periods"]):
-                summary_data = self.session_periods.get(id=period).summary_data
 
-                for player_number, player in enumerate(world_state["session_players"]):
-                    player_s = str(player)
-                    summary_data_player = summary_data[player_s]
+                groups = world_state["session_periods"][period]["groups"]
+                parameter_set_period_id = parameter_set["parameter_set_periods_order"][period_number]
+                parameter_set_period = parameter_set["parameter_set_periods"][str(parameter_set_period_id)]
+
+                for group_id in groups:
+                    group = groups[group_id]
+                    
                     temp_row = [self.id, 
                                 period_number+1, 
-                                player_number+1,
-                                parameter_set_players[player_s]["parameter_set_player__id_label"],
-                                summary_data_player["earnings"],
-                                ]
-                    
-                    for p in world_state["session_players"]:
-                        p_s = str(p)
-                        temp_row.append(summary_data_player["interactions"][p_s]["cherries_i_sent"])
-                        temp_row.append(summary_data_player["interactions"][p_s]["cherries_i_took"])
-                        temp_row.append(summary_data[p_s]["interactions"][player_s]["cherries_i_sent"])
-                        temp_row.append(summary_data[p_s]["interactions"][player_s]["cherries_i_took"])
-                    
+                                group_id,
+                                session_players_list[str(group["player_1"])]["player_number"],
+                                session_players_list[str(group["player_2"])]["player_number"],
+                                parameter_set_period["type_a_units_player_1"],
+                                parameter_set_period["type_a_units_player_2"],
+                                parameter_set_period["type_b_units_player_1"],
+                                parameter_set_period["type_b_units_player_2"],
+                                parameter_set_period["work_payout"],
+                                parameter_set_period["outside_option_payout"],
+                                group["player_1_start_total_value"],
+                                group["player_2_start_total_value"],
+                                group["group_start_total_value"],
+                                group["type_a_phase_1_units_player_1"],
+                                group["type_a_phase_1_units_player_2"],
+                                group["type_a_phase_1_units_player_1_prediction"],
+                                group["type_a_phase_1_units_player_2_prediction"],
+                                group["player_1_total_value"],
+                                group["player_2_total_value"],
+                                group["group_total_value"],
+                                session_players_list[str(group["manager"])]["player_number"] if group["manager"] else None,
+                                session_players_list[str(group["worker"])]["player_number"] if group["worker"] else None,
+                                group["manager_offer"],
+                                group["manager_offer_accepted"],
+                                group["player_1_earnings"],
+                                group["player_2_earnings"]
+                            ]
+
                     writer.writerow(temp_row)
+
+                # summary_data = self.session_periods.get(id=period).summary_data
+
+                # for player_number, player in enumerate(world_state["session_players"]):
+                #     player_s = str(player)
+                #     summary_data_player = summary_data[player_s]
+                #     temp_row = [self.id, 
+                #                 period_number+1, 
+                #                 player_number+1,
+                #                 parameter_set_players[player_s]["parameter_set_player__id_label"],
+                #                 summary_data_player["earnings"],
+                #                 ]
+                    
+                #     for p in world_state["session_players"]:
+                #         p_s = str(p)
+                #         temp_row.append(summary_data_player["interactions"][p_s]["cherries_i_sent"])
+                #         temp_row.append(summary_data_player["interactions"][p_s]["cherries_i_took"])
+                #         temp_row.append(summary_data[p_s]["interactions"][player_s]["cherries_i_sent"])
+                #         temp_row.append(summary_data[p_s]["interactions"][player_s]["cherries_i_took"])
+                    
+                #     writer.writerow(temp_row)
                     
             v = output.getvalue()
             output.close()
@@ -436,15 +479,16 @@ class Session(models.Model):
         return plain text version of action
         '''
 
-        if type == "chat":
-            nearby_text = ""
-            for i in data["nearby_players"]:
-                if nearby_text != "":
-                    nearby_text += ", "
-                nearby_text += f'{session_players[str(i)]["parameter_set_player__id_label"]}'
-
-            temp_s = re.sub("\n", " ", data["text"])
-            return f'{temp_s} @  {nearby_text}'
+        if type == "submit_type_a_bid":
+            return f'Bid: {data["event_data"]["type_a_bid"]} | Prediction: {data["event_data"]["type_a_bid_counterpart"]}'
+        elif type == "submit_manager_offer_to_worker":
+            return f'Offer: {data["event_data"]["manager_offer_to_worker"]}'
+        elif type == "submit_worker_response_to_manager":
+            return f'Offer Response: {data["event_data"]["worker_response_to_manager"]}'
+        elif type == "ready_to_go_on":
+            return f'Ready to go on'
+        elif type == "start_next_period":
+            return f'Start Period: {data["result"]["current_period"]}'
         elif type == "chat_gpt_prompt":
             return f'{data["prompt"]} | {strip_tags(data["response"])}'
         elif type == "help_doc":
@@ -481,7 +525,16 @@ class Session(models.Model):
 
             writer = csv.writer(output)
 
-            writer.writerow(['Session', 'Date', 'Player', 'Name', 'Student ID', 'Earnings'])
+            writer.writerow(['Session', 'Date', 'Player', 'Name', 'Student ID', 'Earnings','Periods Paid'])
+
+            periods_paid = ""
+            for period_number, period in enumerate(self.world_state["session_periods"]):
+                session_period = self.world_state["session_periods"][period]
+
+                if session_period["paid"]:
+                    if periods_paid != "":
+                        periods_paid += ", "
+                    periods_paid += f'{period_number + 1}'
 
             # session_players = self.session_players.all()
 
@@ -498,7 +551,8 @@ class Session(models.Model):
                                  parameter_set_players[p]["player_number"],
                                  parameter_set_players[p]["name"],
                                  parameter_set_players[p]["student_id"],
-                                 self.world_state["session_players"][p]["earnings"]])
+                                 self.world_state["session_players"][p]["earnings"],
+                                 periods_paid])
 
             v = output.getvalue()
             output.close()

@@ -336,8 +336,8 @@ class SubjectUpdatesMixin():
                 group["type_a_units_player_1"] -= player_1_bid
                 group["type_a_units_player_2"] -= player_2_bid
 
-                # group["player_1_total_value"] = await get_total_player_value(group, 1, parameter_set_period)
-                # group["player_2_total_value"] = await get_total_player_value(group, 2, parameter_set_period)
+                group["player_1_total_value"] = await get_total_player_value(group, 1, parameter_set_period)
+                group["player_2_total_value"] = await get_total_player_value(group, 2, parameter_set_period)
                 group["group_total_value"] =  await get_total_group_value(group, parameter_set_period)
         
         result = {"group" : group,
@@ -352,7 +352,7 @@ class SubjectUpdatesMixin():
                                                         session_player_id=player_id,
                                                         type=event['type'],
                                                         period_number=world_state["current_period"],
-                                                        data=result))
+                                                        data={"result": result, "event_data": event_data}))
             await SessionEvent.objects.abulk_create(self.session_events, ignore_conflicts=True)
             self.session_events = []
 
@@ -423,7 +423,7 @@ class SubjectUpdatesMixin():
                                                         session_player_id=player_id,
                                                         type=event['type'],
                                                         period_number=world_state["current_period"],
-                                                        data=result))
+                                                        data={"result": result, "event_data": event_data}))
             await SessionEvent.objects.abulk_create(self.session_events, ignore_conflicts=True)
             self.session_events = []
 
@@ -499,7 +499,7 @@ class SubjectUpdatesMixin():
                                                         session_player_id=player_id,
                                                         type=event['type'],
                                                         period_number=world_state["current_period"],
-                                                        data=result))
+                                                        data={"result": result, "event_data": event_data}))
             await SessionEvent.objects.abulk_create(self.session_events, ignore_conflicts=True)
             self.session_events = []
 
@@ -556,7 +556,7 @@ class SubjectUpdatesMixin():
                                                     session_player_id=player_id,
                                                     type=event['type'],
                                                     period_number=world_state["current_period"],
-                                                    data=result))
+                                                    data={"result": result, "event_data": event_data}))
         await SessionEvent.objects.abulk_create(self.session_events, ignore_conflicts=True)
         self.session_events = []
         
@@ -577,7 +577,7 @@ class SubjectUpdatesMixin():
                                                     session_player_id=player_id,
                                                     type="start_next_period",
                                                     period_number=world_state["current_period"],
-                                                    data=result))
+                                                    data={"result": result, "event_data": event_data}))
                 await SessionEvent.objects.abulk_create(self.session_events, ignore_conflicts=True)
                 self.session_events = []
 
