@@ -48,7 +48,7 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = '_manager_contest.urls'
-ADMIN_SITE_HEADER = 'Multi User Socket Template Administration'
+ADMIN_SITE_HEADER = 'Manager Contest Administration'
 
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
 CRISPY_TEMPLATE_PACK = "bootstrap5"
