@@ -408,14 +408,20 @@ let app = Vue.createApp({
       
             app.draw_units_graph("phase_1_my_unit_graph", 
                                     total_player_value_string.type_a_units,
+                                    total_player_value_string.type_a_total_units,
                                     total_player_value_string.type_b_units,
+                                    total_player_value_string.type_b_total_units,
                                     total_player_value_string.type_ab_units,
+                                    total_player_value_string.type_ab_total_units,
                                     scale_max);
 
             app.draw_units_graph("phase_1_counterpart_unit_graph",
                                     total_counterpart_value_string.type_a_units,
+                                    total_counterpart_value_string.type_a_total_units,
                                     total_counterpart_value_string.type_b_units,
+                                    total_counterpart_value_string.type_b_total_units,
                                     total_counterpart_value_string.type_ab_units,
+                                    total_counterpart_value_string.type_ab_total_units,
                                     scale_max);
 
             let clear_canvas_only = false;     
@@ -423,8 +429,11 @@ let app = Vue.createApp({
 
             app.draw_units_graph("phase_1_group_unit_graph",
                                             total_value_value_string.type_a_units,
+                                            total_value_value_string.type_a_total_units,
                                             total_value_value_string.type_b_units,
+                                            total_value_value_string.type_b_total_units,
                                             total_value_value_string.type_ab_units,
+                                            total_value_value_string.type_ab_total_units,
                                             scale_max,
                                             clear_canvas_only);
             

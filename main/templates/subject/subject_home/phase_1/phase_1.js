@@ -151,7 +151,15 @@ get_manager_probability: function get_manager_probability()
  * @param units_ab {number} number of type AB units
  * @param graph_max {number} maximum value for graph (for scaling)
  */
-draw_units_graph: function draw_units_graph(canvas_id, units_a, units_b, units_ab, graph_max, clear_canvas_only=false)
+draw_units_graph: function draw_units_graph(canvas_id, 
+                                            units_a, 
+                                            units_a_total,
+                                            units_b,
+                                            units_b_total, 
+                                            units_ab, 
+                                            units_ab_total,
+                                            graph_max, 
+                                            clear_canvas_only=false)
 {
     let temp_canvas = document.getElementById(canvas_id);
 
@@ -167,6 +175,7 @@ draw_units_graph: function draw_units_graph(canvas_id, units_a, units_b, units_a
     let w = temp_canvas.width;
     let h = temp_canvas.height;
     let bar_height = (h - top_margin - bottom_margin - 2 * bar_spacing) / 3;
+    let y_offset = bar_height + bar_spacing;
 
     ctx.clearRect(0,0,w,h);
 
@@ -175,60 +184,89 @@ draw_units_graph: function draw_units_graph(canvas_id, units_a, units_b, units_a
     ctx.save(); 
     ctx.translate(left_margin, top_margin);
 
-    //draw units_a bar
+    //draw units_a bar, fill with units_a
     let bar_width = (w - left_margin - right_margin) * (units_a / graph_max);
+    let bar_fill_offset = (w - left_margin - right_margin) * ((units_a_total-units_a) / graph_max)
     ctx.fillStyle = "crimson";
+    ctx.strokeStyle = "crimson";
+    ctx.beginPath();
+    ctx.roundRect(bar_fill_offset, 0, bar_width, bar_height, 5);
+    ctx.fill();
+    ctx.font = "18px Arial";
+    ctx.fillText("A", -left_margin + 8, bar_height / 2 + 6);
+
+    //draw units_a_total bar, outline with units_a_total
+    bar_width = (w - left_margin - right_margin) * (units_a_total / graph_max);
+    ctx.fillStyle = "crimson";
+    ctx.strokeStyle = "crimson";
     ctx.beginPath();
     ctx.roundRect(0, 0, bar_width, bar_height, 5);
-    ctx.fill();
-    ctx.fillStyle = "black";
-    ctx.strokeStyle = "black";
     ctx.lineWidth = 0.5;
     ctx.stroke();
     ctx.font = "18px Arial";
     ctx.fillText(units_a, bar_width + 5, bar_height / 2 + 6);
-    ctx.fillText("A", -left_margin + 8, bar_height / 2 + 6);
 
-    //draw units_b bar
-    let y_offset = bar_height + bar_spacing;
+    //draw units_b bar, fill with units_b    
     bar_width = (w - left_margin - right_margin) * (units_b / graph_max);
+    bar_fill_offset = (w - left_margin - right_margin) * ((units_b_total-units_b) / graph_max)
     ctx.fillStyle = "cornflowerblue";
+    ctx.strokeStyle = "cornflowerblue";
     ctx.beginPath();
     ctx.roundRect(0, y_offset, bar_width, bar_height, 5);
     ctx.fill();
-    ctx.fillStyle = "black";
-    ctx.strokeStyle = "black";
+    ctx.font = "18px Arial";
+    ctx.fillText("B", -left_margin + 8, y_offset + bar_height / 2 + 6);
+
+    //draw units_b_total bar, outline with units_b_total
+    bar_width = (w - left_margin - right_margin) * (units_b_total / graph_max);
+    ctx.fillStyle = "cornflowerblue";
+    ctx.strokeStyle = "cornflowerblue";
+    ctx.beginPath();
+    ctx.roundRect(0, y_offset, bar_width, bar_height, 5);
     ctx.lineWidth = 0.5;
     ctx.stroke();
     ctx.font = "18px Arial";
     ctx.fillText(units_b, bar_width + 5, y_offset + bar_height / 2 + 6);
-    ctx.fillText("B", -left_margin + 8, y_offset + bar_height / 2 + 6);
     
-    if(units_ab == null)
+    // if(units_ab == null)
+    // {
+    //     //replace bar with "Starting Units" text
+    //     y_offset = 2 * (bar_height + bar_spacing);
+    //     ctx.fillStyle = "black";
+    //     ctx.font = "18px Arial";
+    //     ctx.textalign = "center";
+    //     ctx.fillText("Initial Units", w/2-left_margin-40, y_offset + bar_height / 2 + 6);
+    // }
+    // else
+    // {
+    //draw units_ab bar, fill with units_ab
+    y_offset = 2 * (bar_height + bar_spacing);
+    bar_width = (w - left_margin - right_margin) * (units_ab / graph_max);
+    bar_fill_offset = (w - left_margin - right_margin) * ((units_ab_total-units_ab) / graph_max)
+    ctx.fillStyle = "purple";
+    ctx.fillStyle = "purple";
+    ctx.beginPath();
+    ctx.roundRect(bar_fill_offset, y_offset, bar_width, bar_height, 5);
+    ctx.fill();
+    ctx.lineWidth = 0.5;
+    ctx.stroke();
+    ctx.font = "18px Arial";
+    // ctx.fillText(units_ab, bar_width + 5, y_offset + bar_height / 2 + 6);
+    ctx.fillText("AB", -left_margin + 2, y_offset + bar_height / 2 + 6);
+
+    //draw units_ab_total bar, outline with units_ab_total
+    bar_width = (w - left_margin - right_margin) * (units_ab_total / graph_max);
+    ctx.fillStyle = "purple";
+    ctx.strokeStyle = "purple";
+    ctx.beginPath();
+    ctx.roundRect(0, y_offset, bar_width, bar_height, 5);
+    ctx.lineWidth = 0.5;
+    ctx.stroke();
+    ctx.font = "18px Arial";
+
+    if(units_ab != null)
     {
-        //replace bar with "Starting Units" text
-        y_offset = 2 * (bar_height + bar_spacing);
-        ctx.fillStyle = "black";
-        ctx.font = "18px Arial";
-        ctx.textalign = "center";
-        ctx.fillText("Initial Units", w/2-left_margin-40, y_offset + bar_height / 2 + 6);
-    }
-    else
-    {
-        //draw units_ab bar
-        y_offset = 2 * (bar_height + bar_spacing);
-        bar_width = (w - left_margin - right_margin) * (units_ab / graph_max);
-        ctx.fillStyle = "purple";
-        ctx.beginPath();
-        ctx.roundRect(0, y_offset, bar_width, bar_height, 5);
-        ctx.fill();
-        ctx.fillStyle = "black";
-        ctx.strokeStyle = "black";
-        ctx.lineWidth = 0.5;
-        ctx.stroke();
-        ctx.font = "18px Arial";
         ctx.fillText(units_ab, bar_width + 5, y_offset + bar_height / 2 + 6);
-        ctx.fillText("AB", -left_margin + 2, y_offset + bar_height / 2 + 6);
     }
 
     //draw y axis

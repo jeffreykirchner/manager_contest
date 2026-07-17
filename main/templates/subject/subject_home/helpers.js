@@ -194,14 +194,19 @@ get_total_player_value_string: function get_total_player_value_string(player_num
     
     let place_holder = `<span class="fs-4">---</span><br>---`;
     let type_a_units = group["type_a_units_player_" + player_number];
+    let type_a_total_units = type_a_units;
     let type_b_units = group["type_b_units_player_" + player_number];
+    let type_b_total_units = type_b_units;
 
     if(format == "json")
     {
         place_holder = {
             "type_a_units": type_a_units,
+            "type_a_total_units": type_a_total_units,
             "type_b_units": type_b_units,
+            "type_b_total_units": type_b_total_units,
             "type_ab_units": null,
+            "type_ab_total_units": Math.min(type_a_total_units, type_b_total_units),
             "profit": null,
         };
     }
@@ -262,8 +267,11 @@ get_total_player_value_string: function get_total_player_value_string(player_num
         {
             return {
                 "type_a_units": unused_a_units,
+                "type_a_total_units": type_a_total_units,
                 "type_b_units": unused_b_units,
+                "type_b_total_units": type_b_total_units,
                 "type_ab_units": units_for_work,
+                "type_ab_total_units": units_for_work,
                 "profit": Math.round(value_from_work_total * 100) / 100,
             };
         }
@@ -271,8 +279,11 @@ get_total_player_value_string: function get_total_player_value_string(player_num
         {
             return {
                 "type_a_units": unused_a_units,
+                "type_a_total_units": unused_a_units,
                 "type_b_units": type_b_units,
+                "type_b_total_units": type_b_units,
                 "type_ab_units": 0,
+                "type_ab_total_units": 0,
                 "profit": Math.round(value_from_outside_option * 100) / 100,
             };
         }
@@ -310,7 +321,9 @@ get_total_value_value_string : function get_total_value_value_string(format = "s
     let group = app.get_current_group();
 
     let type_a_units = group["type_a_units_player_1"] + group["type_a_units_player_2"];
+    let type_a_total_units = type_a_units;
     let type_b_units = group["type_b_units_player_1"] + group["type_b_units_player_2"];
+    let type_b_total_units = type_b_units;
 
     let place_holder = `<span class="fs-4">---</span><br>---`;
 
@@ -318,8 +331,11 @@ get_total_value_value_string : function get_total_value_value_string(format = "s
     {
         place_holder = {
             "type_a_units": type_a_units,
+            "type_a_total_units": type_a_total_units,
             "type_b_units": type_b_units,
+            "type_b_total_units": type_b_total_units,
             "type_ab_units": null,
+            "type_ab_total_units": null,
             "profit": null,
         };
     }
@@ -382,6 +398,11 @@ get_total_value_value_string : function get_total_value_value_string(format = "s
         {
             return {
                 "type_a_units": unused_a_units,
+                "type_a_total_units": unused_a_units,
+                "type_b_units": unused_b_units,
+                "type_b_total_units": unused_b_units,
+                "type_ab_units": units_for_work,
+                "type_ab_total_units": units_for_work,
                 "type_b_units": unused_b_units,
                 "type_ab_units": units_for_work,
                 "profit": value_from_work_total,
@@ -391,8 +412,11 @@ get_total_value_value_string : function get_total_value_value_string(format = "s
         {
             return {
                 "type_a_units": unused_a_units,
+                "type_a_total_units": unused_a_units,
                 "type_b_units": type_b_units,
+                "type_b_total_units": type_b_units,
                 "type_ab_units": 0,
+                "type_ab_total_units": 0,
                 "profit": value_from_outside_option,
             };
         }
