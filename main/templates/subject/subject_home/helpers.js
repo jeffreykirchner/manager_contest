@@ -190,7 +190,11 @@ get_type_a_bid: function get_type_a_bid()
  */
 get_total_player_value_string: function get_total_player_value_string(player_number, format = "string")
 {
+    if(!app.session) return "---";
+    if(!app.session.started) return "---";
+
     let group = app.get_current_group();
+    let parameter_set_period = app.get_current_parameter_set_period();
     
     let place_holder = `<span class="fs-4">---</span><br>---`;
     let type_a_units = group["type_a_units_player_" + player_number];
@@ -206,38 +210,37 @@ get_total_player_value_string: function get_total_player_value_string(player_num
             "type_b_units": type_b_units,
             "type_b_total_units": type_b_total_units,
             "type_ab_units": null,
-            "type_ab_total_units": Math.min(type_a_total_units, type_b_total_units),
+            "type_ab_total_units": parameter_set_period.work_payout>parameter_set_period.outside_option_payout ? Math.min(type_a_total_units, type_b_total_units) : 0,
             "profit": null,
         };
     }
 
-    if(!app.session) return place_holder;
-    if(!app.session.started) return place_holder;
-
-    let parameter_set_period = app.get_current_parameter_set_period();
+    // if(!app.session) return place_holder;
+    // if(!app.session.started) return place_holder;
 
     if(!parameter_set_period) return ;
 
     if(group.phase =="Phase 1")
     {
-        if(app.type_a_bid == null) return place_holder;
-        if(app.type_a_bid_counterpart == null) return place_holder;
-    
-        //check if type_a_bid is a number
-        if(!Number.isFinite(app.type_a_bid)) return place_holder;
-        if(!Number.isFinite(app.type_a_bid_counterpart)) return place_holder;
-
-        //check if type_a_bid is greater than or equal to 0
-        if(app.type_a_bid < 0) return place_holder;
-        if(app.type_a_bid_counterpart < 0) return place_holder;
-
         //remove type a units from calculation if used for bid
         if(player_number == app.get_player_number())
         {
+            if(app.type_a_bid == null) return place_holder;
+
+            //check if type_a_bid is a number
+            if(!Number.isFinite(app.type_a_bid)) return place_holder;
+
+            //check if type_a_bid is greater than or equal to 0
+            if(app.type_a_bid < 0) return place_holder;
+
             type_a_units -= parseInt(app.type_a_bid);
         }
         else
         {
+            if(app.type_a_bid_counterpart == null) return place_holder;
+            if(!Number.isFinite(app.type_a_bid_counterpart)) return place_holder;
+            if(app.type_a_bid_counterpart < 0) return place_holder;
+
             type_a_units -= parseInt(app.type_a_bid_counterpart);
         }
 
@@ -318,7 +321,11 @@ get_total_player_value_string: function get_total_player_value_string(player_num
  */
 get_total_value_value_string : function get_total_value_value_string(format = "string")
 {
+    if(!app.session) return "---";
+    if(!app.session.started) return "---";
+
     let group = app.get_current_group();
+    let parameter_set_period = app.get_current_parameter_set_period();
 
     let type_a_units = group["type_a_units_player_1"] + group["type_a_units_player_2"];
     let type_a_total_units = type_a_units;
@@ -340,11 +347,6 @@ get_total_value_value_string : function get_total_value_value_string(format = "s
         };
     }
 
-    if(!app.session) return place_holder;
-    if(!app.session.started) return place_holder;
-
-    let parameter_set_period = app.get_current_parameter_set_period();
-
     if(group.phase =="Phase 1")
     {
         if(!parameter_set_period) return place_holder;
@@ -362,13 +364,13 @@ get_total_value_value_string : function get_total_value_value_string(format = "s
         //chec if bids are greater than total type a units for players
         if(app.get_player_number() == 1)   
         {
-        if(parseInt(app.type_a_bid) > group["type_a_units_player_1"]) return place_holder;
-        if(parseInt(app.type_a_bid_counterpart) > group["type_a_units_player_2"]) return place_holder;
+            if(parseInt(app.type_a_bid) > group["type_a_units_player_1"]) return place_holder;
+            if(parseInt(app.type_a_bid_counterpart) > group["type_a_units_player_2"]) return place_holder;
         }
         else
         {
-        if(parseInt(app.type_a_bid) > group["type_a_units_player_2"]) return place_holder;
-        if(parseInt(app.type_a_bid_counterpart) > group["type_a_units_player_1"]) return place_holder;
+            if(parseInt(app.type_a_bid) > group["type_a_units_player_2"]) return place_holder;
+            if(parseInt(app.type_a_bid_counterpart) > group["type_a_units_player_1"]) return place_holder;
         }
 
         type_a_units -= (parseInt(app.type_a_bid) + parseInt(app.type_a_bid_counterpart));
@@ -398,9 +400,9 @@ get_total_value_value_string : function get_total_value_value_string(format = "s
         {
             return {
                 "type_a_units": unused_a_units,
-                "type_a_total_units": unused_a_units,
+                "type_a_total_units": type_a_units,
                 "type_b_units": unused_b_units,
-                "type_b_total_units": unused_b_units,
+                "type_b_total_units": type_b_units,
                 "type_ab_units": units_for_work,
                 "type_ab_total_units": units_for_work,
                 "type_b_units": unused_b_units,

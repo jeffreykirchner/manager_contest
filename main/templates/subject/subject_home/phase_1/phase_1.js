@@ -212,7 +212,7 @@ draw_units_graph: function draw_units_graph(canvas_id,
     ctx.fillStyle = "cornflowerblue";
     ctx.strokeStyle = "cornflowerblue";
     ctx.beginPath();
-    ctx.roundRect(0, y_offset, bar_width, bar_height, 5);
+    ctx.roundRect(bar_fill_offset, y_offset, bar_width, bar_height, 5);
     ctx.fill();
     ctx.font = "18px Arial";
     ctx.fillText("B", -left_margin + 8, y_offset + bar_height / 2 + 6);
@@ -299,5 +299,45 @@ is_phase_1_input_disabled: function is_phase_1_input_disabled()
     }
 
     return false;
+},
+
+/**
+ * get my type a bid max
+ */
+get_my_type_a_bid_max: function get_my_type_a_bid_max()
+{
+    if(!app.session) return 0;
+    if(!app.session.started) return 0;
+
+    let group = app.get_current_group();
+
+    if(app.get_player_number() == 1)
+    {
+        return group["type_a_units_player_1"];
+    }
+    else
+    {
+        return group["type_a_units_player_2"];
+    }
+},
+
+/**
+ * get counterpart type a bid max
+ */
+get_counterpart_type_a_bid_max: function get_counterpart_type_a_bid_max()
+{
+    if(!app.session) return 0;
+    if(!app.session.started) return 0;
+
+    let group = app.get_current_group();
+
+    if(app.get_player_number() == 1)
+    {
+        return group["type_a_units_player_2"];
+    }
+    else
+    {
+        return group["type_a_units_player_1"];
+    }
 },
 

@@ -391,6 +391,7 @@ let app = Vue.createApp({
         update_graphs: function update_graphs()
         {
             if(!app.session) return;
+            if(!app.session.started) return;
             
             let world_state = app.session.world_state;
             let group = app.get_current_group();
