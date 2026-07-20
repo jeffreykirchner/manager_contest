@@ -110,10 +110,11 @@
                                 class="transfer_model_input form-control-lg fw-bold"
                                 v-model="type_a_bid"
                                 min="0"
-                                max="999"
+                                v-bind:max="get_my_type_a_bid_max()"
                                 step="1"
                                 v-bind:disabled="is_phase_1_input_disabled()"
                                 v-on:input="update_graphs()"
+                                style="color:gray"
                                 id="type_a_bid">     
                         </div>
                     </div>
@@ -131,10 +132,11 @@
                                 class="transfer_model_input form-control-lg fw-bold"
                                 v-model="type_a_bid_counterpart"
                                 min="0"
-                                max="999"
+                                v-bind:max="get_counterpart_type_a_bid_max()"
                                 step="1"
                                 v-bind:disabled="is_phase_1_input_disabled()"
                                 v-on:input="update_graphs()"
+                                style="color:gray"
                                 id="type_a_bid_counterpart">     
                         </div>
                     </div>
