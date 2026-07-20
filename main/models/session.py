@@ -202,6 +202,9 @@ class Session(models.Model):
                 p["type_b_units_player_1"] = parameter_set_period.type_b_units_player_1
                 p["type_b_units_player_2"] = parameter_set_period.type_b_units_player_2
 
+                p["type_a_units_start_player_1"] = parameter_set_period.type_a_units_player_1
+                p["type_a_units_start_player_2"] = parameter_set_period.type_a_units_player_2
+
                 p["type_a_phase_1_units_player_1"] = None
                 p["type_a_phase_1_units_player_2"] = None
                 

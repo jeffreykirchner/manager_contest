@@ -198,15 +198,17 @@ get_total_player_value_string: function get_total_player_value_string(player_num
     
     let place_holder = `<span class="fs-4">---</span><br>---`;
     let type_a_units = group["type_a_units_player_" + player_number];
-    let type_a_total_units = type_a_units;
+    let type_a_total_units = group["type_a_units_start_player_" + player_number];
     let type_b_units = group["type_b_units_player_" + player_number];
     let type_b_total_units = type_b_units;
+    let type_a_spent = 0;
 
     if(format == "json")
     {
         place_holder = {
             "type_a_units": type_a_units,
             "type_a_total_units": type_a_total_units,
+            "type_a_spent": type_a_spent,
             "type_b_units": type_b_units,
             "type_b_total_units": type_b_total_units,
             "type_ab_units": null,
@@ -234,6 +236,7 @@ get_total_player_value_string: function get_total_player_value_string(player_num
             if(app.type_a_bid < 0) return place_holder;
 
             type_a_units -= parseInt(app.type_a_bid);
+            type_a_spent = parseInt(app.type_a_bid);
         }
         else
         {
@@ -242,9 +245,14 @@ get_total_player_value_string: function get_total_player_value_string(player_num
             if(app.type_a_bid_counterpart < 0) return place_holder;
 
             type_a_units -= parseInt(app.type_a_bid_counterpart);
+            type_a_spent = parseInt(app.type_a_bid_counterpart);
         }
 
         if(type_a_units < 0) return place_holder;
+    }
+    else if(group.phase == "Phase 2")
+    {
+        type_a_spent = group["type_a_phase_1_units_player_" + player_number];
     }
 
     let work_payout = parseFloat(parameter_set_period.work_payout);
@@ -266,11 +274,12 @@ get_total_player_value_string: function get_total_player_value_string(player_num
     //format in 0.00
     if(format == "json")
     {
-        if(value_from_work_total > value_from_outside_option)
+        if(work_payout >= outside_option_payout)
         {
             return {
                 "type_a_units": unused_a_units,
                 "type_a_total_units": type_a_total_units,
+                "type_a_spent": type_a_spent,
                 "type_b_units": unused_b_units,
                 "type_b_total_units": type_b_total_units,
                 "type_ab_units": units_for_work,
@@ -282,7 +291,8 @@ get_total_player_value_string: function get_total_player_value_string(player_num
         {
             return {
                 "type_a_units": unused_a_units,
-                "type_a_total_units": unused_a_units,
+                "type_a_total_units": type_a_total_units,
+                "type_a_spent": type_a_spent,
                 "type_b_units": type_b_units,
                 "type_b_total_units": type_b_units,
                 "type_ab_units": 0,
@@ -293,7 +303,7 @@ get_total_player_value_string: function get_total_player_value_string(player_num
     }
     else
     {
-        if(value_from_work_total > value_from_outside_option)
+        if(work_payout >= outside_option_payout)
         {
             return `<span class="fs-4">$${value_from_work_total.toFixed(2)}</span>
                     <br>
@@ -328,9 +338,10 @@ get_total_value_value_string : function get_total_value_value_string(format = "s
     let parameter_set_period = app.get_current_parameter_set_period();
 
     let type_a_units = group["type_a_units_player_1"] + group["type_a_units_player_2"];
-    let type_a_total_units = type_a_units;
+    let type_a_total_units = group["type_a_units_start_player_1"] + group["type_a_units_start_player_2"];;
     let type_b_units = group["type_b_units_player_1"] + group["type_b_units_player_2"];
     let type_b_total_units = type_b_units;
+    let type_a_spent = 0;
 
     let place_holder = `<span class="fs-4">---</span><br>---`;
 
@@ -339,6 +350,7 @@ get_total_value_value_string : function get_total_value_value_string(format = "s
         place_holder = {
             "type_a_units": type_a_units,
             "type_a_total_units": type_a_total_units,
+            "type_a_spent": type_a_spent,
             "type_b_units": type_b_units,
             "type_b_total_units": type_b_total_units,
             "type_ab_units": null,
@@ -374,8 +386,13 @@ get_total_value_value_string : function get_total_value_value_string(format = "s
         }
 
         type_a_units -= (parseInt(app.type_a_bid) + parseInt(app.type_a_bid_counterpart));
+        type_a_spent = parseInt(app.type_a_bid) + parseInt(app.type_a_bid_counterpart);
 
         if(type_a_units < 0) return place_holder;
+    }
+    else if(group.phase == "Phase 2")
+    {
+        type_a_spent = group["type_a_phase_1_units_player_1"] + group["type_a_phase_1_units_player_2"]; 
     }
 
     let work_payout = parseFloat(parameter_set_period.work_payout);
@@ -396,11 +413,12 @@ get_total_value_value_string : function get_total_value_value_string(format = "s
 
     if(format == "json")
     {
-        if(value_from_work_total > value_from_outside_option)
+        if(work_payout >= outside_option_payout)
         {
             return {
                 "type_a_units": unused_a_units,
-                "type_a_total_units": type_a_units,
+                "type_a_total_units": type_a_total_units,
+                "type_a_spent": type_a_spent,
                 "type_b_units": unused_b_units,
                 "type_b_total_units": type_b_units,
                 "type_ab_units": units_for_work,
@@ -414,7 +432,8 @@ get_total_value_value_string : function get_total_value_value_string(format = "s
         {
             return {
                 "type_a_units": unused_a_units,
-                "type_a_total_units": unused_a_units,
+                "type_a_total_units": type_a_total_units,
+                "type_a_spent": type_a_spent,
                 "type_b_units": type_b_units,
                 "type_b_total_units": type_b_units,
                 "type_ab_units": 0,
@@ -425,7 +444,7 @@ get_total_value_value_string : function get_total_value_value_string(format = "s
     }
     else
     {
-        if(value_from_work_total > value_from_outside_option)
+        if(work_payout >= outside_option_payout)
         {
             return `<span class="fs-4">$${value_from_work_total.toFixed(2)}</span>
                     <br>

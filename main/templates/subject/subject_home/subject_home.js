@@ -406,10 +406,19 @@ let app = Vue.createApp({
             if(scale_max < (parameter_set_period.type_a_units_player_1 + parameter_set_period.type_a_units_player_2)) scale_max = (parameter_set_period.type_a_units_player_1 + parameter_set_period.type_a_units_player_2);
             if(scale_max < (parameter_set_period.type_b_units_player_1 + parameter_set_period.type_b_units_player_2)) scale_max = (parameter_set_period.type_b_units_player_1 + parameter_set_period.type_b_units_player_2);
 
+            let my_type_a_spent = 0;
+            let counterpart_type_a_spent = 0;
+
+            // if(group.phase == "Phase 1")
+            // {
+            //     if(total_player_value_string.type_a_units != null) my_type_a_spent = app.type_a_bid;
+            //     if(total_counterpart_value_string.type_a_units != null) counterpart_type_a_spent = app.type_a_bid_counterpart;
+            // }
       
             app.draw_units_graph("phase_1_my_unit_graph", 
                                     total_player_value_string.type_a_units,
                                     total_player_value_string.type_a_total_units,
+                                    total_player_value_string.type_a_spent,
                                     total_player_value_string.type_b_units,
                                     total_player_value_string.type_b_total_units,
                                     total_player_value_string.type_ab_units,
@@ -419,6 +428,7 @@ let app = Vue.createApp({
             app.draw_units_graph("phase_1_counterpart_unit_graph",
                                     total_counterpart_value_string.type_a_units,
                                     total_counterpart_value_string.type_a_total_units,
+                                    total_counterpart_value_string.type_a_spent,
                                     total_counterpart_value_string.type_b_units,
                                     total_counterpart_value_string.type_b_total_units,
                                     total_counterpart_value_string.type_ab_units,
@@ -431,6 +441,7 @@ let app = Vue.createApp({
             app.draw_units_graph("phase_1_group_unit_graph",
                                             total_value_value_string.type_a_units,
                                             total_value_value_string.type_a_total_units,
+                                            total_value_value_string.type_a_spent,
                                             total_value_value_string.type_b_units,
                                             total_value_value_string.type_b_total_units,
                                             total_value_value_string.type_ab_units,

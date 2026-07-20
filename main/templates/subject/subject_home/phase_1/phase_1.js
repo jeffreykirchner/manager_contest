@@ -154,6 +154,7 @@ get_manager_probability: function get_manager_probability()
 draw_units_graph: function draw_units_graph(canvas_id, 
                                             units_a, 
                                             units_a_total,
+                                            units_a_spent,
                                             units_b,
                                             units_b_total, 
                                             units_ab, 
@@ -195,6 +196,15 @@ draw_units_graph: function draw_units_graph(canvas_id,
     ctx.font = "18px Arial";
     ctx.fillText("A", -left_margin + 8, bar_height / 2 + 6);
 
+    //draw units_a_spent bar, fill with units_a_spent
+    bar_width = (w - left_margin - right_margin) * (units_a_spent / graph_max);
+    bar_fill_offset = (w - left_margin - right_margin) * ((units_a_total-units_a_spent - units_a) / graph_max)
+    ctx.fillStyle = "grey";
+    ctx.strokeStyle = "grey";
+    ctx.beginPath();
+    ctx.roundRect(bar_fill_offset, 0, bar_width, bar_height, 5);
+    ctx.fill();
+
     //draw units_a_total bar, outline with units_a_total
     bar_width = (w - left_margin - right_margin) * (units_a_total / graph_max);
     ctx.fillStyle = "crimson";
@@ -205,6 +215,15 @@ draw_units_graph: function draw_units_graph(canvas_id,
     ctx.stroke();
     ctx.font = "18px Arial";
     ctx.fillText(units_a, bar_width + 5, bar_height / 2 + 6);
+
+    //draw down arrow to indicate unused units_a (units_a_total-units_a_spent - units_a)
+    if(units_a_total - units_a_spent - units_a > 0)
+    {
+        ctx.fillStyle = "black";
+        ctx.strokeStyle = "black";
+        ctx.font = "26px Arial";
+        ctx.fillText("⤵", 0, bar_height/2+8);
+    }
 
     //draw units_b bar, fill with units_b    
     bar_width = (w - left_margin - right_margin) * (units_b / graph_max);
@@ -227,6 +246,15 @@ draw_units_graph: function draw_units_graph(canvas_id,
     ctx.stroke();
     ctx.font = "18px Arial";
     ctx.fillText(units_b, bar_width + 5, y_offset + bar_height / 2 + 6);
+
+    //draw down arrow to indicate unused units_a (units_a_total-units_a_spent - units_a)
+    if(units_a_total - units_a_spent - units_a > 0)
+    {
+        ctx.fillStyle = "black";
+        ctx.strokeStyle = "black";
+        ctx.font = "26px Arial";
+        ctx.fillText("⤵", 0, y_offset + bar_height/2+8);
+    }
     
     // if(units_ab == null)
     // {
