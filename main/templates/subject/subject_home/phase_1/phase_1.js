@@ -267,14 +267,15 @@ draw_units_graph: function draw_units_graph(canvas_id,
     // }
     // else
     // {
+
     //draw units_ab bar, fill with units_ab
     y_offset = 2 * (bar_height + bar_spacing);
     bar_width = (w - left_margin - right_margin) * (units_ab / graph_max);
-    bar_fill_offset = (w - left_margin - right_margin) * ((units_ab_total-units_ab) / graph_max)
+    // bar_fill_offset = (w - left_margin - right_margin) * ((units_ab) / graph_max)
     ctx.fillStyle = "purple";
     ctx.fillStyle = "purple";
     ctx.beginPath();
-    ctx.roundRect(bar_fill_offset, y_offset, bar_width, bar_height, 5);
+    ctx.roundRect(0, y_offset, bar_width, bar_height, 5);
     ctx.fill();
     ctx.lineWidth = 0.5;
     ctx.stroke();
