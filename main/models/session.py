@@ -363,7 +363,7 @@ class Session(models.Model):
             parameter_set = self.parameter_set.json_for_session
             
            
-            top_row = ["Session ID", "Period", "Group", "Player 1", "Player 2", "Player 1 Start A", "Player 2 Start A", "Player 1 Start B", "Player 2 Start B", 
+            top_row = ["Session ID", "Period", "Group", "Player ID (Global)", "Player Number (Session)", "Player 1", "Player 2", "Player 1 Start A", "Player 2 Start A", "Player 1 Start B", "Player 2 Start B", 
                        "AB Value", "B Value",
                        "Phase 1, Player 1 Separate Value", "Phase 1, Player 2 Separate Value", "Phase 1, Group Total Value",
                        "Player 1 A Bid", "Player 2 A Bid", "Player 1 A Bid Prediction", "Player 2 A Bid Prediction",
@@ -387,6 +387,41 @@ class Session(models.Model):
                     temp_row = [self.id, 
                                 period_number+1, 
                                 group_id,
+                                group["player_1"],
+                                session_players_list[str(group["player_1"])]["player_number"],
+                                session_players_list[str(group["player_1"])]["player_number"],
+                                session_players_list[str(group["player_2"])]["player_number"],
+                                parameter_set_period["type_a_units_player_1"],
+                                parameter_set_period["type_a_units_player_2"],
+                                parameter_set_period["type_b_units_player_1"],
+                                parameter_set_period["type_b_units_player_2"],
+                                parameter_set_period["work_payout"],
+                                parameter_set_period["outside_option_payout"],
+                                group["player_1_start_total_value"],
+                                group["player_2_start_total_value"],
+                                group["group_start_total_value"],
+                                group["type_a_phase_1_units_player_1"],
+                                group["type_a_phase_1_units_player_2"],
+                                group["type_a_phase_1_units_player_1_prediction"],
+                                group["type_a_phase_1_units_player_2_prediction"],
+                                group["player_1_total_value"],
+                                group["player_2_total_value"],
+                                group["group_total_value"],
+                                session_players_list[str(group["manager"])]["player_number"] if group["manager"] else None,
+                                session_players_list[str(group["worker"])]["player_number"] if group["worker"] else None,
+                                group["manager_offer"],
+                                group["manager_offer_accepted"],
+                                group["player_1_earnings"],
+                                group["player_2_earnings"]
+                            ]
+
+                    writer.writerow(temp_row)
+
+                    temp_row = [self.id, 
+                                period_number+1, 
+                                group_id,
+                                group["player_2"],
+                                session_players_list[str(group["player_2"])]["player_number"],
                                 session_players_list[str(group["player_1"])]["player_number"],
                                 session_players_list[str(group["player_2"])]["player_number"],
                                 parameter_set_period["type_a_units_player_1"],
