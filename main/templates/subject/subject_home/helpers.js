@@ -291,7 +291,7 @@ get_total_player_value_string: function get_total_player_value_string(player_num
         else
         {
             return {
-                "type_a_units": unused_a_units,
+                "type_a_units": type_a_units,
                 "type_a_total_units": type_a_total_units,
                 "type_a_spent": type_a_spent,
                 "type_b_units": type_b_units,
@@ -431,7 +431,7 @@ get_total_value_value_string : function get_total_value_value_string(format = "s
         else
         {
             return {
-                "type_a_units": unused_a_units,
+                "type_a_units": type_a_units,
                 "type_a_total_units": type_a_total_units,
                 "type_a_spent": type_a_spent,
                 "type_b_units": type_b_units,
