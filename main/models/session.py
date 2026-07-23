@@ -235,6 +235,7 @@ class Session(models.Model):
                 p["player_2_review_complete"] = False
 
                 p["phase"] = GroupPhase.PHASE_1
+                p["id"] = p_id
 
                 groups[str(p_id)] = p
 

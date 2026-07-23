@@ -200,6 +200,21 @@ let app = Vue.createApp({
                 case "update_end_game":
                     app.take_update_end_game(message_data);
                     break;
+                case "update_submit_type_a_bid":
+                    app.take_submit_type_a_bid(message_data);
+                    break;
+                case "update_submit_manager_offer_to_worker":
+                    app.take_submit_manager_offer_to_worker(message_data);
+                    break;
+                case "update_submit_worker_response_to_manager":
+                    app.take_submit_worker_response_to_manager(message_data);
+                    break;
+                case "update_ready_to_go_on":
+                    app.take_update_ready_to_go_on(message_data);
+                    break;
+                case "update_start_next_period":
+                    app.take_update_start_next_period(message_data);
+                    break;
             }
             app.working = false;
             app.process_the_feed(message_type, message_data);
@@ -355,6 +370,7 @@ let app = Vue.createApp({
 
         /**
          * end game
+         * @param message_data {json} session day in json format
          */
         take_update_end_game: function take_update_end_game(message_data){
             let periods_paid = message_data.periods_paid;
@@ -373,6 +389,79 @@ let app = Vue.createApp({
 
             world_state.current_experiment_phase = message_data.current_experiment_phase;
             app.update_phase_button_text();
+        },
+
+        /**
+         * get group
+         */
+        get_player_group: function get_player_group(player_id)
+        {
+            let current_session_period = app.get_current_session_period();
+
+            if(!current_session_period) return null;
+
+            let group_id = current_session_period.group_map[player_id];
+            let group = current_session_period.groups[group_id];
+            return group;       
+        },
+
+        /**
+         * take results of submit_type_a_bid
+         * @param message_data {json} session day in json format
+         */
+        take_submit_type_a_bid: function take_submit_type_a_bid(message_data)
+        {
+            
+            let source_player_id = message_data.source_player_id;
+            let group = app.get_current_group();
+
+            if(source_player_id == app.session.player_id)
+            {
+                app.working = false;
+            }
+
+            if(message_data.status == "fail")
+            {
+                app.type_a_bid_error = "Error: " + message_data.error_message;
+            }
+            else
+            {
+                group.type_a_phase_1_units_player_1 = message_data.group.type_a_phase_1_units_player_1;   
+                group.type_a_phase_1_units_player_2 = message_data.group.type_a_phase_1_units_player_2; 
+                group.type_a_units_player_1 = message_data.group.type_a_units_player_1;
+                group.type_a_units_player_2 = message_data.group.type_a_units_player_2;
+                group.phase = message_data.group.phase;
+                group.manager = message_data.group.manager; 
+                group.worker = message_data.group.worker;
+                group.player_1_probability = message_data.group.player_1_probability;
+                group.player_2_probability = message_data.group.player_2_probability;
+                group.manager_draw = message_data.group.manager_draw;
+
+                if(app.is_subject && group.phase == "Phase 2")
+                {
+                    
+                    Vue.nextTick(() => {
+                        app.update_graphs();
+
+                        try{
+                            app.pixi_setup_pie_graph();
+                            app.spinner_complete = false;
+                            app.spinning = true;
+                        }
+                        catch(err)
+                        {
+                            console.log("Error setting up pie graph: " + err);
+                        }
+                    });
+                }
+            }
+        },
+
+        /** update start next period status
+        *    @param message_data {json} session day in json format
+        */
+        take_update_start_next_period: function take_update_start_next_period(message_data){
+            app.session.world_state.current_period = message_data.current_period;
         },
        
         //do nothing on when enter pressed for post

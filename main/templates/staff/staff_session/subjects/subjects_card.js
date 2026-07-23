@@ -382,3 +382,27 @@ get_earnings_display: function get_earnings_display(earnings)
         return "$" + v;
     }
 },  
+
+/**
+ * get status display
+ */
+get_status_display: function get_status_display(player_id)
+{
+    let group = app.get_player_group(player_id);
+
+    if(!group) return "***";
+
+    return "Group " + group.id + " | " + group.phase;
+},
+
+/**
+ * get current session period from the world state
+ */
+get_current_session_period: function get_current_session_period()
+{
+    if(!app.session) return null;
+    if(!app.session.started) return null;
+    
+    let current_session_period_id = app.session.world_state.session_periods_order[app.session.world_state.current_period-1];
+    return app.session.world_state.session_periods[current_session_period_id];
+},
