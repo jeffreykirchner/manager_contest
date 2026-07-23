@@ -75,10 +75,10 @@ submit_type_a_bid_instructions: function submit_type_a_bid_instructions()
 take_submit_type_a_bid: function take_submit_type_a_bid(message_data)
 {
     
-    let source_player_id = message_data.source_player_id;
+    let session_player_id = message_data.session_player_id;
     let group = app.get_current_group();
 
-    if(source_player_id == app.session.player_id)
+    if(session_player_id == app.session_player.id)
     {
         app.working = false;
     }

@@ -26,7 +26,7 @@ process_the_feed: function process_the_feed(message_type, message_data)
 
             break;
         case "update_interaction":
-                sender_label = app.get_parameter_set_player_from_player_id(message_data.source_player_id).id_label;
+                sender_label = app.get_parameter_set_player_from_player_id(message_data.session_player_id).id_label;
                 receiver_label = app.get_parameter_set_player_from_player_id(message_data.target_player_id).id_label;
     
                 if(message_data.direction == "send")

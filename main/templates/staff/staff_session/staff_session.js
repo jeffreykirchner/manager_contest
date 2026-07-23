@@ -424,8 +424,8 @@ let app = Vue.createApp({
         take_submit_type_a_bid: function take_submit_type_a_bid(message_data)
         {
             
-            let source_player_id = message_data.source_player_id;
-            let group = app.get_player_group(source_player_id);
+            let session_player_id = message_data.session_player_id;
+            let group = app.get_player_group(session_player_id);
 
             if(message_data.status != "fail")
             {
@@ -449,8 +449,8 @@ let app = Vue.createApp({
         take_submit_manager_offer_to_worker: function take_submit_manager_offer_to_worker(message_data)
         {
             
-            let source_player_id = message_data.source_player_id;
-            let group = app.get_player_group(source_player_id);
+            let session_player_id = message_data.session_player_id;
+            let group = app.get_player_group(session_player_id);
 
             if(message_data.status != "fail")
             {
@@ -465,8 +465,8 @@ let app = Vue.createApp({
         take_submit_worker_response_to_manager: function take_submit_worker_response_to_manager(message_data)
         {
             
-            let source_player_id = message_data.source_player_id;
-            let group = app.get_player_group(source_player_id);
+            let session_player_id = message_data.session_player_id;
+            let group = app.get_player_group(session_player_id);
 
             if(message_data.status != "fail")
             {
@@ -484,8 +484,8 @@ let app = Vue.createApp({
         take_update_ready_to_go_on: function take_update_ready_to_go_on(message_data)
         {
             
-            let source_player_id = message_data.source_player_id;
-            let group = app.get_player_group(source_player_id);
+            let session_player_id = message_data.session_player_id;
+            let group = app.get_player_group(session_player_id);
 
             if(message_data.status != "fail")
             {

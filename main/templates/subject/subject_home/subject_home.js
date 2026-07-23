@@ -457,9 +457,9 @@ let app = Vue.createApp({
         take_update_end_game: function take_update_end_game(message_data){
             let periods_paid = message_data.periods_paid;
             let world_state = app.session.world_state;
-            let source_player_id = message_data.source_player_id;
+            let session_player_id = message_data.session_player_id;
 
-            if(source_player_id == app.session.player_id)
+            if(session_player_id == app.session_player.id)
             {
                 app.working = false;
                 let player_number = app.get_player_number();
