@@ -58,14 +58,15 @@ submit_worker_response_to_manager_instructions: function submit_worker_response_
 
 /**
  * take results of submit_worker_response_to_manager
+ * @param {Object} message_data - data from server
  */
 take_submit_worker_response_to_manager: function take_submit_worker_response_to_manager(message_data)
 {
     
-    let source_player_id = message_data.source_player_id;
+    let session_player_id = message_data.session_player_id;
     let group = app.get_current_group();
 
-    if(source_player_id == app.session.player_id)
+    if(session_player_id == app.session_player.id)
     {
         app.working = false;
     }
@@ -144,14 +145,15 @@ ready_to_go_on_instructions: function ready_to_go_on_instructions()
 
 /**
  * take results of ready_to_go_on
+ * @param {Object} message_data - data from server
  */
 take_update_ready_to_go_on: function take_update_ready_to_go_on(message_data)
 {
     
-    let source_player_id = message_data.source_player_id;
+    let session_player_id = message_data.session_player_id;
     let group = app.get_current_group();
 
-    if(source_player_id == app.session.player_id)
+    if(session_player_id == app.session_player.id)
     {
         app.working = false;
     }

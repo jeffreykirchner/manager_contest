@@ -98,6 +98,9 @@
                                 <span v-else>
                                     Bonus<br>Earnings
                                 </span>
+                            </th>  
+                            <th scope="col" class = "text-center">
+                                Status
                             </th>                       
                             <th scope="col" class = "text-center">
                                 Shareable<br>Login Link
@@ -143,6 +146,14 @@
                             <td class="player_table_cell text-nowrap">
                                 <span v-if="Object.keys(session.world_state).length > 0 && session.started">
                                     [[get_earnings_display(session.world_state.session_players[p].earnings)]]
+                                </span>
+                                <span v-else>
+                                    ---
+                                </span>
+                            </td> 
+                            <td class="player_table_cell text-nowrap">
+                                <span v-if="Object.keys(session.world_state).length > 0 && session.started">
+                                    [[get_status_display(p)]]
                                 </span>
                                 <span v-else>
                                     ---

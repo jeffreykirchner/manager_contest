@@ -53,14 +53,15 @@ submit_manager_offer_to_worker_instructions: function submit_manager_offer_to_wo
 
 /**
  * take results of submit_manager_offer_to_worker
+ * @param {Object} message_data - data from server
  */
 take_submit_manager_offer_to_worker: function take_submit_manager_offer_to_worker(message_data)
 {
     
-    let source_player_id = message_data.source_player_id;
+    let session_player_id = message_data.session_player_id;
     let group = app.get_current_group();
 
-    if(source_player_id == app.session.player_id)
+    if(session_player_id == app.session_player.id)
     {
         app.working = false;
     }

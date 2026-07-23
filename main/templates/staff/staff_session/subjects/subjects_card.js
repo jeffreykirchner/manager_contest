@@ -382,3 +382,15 @@ get_earnings_display: function get_earnings_display(earnings)
         return "$" + v;
     }
 },  
+
+/**
+ * get status display
+ */
+get_status_display: function get_status_display(player_id)
+{
+    let group = app.get_player_group(player_id);
+
+    if(!group) return "***";
+
+    return "G" + group.id + " | " + group.phase;
+},
