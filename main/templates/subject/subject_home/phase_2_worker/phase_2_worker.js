@@ -58,6 +58,7 @@ submit_worker_response_to_manager_instructions: function submit_worker_response_
 
 /**
  * take results of submit_worker_response_to_manager
+ * @param {Object} message_data - data from server
  */
 take_submit_worker_response_to_manager: function take_submit_worker_response_to_manager(message_data)
 {
@@ -144,6 +145,7 @@ ready_to_go_on_instructions: function ready_to_go_on_instructions()
 
 /**
  * take results of ready_to_go_on
+ * @param {Object} message_data - data from server
  */
 take_update_ready_to_go_on: function take_update_ready_to_go_on(message_data)
 {

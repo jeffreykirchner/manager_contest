@@ -53,6 +53,7 @@ submit_manager_offer_to_worker_instructions: function submit_manager_offer_to_wo
 
 /**
  * take results of submit_manager_offer_to_worker
+ * @param {Object} message_data - data from server
  */
 take_submit_manager_offer_to_worker: function take_submit_manager_offer_to_worker(message_data)
 {

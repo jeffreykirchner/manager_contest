@@ -392,6 +392,18 @@ let app = Vue.createApp({
         },
 
         /**
+         * get current session period from the world state
+         */
+        get_current_session_period: function get_current_session_period()
+        {
+            if(!app.session) return null;
+            if(!app.session.started) return null;
+            
+            let current_session_period_id = app.session.world_state.session_periods_order[app.session.world_state.current_period-1];
+            return app.session.world_state.session_periods[current_session_period_id];
+        },
+
+        /**
          * get group
          */
         get_player_group: function get_player_group(player_id)
@@ -413,18 +425,9 @@ let app = Vue.createApp({
         {
             
             let source_player_id = message_data.source_player_id;
-            let group = app.get_current_group();
+            let group = app.get_player_group(source_player_id);
 
-            if(source_player_id == app.session.player_id)
-            {
-                app.working = false;
-            }
-
-            if(message_data.status == "fail")
-            {
-                app.type_a_bid_error = "Error: " + message_data.error_message;
-            }
-            else
+            if(message_data.status != "fail")
             {
                 group.type_a_phase_1_units_player_1 = message_data.group.type_a_phase_1_units_player_1;   
                 group.type_a_phase_1_units_player_2 = message_data.group.type_a_phase_1_units_player_2; 
@@ -436,24 +439,58 @@ let app = Vue.createApp({
                 group.player_1_probability = message_data.group.player_1_probability;
                 group.player_2_probability = message_data.group.player_2_probability;
                 group.manager_draw = message_data.group.manager_draw;
+            }
+        },
 
-                if(app.is_subject && group.phase == "Phase 2")
-                {
-                    
-                    Vue.nextTick(() => {
-                        app.update_graphs();
+        /**
+         * take results of submit_manager_offer_to_worker
+         * @param {Object} message_data - data from server
+         */
+        take_submit_manager_offer_to_worker: function take_submit_manager_offer_to_worker(message_data)
+        {
+            
+            let source_player_id = message_data.source_player_id;
+            let group = app.get_player_group(source_player_id);
 
-                        try{
-                            app.pixi_setup_pie_graph();
-                            app.spinner_complete = false;
-                            app.spinning = true;
-                        }
-                        catch(err)
-                        {
-                            console.log("Error setting up pie graph: " + err);
-                        }
-                    });
-                }
+            if(message_data.status != "fail")
+            {
+                group.manager_offer = message_data.group.manager_offer;
+            }
+        },
+
+        /**
+         * take results of submit_worker_response_to_manager
+         * @param {Object} message_data - data from server
+         */
+        take_submit_worker_response_to_manager: function take_submit_worker_response_to_manager(message_data)
+        {
+            
+            let source_player_id = message_data.source_player_id;
+            let group = app.get_player_group(source_player_id);
+
+            if(message_data.status != "fail")
+            {
+                group.manager_offer_accepted = message_data.group.manager_offer_accepted;
+                group.phase = message_data.group.phase;
+                group.player_1_earnings = message_data.group.player_1_earnings;
+                group.player_2_earnings = message_data.group.player_2_earnings;
+            }
+        },
+
+        /**
+         * take results of ready_to_go_on
+         * @param {Object} message_data - data from server
+         */
+        take_update_ready_to_go_on: function take_update_ready_to_go_on(message_data)
+        {
+            
+            let source_player_id = message_data.source_player_id;
+            let group = app.get_player_group(source_player_id);
+
+            if(message_data.status != "fail")
+            {
+                group.player_1_review_complete = message_data.group.player_1_review_complete;
+                group.player_2_review_complete = message_data.group.player_2_review_complete;
             }
         },
 
