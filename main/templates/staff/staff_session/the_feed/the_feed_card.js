@@ -9,6 +9,7 @@ process_the_feed: function process_the_feed(message_type, message_data)
     let sender_label = "";
     let receiver_label = "";
     let group_label = "";
+    let player_info = null;
 
     switch(message_type) {                
         
@@ -25,18 +26,18 @@ process_the_feed: function process_the_feed(message_type, message_data)
             html_text = "<b>" + sender_label + "</b> @ " + receiver_label + ": " +  message_data.text;
 
             break;
-        case "update_interaction":
-                sender_label = app.get_parameter_set_player_from_player_id(message_data.session_player_id).id_label;
-                receiver_label = app.get_parameter_set_player_from_player_id(message_data.target_player_id).id_label;
-    
-                if(message_data.direction == "send")
-                {
-                    html_text = "<b>" + sender_label + "</b> sent " + parseInt(message_data.target_player_change) + " <img src='/static/"+  "cherry.png' height='20'> to <b>" + receiver_label + "</b>. ";
-                }
-                else if(message_data.direction == "take")
-                {
-                    html_text = "<b>" + sender_label + "</b> took " + parseInt(message_data.source_player_change) + " <img src='/static/"+  "cherry.png' height='20'> from <b>" + receiver_label + "</b>. ";
-                }
+        case "update_submit_type_a_bid":
+                player_info = app.get_the_feed_player_info(message_data.session_player_id);
+                let bid = player_info.group["type_a_phase_1_units_player_" + player_info.player_number];
+
+                html_text = `<b>P${player_info.player_label} | G${player_info.group.id}:</b> Spent ${bid} Type A unit(s) in Phase 1.`;
+                break;
+        case "update_submit_manager_offer_to_worker":
+                player_info = app.get_the_feed_player_info(message_data.session_player_id);
+                let offer = player_info.group.manager_offer;
+
+                html_text = `<b>P${player_info.player_label} | G${player_info.group.id}:</b> Offered $${offer.toFixed(2)} to their counterpart in Phase 2.`;
+                break;
     }
 
     if(html_text != "") {
@@ -44,4 +45,20 @@ process_the_feed: function process_the_feed(message_type, message_data)
         app.the_feed.unshift(html_text);
     }
 
+},
+
+/**
+ * Get player info for the feed
+ * @param {number} session_player_id - The ID of the session player
+ * @returns {Object} - The player info
+ */
+get_the_feed_player_info: function get_the_feed_player_info(session_player_id)
+{
+    let group = app.get_player_group(session_player_id);
+    let session_player = app.session.world_state.session_players[session_player_id];
+    let parameter_set_player = app.session.parameter_set.parameter_set_players[session_player.parameter_set_player_id];
+
+    return {player_label: parameter_set_player.player_number, 
+            group: group,
+            player_number: group.player_1 == session_player_id ? 1 : 2,};
 },
