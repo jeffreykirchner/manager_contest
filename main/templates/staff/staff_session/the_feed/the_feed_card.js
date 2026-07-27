@@ -35,8 +35,33 @@ process_the_feed: function process_the_feed(message_type, message_data)
         case "update_submit_manager_offer_to_worker":
                 player_info = app.get_the_feed_player_info(message_data.session_player_id);
                 let offer = player_info.group.manager_offer;
+                let value = null;
+                if(player_info.player_number == 1) {
+                    value = player_info.group.player_2_total_value;
+                } else {
+                    value = player_info.group.player_1_total_value;
+                }
 
-                html_text = `<b>P${player_info.player_label} | G${player_info.group.id}:</b> Offered $${offer.toFixed(2)} to their counterpart in Phase 2.`;
+                html_text = `<b>P${player_info.player_label} | G${player_info.group.id}:</b> Offered $${offer.toFixed(2)} to their counterpart for their items ($${value.toFixed(2)}) in Phase 2.`;
+                break;
+        case "update_submit_worker_response_to_manager":
+                player_info = app.get_the_feed_player_info(message_data.session_player_id);
+                let response = player_info.group.manager_offer_accepted;
+
+                if(response == "accept") 
+                {
+                    response = "Accepted";
+                } 
+                else 
+                {
+                    response = "Rejected";
+                }
+
+                html_text = `<b>P${player_info.player_label} | G${player_info.group.id}:</b> ${response} their counterpart's offer of 
+                             $${player_info.group.manager_offer.toFixed(2)} for their items ($${player_info.group["player_" + player_info.player_number + "_total_value"].toFixed(2)}) in Phase 2.`;
+                break;
+        case "update_start_next_period":
+                html_text = "<center><b>Period " + app.session.world_state.current_period + " has started.</b></center>";
                 break;
     }
 
