@@ -56,6 +56,15 @@
         font-weight: bold;
     }
 
+    .summary_graph{
+        height:300px;
+        width:100%;
+        border-color: lightgray;
+        border-style: solid;
+        border-width: 1px;
+        border-radius: 5px;
+    }
+
 </style>
 
 {%endblock head%}
@@ -122,8 +131,11 @@
                 {%include "staff/staff_session/replay/replay_card.html"%}
             </div>
         </div>
-    </div>    
-    <div class="col-md-9">
+    </div>  
+    <div class="col-md-6">
+        {%include "staff/staff_session/summary_graph/summary_graph_card.html"%}
+    </div>   
+    <div class="col-md-3">
         {%include "staff/staff_session/the_feed/the_feed_card.html"%}
     </div>            
 </div>

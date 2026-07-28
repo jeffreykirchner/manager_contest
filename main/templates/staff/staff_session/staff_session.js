@@ -309,6 +309,7 @@ let app = Vue.createApp({
             {
                 Vue.nextTick(() => {
                     app.do_first_load();
+                    app.draw_summary_graph();
                 });
             }
             else
@@ -514,6 +515,7 @@ let app = Vue.createApp({
         {%include "staff/staff_session/interface/interface_card.js"%}
         {%include "staff/staff_session/replay/replay_card.js"%}
         {%include "staff/staff_session/the_feed/the_feed_card.js"%}
+        {%include "staff/staff_session/summary_graph/summary_graph_card.js"%}
         {%include "js/help_doc.js"%}
     
         /** clear form error messages
