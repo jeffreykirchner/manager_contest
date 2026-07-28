@@ -10,7 +10,7 @@ draw_summary_graph: function draw_summary_graph()
 
     let ctx = temp_canvas.getContext('2d');
 
-    let parameter_set_period = app.get_current_parameter_set_period();
+    let world_state = app.session.world_state;
 
     let left_margin = 30;
     let right_margin = 30;
@@ -26,8 +26,6 @@ draw_summary_graph: function draw_summary_graph()
 
     ctx.clearRect(0,0,w,h);
 
-    if(clear_canvas_only) return;
-
     ctx.save(); 
     ctx.translate(left_margin, top_margin);
 
@@ -39,19 +37,21 @@ draw_summary_graph: function draw_summary_graph()
     ctx.stroke();
 
     //draw bars for each period
-    for(let i = 0; i < parameter_set_period.length; i++)
+    for(let i = 0; i < world_state.current_period; i++)
     {
-        let period = parameter_set_period[i];
-        let x = i * (w - left_margin - right_margin) / parameter_set_period.length;
+        let session_period_id = world_state.session_periods_order[i];
+        let session_period = world_state.session_periods[session_period_id];
+
+        let x = i * (w - left_margin - right_margin) / world_state.session_periods_order.length;
         let y = h/2 - top_margin - bottom_margin;
 
-        let profit = period.average_profit;
+        let profit = 10;
         let bar_length = profit * 10; //scale factor
 
         if(bar_length > 0)
         {
             ctx.fillStyle = "green";
-            ctx.fillRect(x, y - bar_length, (w - left_margin - right_margin) / parameter_set_period.length - bar_spacing, bar_length);          
+            ctx.fillRect(x, y - bar_length, (w - left_margin - right_margin) / world_state.session_periods_order.length - bar_spacing, bar_length);          
         }
     }
 },
