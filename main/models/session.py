@@ -245,6 +245,8 @@ class Session(models.Model):
             session_period["groups"] = groups
             session_period["group_map"] = group_map
             session_period["paid"] = None
+            session_period["player_1_average_gain"] = None
+            session_period["player_2_average_gain"] = None
 
         #session players
         for i in self.session_players.prefetch_related('parameter_set_player').all().values('id', 

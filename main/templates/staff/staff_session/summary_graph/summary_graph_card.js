@@ -36,7 +36,7 @@ draw_summary_graph: function draw_summary_graph()
     ctx.strokeStyle = "black";
     ctx.stroke();
 
-    //draw bars for each period
+    //draw player_1_average_gain bar and player_2_average_gain bar for each period
     for(let i = 0; i < world_state.current_period; i++)
     {
         let session_period_id = world_state.session_periods_order[i];
@@ -45,13 +45,23 @@ draw_summary_graph: function draw_summary_graph()
         let x = i * (w - left_margin - right_margin) / world_state.session_periods_order.length;
         let y = h/2 - top_margin - bottom_margin;
 
-        let profit = 10;
-        let bar_length = profit * 10; //scale factor
+        let player_1_profit = Math.abs(session_period.player_1_average_gain);
+        let bar_length = (player_1_profit) * 10; //scale factor
 
         if(bar_length > 0)
         {
-            ctx.fillStyle = "green";
-            ctx.fillRect(x, y - bar_length, (w - left_margin - right_margin) / world_state.session_periods_order.length - bar_spacing, bar_length);          
+            if(session_period.player_1_average_gain < 0)
+            {
+                ctx.fillStyle = "red";
+                ctx.fillRect(x, y, (w - left_margin - right_margin) / world_state.session_periods_order.length - bar_spacing, bar_length);
+            
+            }
+            else
+            {
+                ctx.fillStyle = "green";
+                ctx.fillRect(x, y - bar_length, (w - left_margin - right_margin) / world_state.session_periods_order.length - bar_spacing, bar_length);          
+            }
+         
         }
     }
 },

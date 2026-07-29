@@ -499,6 +499,12 @@ let app = Vue.createApp({
         *    @param message_data {json} session day in json format
         */
         take_update_start_next_period: function take_update_start_next_period(message_data){
+            let current_session_period = app.get_current_session_period();
+
+            current_session_period.player_1_average_gain = message_data.player_1_average_gain;
+            current_session_period.player_2_average_gain = message_data.player_2_average_gain;
+            app.draw_summary_graph();
+            
             app.session.world_state.current_period = message_data.current_period;
         },
        

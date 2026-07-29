@@ -57,8 +57,11 @@ reset_experiment: async function reset_experiment(){
 */
 take_reset_experiment: function take_reset_experiment(message_data){
     app.take_get_session(message_data);
+    app.draw_summary_graph();
 },
 
+/** reset connections
+*/
 reset_connections: async function reset_connections(){
     if (!await show_confirm_dialog('Reset connection status?')) {
         return;
