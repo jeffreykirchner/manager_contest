@@ -45,21 +45,44 @@ draw_summary_graph: function draw_summary_graph()
         let x = i * (w - left_margin - right_margin) / world_state.session_periods_order.length;
         let y = h/2 - top_margin - bottom_margin;
 
-        let player_1_profit = Math.abs(session_period.player_1_average_gain);
-        let bar_length = (player_1_profit) * 10; //scale factor
+        let scale_factor = 10; //scale factor for bar length
 
-        if(bar_length > 0)
+        let player_1_profit = Math.abs(session_period.player_1_average_gain);
+        let player_2_profit = Math.abs(session_period.player_2_average_gain);
+
+        let bar_length_player_1 = (player_1_profit) * scale_factor;
+        let bar_length_player_2 = (player_2_profit) * scale_factor;
+
+        let bar_width = (w - left_margin - right_margin) / world_state.session_periods_order.length - bar_spacing;
+
+        if(bar_length_player_1 > 0)
         {
             if(session_period.player_1_average_gain < 0)
             {
                 ctx.fillStyle = "red";
-                ctx.fillRect(x, y, (w - left_margin - right_margin) / world_state.session_periods_order.length - bar_spacing, bar_length);
+                ctx.fillRect(x, y, bar_width/2, bar_length_player_1);
             
             }
             else
             {
                 ctx.fillStyle = "green";
-                ctx.fillRect(x, y - bar_length, (w - left_margin - right_margin) / world_state.session_periods_order.length - bar_spacing, bar_length);          
+                ctx.fillRect(x, y - bar_length_player_1, bar_width/2, bar_length_player_1);          
+            }
+         
+        }
+
+        if(bar_length_player_2 > 0)
+        {
+            if(session_period.player_2_average_gain < 0)
+            {
+                ctx.fillStyle = "red";
+                ctx.fillRect(x + bar_width/2, y, bar_width/2, bar_length_player_2);
+            
+            }
+            else
+            {
+                ctx.fillStyle = "green";
+                ctx.fillRect(x + bar_width/2 , y - bar_length_player_2, bar_width/2, bar_length_player_2);          
             }
          
         }
