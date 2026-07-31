@@ -389,8 +389,35 @@ get_earnings_display: function get_earnings_display(earnings)
 get_status_display: function get_status_display(player_id)
 {
     let group = app.get_player_group(player_id);
+    let player_number = 2;
+
+    if(group.player_1 == player_id)
+    {
+        player_number = 1;
+    }
 
     if(!group) return "***";
 
-    return "G" + group.id + " | " + group.phase;
+    let waiting = false;
+    let s = "G" + group.id + " | P" + player_number + " | " + group.phase
+
+    //phase 1
+    if(group.phase == "Phase 1" && group["type_a_phase_1_units_player_" + player_number] != null) waiting = true;
+
+    //phase 2 non-manager waiting
+    if(group.phase == "Phase 2")
+    {
+        if(group.manager == player_id && group.manager_offer != null) waiting = true;
+        if(group.manager != player_id && group.manager_offer == null) waiting = true;
+    }
+
+    // phase review
+    if(group.phase == "Review" && group["player_" + player_number + "_review_complete"]) waiting = true;
+
+    if(waiting)
+    {
+        s += " (waiting)";
+    }
+
+    return s;
 },

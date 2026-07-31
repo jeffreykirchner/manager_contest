@@ -565,13 +565,41 @@ class SubjectUpdatesMixin():
                                     message_type=event['type'], send_to_client=False,
                                     send_to_group=True, target_list=[player_id])
         else:
-            #start next period or end the experiment if this is the last period
 
+            #calculate average gain for both player 1s and players 2s in the session period
+            player_1_total_gain = 0
+            player_2_total_gain = 0
+            player_1_count = 0
+            player_2_count = 0  
+
+            for g in session_period["groups"].values():
+                if g.get("player_1_earnings") is not None:
+                    player_1_total_gain += Decimal(g["player_1_earnings"])
+                    player_1_total_gain -= Decimal(g["player_1_start_total_value"])
+                    player_1_count += 1
+                if g.get("player_2_earnings") is not None:
+                    player_2_total_gain += Decimal(g["player_2_earnings"])
+                    player_2_total_gain -= Decimal(g["player_2_start_total_value"])
+                    player_2_count += 1
+
+            if player_1_count > 0:
+                session_period["player_1_average_gain"] = player_1_total_gain / player_1_count
+            else:
+                session_period["player_1_average_gain"] = None
+
+            if player_2_count > 0:
+                session_period["player_2_average_gain"] = player_2_total_gain / player_2_count
+            else:
+                session_period["player_2_average_gain"] = None
+
+            #start next period or end the experiment if this is the last period
             if world_state["current_period"] < len(world_state["session_periods_order"]):
                 world_state["current_period"] += 1
                 await self.store_world_state(force_store=True)
 
-                result = {"current_period": world_state["current_period"]}
+                result = {"current_period": world_state["current_period"],
+                          "player_1_average_gain": session_period["player_1_average_gain"],
+                          "player_2_average_gain": session_period["player_2_average_gain"]}
 
                 self.session_events.append(SessionEvent(session_id=self.session_id,
                                                     session_player_id=player_id,

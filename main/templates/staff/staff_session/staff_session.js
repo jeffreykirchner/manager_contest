@@ -309,6 +309,7 @@ let app = Vue.createApp({
             {
                 Vue.nextTick(() => {
                     app.do_first_load();
+                    app.draw_summary_graph();
                 });
             }
             else
@@ -498,6 +499,12 @@ let app = Vue.createApp({
         *    @param message_data {json} session day in json format
         */
         take_update_start_next_period: function take_update_start_next_period(message_data){
+            let current_session_period = app.get_current_session_period();
+
+            current_session_period.player_1_average_gain = message_data.player_1_average_gain;
+            current_session_period.player_2_average_gain = message_data.player_2_average_gain;
+            app.draw_summary_graph();
+            
             app.session.world_state.current_period = message_data.current_period;
         },
        
@@ -514,6 +521,7 @@ let app = Vue.createApp({
         {%include "staff/staff_session/interface/interface_card.js"%}
         {%include "staff/staff_session/replay/replay_card.js"%}
         {%include "staff/staff_session/the_feed/the_feed_card.js"%}
+        {%include "staff/staff_session/summary_graph/summary_graph_card.js"%}
         {%include "js/help_doc.js"%}
     
         /** clear form error messages
