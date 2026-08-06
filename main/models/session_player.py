@@ -191,6 +191,7 @@ class SessionPlayer(models.Model):
         text = text.replace("#player_count-1#", str(len(parameter_set["parameter_set_players"])-1))
         text = text.replace("#period_count#", str(self.session.session_periods.count()))
         
+        
         return text
     
     def get_chat_display_history(self):
