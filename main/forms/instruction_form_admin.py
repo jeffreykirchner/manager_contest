@@ -19,4 +19,4 @@ class InstructionFormAdmin(forms.ModelForm):
 
     class Meta:
         model=Instruction
-        fields = ('page_number', 'text_html')
+        fields = ('page_number', 'text_html', 'quiz_question', 'quiz_answer')
