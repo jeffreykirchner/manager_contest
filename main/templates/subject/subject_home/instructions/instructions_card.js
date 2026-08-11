@@ -101,6 +101,14 @@ send_current_instruction_complete: function current_instruction_complete()
 process_instruction_page: function process_instruction_page(){
     let group = app.get_current_group();
 
+    //check for quiz question that needs to be answered
+    //check if current instructions is in quiz_answers and if it is not complete
+    if(app.session_player.current_instruction in app.session_player.quiz_answers && 
+       !app.session_player.quiz_answers[app.session_player.current_instruction].complete)
+    {
+        return;
+    }
+
     //update view when instructions changes
     switch(app.session_player.current_instruction){
         case app.instructions.action_page_1:    
@@ -252,4 +260,64 @@ send_chat_instructions: function send_chat_instructions(chat_text_processed)
     };
 
     app.take_update_chat(message_data);
+},
+
+/**
+ * show quiz question answer box
+ */
+show_quiz_question_answer_box: function show_quiz_question_answer_box()
+{
+    if(app.session_player.current_instruction in app.session_player.quiz_answers && 
+       !app.session_player.quiz_answers[app.session_player.current_instruction].complete)
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+},
+
+/**
+ * show quiz question is answered correctly
+ */
+show_quiz_question_correct_answer: function show_quiz_question_correct_answer()
+{
+    if(app.session_player.current_instruction in app.session_player.quiz_answers && 
+       app.session_player.quiz_answers[app.session_player.current_instruction].complete)
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+},
+
+/**
+ * check if quiz question is answered correctly
+ */
+check_quiz_question_answer: function check_quiz_question_answer()
+{
+    let instruction = app.instructions[app.session_player.current_instruction];
+
+    app.show_quiz_error = false;
+
+    if(instruction.quiz_question)
+    {
+        let quiz_answers = instruction.quiz_answer.split(",");
+
+        if(instruction.quiz_answers.includes(app.quiz_answer.trim().toLowerCase()))
+        {
+            app.session_player.quiz_answers[app.session_player.current_instruction].complete = true;
+            app.session_player.quiz_answers[app.session_player.current_instruction].answers.push(app.quiz_answer);
+            
+            app.session_player.current_instruction_complete = app.session_player.current_instruction;
+            app.send_current_instruction_complete();
+        }
+        else
+        {
+            app.show_quiz_error = true;
+        }
+    }
 },
