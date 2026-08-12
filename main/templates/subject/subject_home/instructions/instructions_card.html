@@ -24,18 +24,17 @@
                 <div class="input-group w-75"
                      v-show="show_quiz_question_answer_box()">
                     <input type="text" 
+                           v-model="quiz_answer"
                            class="form-control form-control-lg" 
                            placeholder="Quiz Answer" 
                            aria-label="Quiz Answer" 
                            aria-describedby="basic-addon2">
 
-                    <div class="input-group-append">
-                        <button class="btn btn-outline-primary btn-lg" 
-                                v-on:click="check_quiz_question_answer()"
-                                v-bind:disabled="reconnecting || working"
-                                type="button">Submit <i class="fas fa-sign-in-alt"></i>
-                        </button>
-                    </div>
+                    <button class="btn btn-outline-primary btn-lg" 
+                            v-on:click="check_quiz_question_answer()"
+                            v-bind:disabled="reconnecting || working"
+                            type="button">Submit <i class="fas fa-sign-in-alt"></i>
+                    </button>                    
                 </div>
                 <span class="text-danger" v-show="show_quiz_error">
                     Incorrect, please try again.

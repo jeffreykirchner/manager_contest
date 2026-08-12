@@ -299,7 +299,7 @@ show_quiz_question_correct_answer: function show_quiz_question_correct_answer()
  */
 check_quiz_question_answer: function check_quiz_question_answer()
 {
-    let instruction = app.instructions[app.session_player.current_instruction];
+    let instruction = app.instructions.instruction_pages[app.session_player.current_instruction-1];
 
     app.show_quiz_error = false;
 
@@ -307,11 +307,11 @@ check_quiz_question_answer: function check_quiz_question_answer()
     {
         let quiz_answers = instruction.quiz_answer.split(",");
 
-        if(instruction.quiz_answers.includes(app.quiz_answer.trim().toLowerCase()))
+        if(quiz_answers.includes(app.quiz_answer.trim().toLowerCase()))
         {
             app.session_player.quiz_answers[app.session_player.current_instruction].complete = true;
             app.session_player.quiz_answers[app.session_player.current_instruction].answers.push(app.quiz_answer);
-            
+
             app.session_player.current_instruction_complete = app.session_player.current_instruction;
             app.send_current_instruction_complete();
         }
