@@ -92,7 +92,9 @@ take_finish_instructions: function take_finish_instructions(message_data){
  */
 send_current_instruction_complete: function current_instruction_complete()
 {
-    app.send_message("current_instruction_complete", {"page_number" : app.session_player.current_instruction_complete});
+    app.send_message("current_instruction_complete", 
+                     {"page_number" : app.session_player.current_instruction_complete,
+                      "quiz_answers" : app.session_player.quiz_answers});
 },
 
 /**
@@ -100,6 +102,40 @@ send_current_instruction_complete: function current_instruction_complete()
  */
 process_instruction_page: function process_instruction_page(){
     let group = app.get_current_group();
+
+     // check if example complete show review page
+    if(app.session_player.current_instruction > app.instructions.action_page_3)
+    {
+        group.phase = "Phase 2";
+        group.worker = app.session_player.id;
+        group.manager = app.session_player.id+1;
+        group.player_1 = app.session_player.id+1;
+        group.player_2 = app.session_player.id;
+        group.manager_draw = 0.4;
+        group.manager_offer = null;
+        group.player_1_probability = 0.6666666666666666;
+        group.player_2_probability = 0.3333333333333333;
+        group.type_a_units_player_1 = app.instructions.ex1_type_a_units_player_1-2;
+        group.type_a_units_player_2 = app.instructions.ex1_type_a_units_player_2-1;
+        group.type_b_units_player_1 = app.instructions.ex1_type_b_units_player_1;
+        group.type_b_units_player_2 = app.instructions.ex1_type_b_units_player_2;
+        group.type_a_phase_1_units_player_1 = 2;
+        group.type_a_phase_1_units_player_2 = 1;
+
+        group.manager_offer = app.get_my_profit_if_working_alone() + 0.5;
+
+        group.manager_offer_accepted = "accept";      
+        group.phase = "Review";          
+        group.manager_offer = app.get_my_profit_if_working_alone() + 0.5;
+        group.player_2_earnings = group.manager_offer;
+        group.player_1_earnings = app.get_total_value_value_string("json").profit - group.manager_offer;
+        group.player_1_review_complete=true;
+        group.player_2_review_complete=true;
+
+        Vue.nextTick(() => {
+            app.update_graphs();
+        });
+    }
 
     //check for quiz question that needs to be answered
     //check if current instructions is in quiz_answers and if it is not complete
@@ -179,7 +215,7 @@ process_instruction_page: function process_instruction_page(){
                 app.update_graphs();
             });
 
-             if(app.session_player.current_instruction_complete == app.instructions.action_page_3)
+            if(app.session_player.current_instruction_complete == app.instructions.action_page_3)
             {
                 group.manager_offer_accepted = "accept";      
                 group.phase = "Review";          
@@ -189,7 +225,7 @@ process_instruction_page: function process_instruction_page(){
             }
             else if(app.session_player.current_instruction_complete < app.instructions.action_page_3)
             {
-               
+                // group.player_1_review_complete=false;
             }
             return; 
             break;
@@ -307,11 +343,12 @@ check_quiz_question_answer: function check_quiz_question_answer()
     {
         let quiz_answers = instruction.quiz_answer.split(",");
 
+        app.session_player.quiz_answers[app.session_player.current_instruction].answers.push(app.quiz_answer);
+
         if(quiz_answers.includes(app.quiz_answer.trim().toLowerCase()))
         {
             app.session_player.quiz_answers[app.session_player.current_instruction].complete = true;
-            app.session_player.quiz_answers[app.session_player.current_instruction].answers.push(app.quiz_answer);
-
+        
             app.session_player.current_instruction_complete = app.session_player.current_instruction;
             app.send_current_instruction_complete();
         }

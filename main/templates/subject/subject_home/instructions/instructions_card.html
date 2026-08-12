@@ -25,6 +25,7 @@
                      v-show="show_quiz_question_answer_box()">
                     <input type="text" 
                            v-model="quiz_answer"
+                           v-on:input="show_quiz_error = false"
                            class="form-control form-control-lg" 
                            placeholder="Quiz Answer" 
                            aria-label="Quiz Answer" 
@@ -36,9 +37,14 @@
                             type="button">Submit <i class="fas fa-sign-in-alt"></i>
                     </button>                    
                 </div>
-                <span class="text-danger" v-show="show_quiz_error">
+                <span class="text-danger" 
+                      v-show="show_quiz_error">
                     Incorrect, please try again.
                 </span>
+                <div v-show="show_quiz_question_correct_answer()" 
+                     class="text-success fw-bold">
+                    Quiz answer correct. Click Next to continue.
+                </div>
             </div>
             <div class="col-md text-center ">    
                 <span class="h5" v-if="instruction_pages_show_scroll">

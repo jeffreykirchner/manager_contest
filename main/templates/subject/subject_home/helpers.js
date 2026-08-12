@@ -251,7 +251,7 @@ get_total_player_value_string: function get_total_player_value_string(player_num
 
         if(type_a_units < 0) return place_holder;
     }
-    else if(group.phase == "Phase 2")
+    else if(group.phase == "Phase 2" || group.phase == "Review")
     {
         type_a_spent = group["type_a_phase_1_units_player_" + player_number];
     }
@@ -392,7 +392,7 @@ get_total_value_value_string : function get_total_value_value_string(format = "s
 
         if(type_a_units < 0) return place_holder;
     }
-    else if(group.phase == "Phase 2")
+    else if(group.phase == "Phase 2" || group.phase == "Review")
     {
         type_a_spent = group["type_a_phase_1_units_player_1"] + group["type_a_phase_1_units_player_2"]; 
     }

@@ -566,7 +566,13 @@ class Session(models.Model):
 
             writer = csv.writer(output)
 
-            writer.writerow(['Session', 'Date', 'Player', 'Name', 'Student ID', 'Earnings','Periods Paid'])
+            # Define the CSV header
+            csv_header = ['Session', 'Date', 'Player', 'Name', 'Student ID', 'Earnings','Periods Paid']
+            session_player_1 = self.session_players.first()
+            for q in session_player_1.quiz_answers:
+                csv_header.append(f'Quiz Page {q}')
+
+            writer.writerow(csv_header)
 
             periods_paid = ""
             for period_number, period in enumerate(self.world_state["session_periods"]):
@@ -587,13 +593,20 @@ class Session(models.Model):
                 parameter_set_players[str(i['id'])] = i
 
             for p in self.world_state["session_players"]:
-                writer.writerow([self.id,
-                                 self.get_start_date_string(),
-                                 parameter_set_players[p]["player_number"],
-                                 parameter_set_players[p]["name"],
-                                 parameter_set_players[p]["student_id"],
-                                 self.world_state["session_players"][p]["earnings"],
-                                 periods_paid])
+                session_player = self.session_players.get(id=p)
+
+                csv_row = [self.id,
+                           self.get_start_date_string(),
+                           parameter_set_players[p]["player_number"],
+                           parameter_set_players[p]["name"],
+                           parameter_set_players[p]["student_id"],
+                           self.world_state["session_players"][p]["earnings"],
+                           periods_paid]
+
+                for q in session_player.quiz_answers:
+                    csv_row.append(session_player.quiz_answers[q]["answers"])
+
+                writer.writerow(csv_row)
 
             v = output.getvalue()
             output.close()
