@@ -27,12 +27,12 @@ submit_manager_offer_to_worker_instructions: function submit_manager_offer_to_wo
 {
         if(app.session_player.current_instruction != app.instructions.action_page_2) return;
 
-        let counterpart_profit_if_working_alone = app.get_counterpart_profit_if_working_alone();
-        counterpart_profit_if_working_alone += 0.5;
+        // let counterpart_profit_if_working_alone = app.get_counterpart_profit_if_working_alone();
+        // counterpart_profit_if_working_alone += 0.5;
 
-        if(app.manager_offer_to_worker != counterpart_profit_if_working_alone)
+        if(app.manager_offer_to_worker != app.instructions.ex1_part_2_offer)
         {
-            app.manager_offer_to_worker_error = "Error: You must offer $" + counterpart_profit_if_working_alone.toFixed(2) + " to the non-manager to proceed.";
+            app.manager_offer_to_worker_error = "Error: You must offer $" + app.instructions.ex1_part_2_offer.toFixed(2) + " to the non-manager to proceed.";
             return;
         }
 

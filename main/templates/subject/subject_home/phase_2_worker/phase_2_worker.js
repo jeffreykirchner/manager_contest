@@ -30,13 +30,24 @@ submit_worker_response_to_manager_instructions: function submit_worker_response_
 
     let group = app.get_current_group();
 
-    if(worker_response_to_manager != "accept")
+    if(app.instructions.ex1_part_2_accept == 1)
     {
-        app.worker_response_to_manager_error = "Error: You must select Accept to proceed.";
-        return;
+        if(worker_response_to_manager != "accept")
+        {
+            app.worker_response_to_manager_error = "Error: You must Work Together to proceed.";
+            return;
+        }
+    }
+    else
+    {
+        if(worker_response_to_manager != "reject")
+        {
+            app.worker_response_to_manager_error = "Error: You must Work Separately to proceed.";
+            return;
+        }
     }
 
-    group.manager_offer_accepted = (worker_response_to_manager == "accept");
+    group.manager_offer_accepted = worker_response_to_manager;
     group.phase = "Phase 2";
     group.player_1_earnings = app.get_total_value_value_string("json").profit - group.manager_offer;
     group.player_2_earnings = group.manager_offer;

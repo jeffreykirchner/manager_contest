@@ -48,7 +48,7 @@ get_history: function get_history()
         let manager_offer = null;
         if(group["manager_offer"] != null)
         {
-            manager_offer = "$" + group["manager_offer"].toFixed(2);
+            manager_offer = "$" + parseFloat(group["manager_offer"]).toFixed(2);
         }
 
         history.push({
