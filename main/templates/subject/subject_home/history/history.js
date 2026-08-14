@@ -9,8 +9,8 @@ get_history: function get_history()
     
     let world_state = app.session.world_state;
     
-
-    for(let i = 0; i < world_state.current_period; i++)
+    //reverse order of periods so that most recent is first
+    for(let i = world_state.current_period - 1; i >= 0; i--)
     {
         let session_period_id = world_state.session_periods_order[i];
         let session_period = world_state.session_periods[session_period_id];
