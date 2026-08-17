@@ -204,50 +204,23 @@ def take_setup_pairs(data):
         logger.warning("take_setup_pairs requires at least 2 players")
         return {"value": "fail", "errors": {"players": ["At least 2 players are required."]}}
 
-    # Round-robin (circle method): produces unique, non-repeating pairs each round.
-    rotation = list(players)
-    if num_players % 2 == 1:
-        rotation.append(None)  # bye slot
-
-    rounds_available = len(rotation) - 1
-    if len(periods) > rounds_available:
-        logger.warning("Not enough unique rounds available for requested number of periods")
-        return {
-            "value": "fail",
-            "errors": {
-                "periods": [
-                    f"Only {rounds_available} unique pairing rounds are possible with {num_players} players."
-                ]
-            },
-        }
-
-    seen_pairs = set()
+    # Round-robin that only pairs odd-numbered players with even-numbered players.
+    odd_players = [p for p in players if p.player_number % 2 == 1]
+    even_players = [p for p in players if p.player_number % 2 == 0]
 
     for idx, period in enumerate(periods):
         round_pairs = {}
-        half = len(rotation) // 2
+        rotation_index = idx % len(even_players) if even_players else 0
+        rotation_even = even_players[rotation_index:] + even_players[:rotation_index]
 
-        for i in range(half):
-            p1 = rotation[i]
-            p2 = rotation[-(i + 1)]
-
-            if p1 is None or p2 is None:
+        for i, odd_player in enumerate(odd_players):
+            if i >= len(rotation_even):
                 continue
 
-            pair_key = tuple(sorted((p1.id, p2.id)))
-            if pair_key in seen_pairs:
-                logger.warning("Duplicate pair detected while generating pairs")
-                return {
-                    "value": "fail",
-                    "error_message": f"Valid pairs not found for period {period.period_number}",
-                }
+            even_player = rotation_even[i]
 
-            seen_pairs.add(pair_key)
-
-            if random.random() < 0.5:
-                round_pairs[str(i+1)] = (p1.id, p2.id)
-            else:
-                round_pairs[str(i+1)] = (p2.id, p1.id)
+            #odd players are alwas first and even player second in the pair
+            round_pairs[str(i+1)] = (odd_player.id, even_player.id)
 
         # Persist on period using commonly used JSON/list fields if present.
         if hasattr(period, "pairs"):
@@ -262,10 +235,6 @@ def take_setup_pairs(data):
                 "value": "fail",
                 "error_message": f"Valid pairs not found for period {period.period_number}",
             }
-
-        # Rotate players for next round (keep first fixed).
-        if idx < len(periods) - 1:
-            rotation = [rotation[0]] + [rotation[-1]] + rotation[1:-1]
 
     session.parameter_set.update_json_fk(update_periods=True)
 
