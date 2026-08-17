@@ -58,6 +58,10 @@
         border-width: 1px;
         border-radius: 5px;
     }
+
+    .history_table{
+        font-size: 9pt;
+    }
        
 </style>
 
@@ -125,7 +129,7 @@
                 </div>
             </div> 
         </div>
-        <div class="col-md-auto" v-if="session.started && spinner_complete" v-cloak>
+        <div class="col-md" v-if="session.started && spinner_complete" v-cloak>
             {%include "subject/subject_home/history/history_card.html"%}
         </div>
     </div>
