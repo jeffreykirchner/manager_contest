@@ -152,6 +152,43 @@
             </div>
         </div>
 
+        <div class="row">
+            <div class="col text-end">
+                {{instruction_set_form.ex1_type_a_bid.label}}:
+            </div>
+            <div class="col">
+                $[[instruction_set.ex1_type_a_bid]]
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col text-end">
+                {{instruction_set_form.ex1_type_a_bid_counterpart.label}}:
+            </div>
+            <div class="col">
+                $[[instruction_set.ex1_type_a_bid_counterpart]]
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col text-end">
+                {{instruction_set_form.ex1_part_2_offer.label}}:
+            </div>
+            <div class="col">
+                $[[instruction_set.ex1_part_2_offer]]
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col text-end">
+                {{instruction_set_form.ex1_part_2_accept.label}}:
+            </div>
+            <div class="col">
+                <span v-if="instruction_set.ex1_part_2_accept">Yes</span>
+                <span v-else>No</span>
+            </div>
+        </div>
+
         <div class="row justify-content-center">
             <div class="col-md text-center mb-2 mt-2">
                 <button class="btn btn-outline-primary"

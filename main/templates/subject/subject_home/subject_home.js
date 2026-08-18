@@ -90,6 +90,10 @@ let app = Vue.createApp({
                     spinning : false,
                     spin_wait : 5,
                     spinner_setup_complete : false,
+
+                    //quiz
+                    quiz_answer:"",
+                    show_quiz_error:false,
                     
                 }},
     methods: {

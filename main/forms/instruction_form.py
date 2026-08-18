@@ -14,6 +14,30 @@ class InstructionForm(forms.ModelForm):
                                                                   "class":"w-25",                                                                   
                                                                   "v-model":"current_instruction.page_number",}))
 
+    quiz_question = forms.ChoiceField(label='Quiz Question',
+                                    choices=((1, 'Yes'), (0, 'No')),
+                                    widget=forms.Select(attrs={"v-model":"current_instruction.quiz_question","class":"w-25"}))
+
+    quiz_answer = forms.CharField(label='Quiz Answer (CSV)',
+                                  required=False,
+                                  widget=forms.TextInput(attrs={"v-model":"current_instruction.quiz_answer", "class":"w-25"}))
+
     class Meta:
         model=Instruction
-        fields = ('page_number','text_html')
+        fields = ('page_number','text_html', 'quiz_question', 'quiz_answer')
+
+    def clean_quiz_answer(self):
+            
+            try:
+               
+               quiz_question = self.data.get('quiz_question')
+               quiz_answer = self.data.get('quiz_answer')
+               
+               if quiz_question and quiz_answer.strip() == "":
+                   raise forms.ValidationError('Quiz answer required if quiz question is selected.')
+                
+            except ValueError:
+                raise forms.ValidationError('Invalid Entry')
+    
+            return quiz_answer
+

@@ -121,6 +121,23 @@ class TestSubjectConsumer(TestCase):
         response = await communicator_staff.receive_json_from()
 
         return communicator_subjects, communicator_staff
+
+    @pytest.mark.asyncio
+    async def test_setup_pairs_only_odd_even_players(self):
+        '''
+        round robin setup should only pair odd-numbered players with even-numbered players
+        '''
+        from main.consumers.staff.session_parameters_consumer_mixins.parameter_set_periods import take_setup_pairs
+
+        result = await take_setup_pairs({"session_id": self.session.id})
+        self.assertEqual(result["value"], "success")
+
+        session = Session.objects.get(id=self.session.id)
+        for period in session.parameter_set.parameter_set_periods.order_by("period_number"):
+            for pair in period.pairs.values():
+                player_1 = session.parameter_set.parameter_set_players.get(id=pair[0])
+                player_2 = session.parameter_set.parameter_set_players.get(id=pair[1])
+                self.assertNotEqual(player_1.player_number % 2, player_2.player_number % 2)
     
     @pytest.mark.asyncio
     async def test_chat_group(self):

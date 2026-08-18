@@ -29,14 +29,14 @@ submit_type_a_bid_instructions: function submit_type_a_bid_instructions()
 {
         if(app.session_player.current_instruction != app.instructions.action_page_1) return;
 
-        if(app.type_a_bid != 2)
+        if(app.type_a_bid != app.instructions.ex1_type_a_bid)
         {
-            app.type_a_bid_error = "Error: You must bid 2 units to proceed.";
+            app.type_a_bid_error = `Error: You must bid ${app.instructions.ex1_type_a_bid} units to proceed.`;
              return;
         }
-        if(app.type_a_bid_counterpart != 1)
+        if(app.type_a_bid_counterpart != app.instructions.ex1_type_a_bid_counterpart)
         {
-            app.type_a_bid_error = "Error: Your prediction must be 1 unit to proceed.";
+            app.type_a_bid_error = `Error: Your prediction must be ${app.instructions.ex1_type_a_bid_counterpart} unit to proceed.`;
             return;
         }
 
@@ -56,12 +56,12 @@ submit_type_a_bid_instructions: function submit_type_a_bid_instructions()
                     manager_offer: null,
                     player_1_probability: 0.6666666666666666,
                     player_2_probability: 0.3333333333333333,
-                    type_a_units_player_1: group.type_a_units_player_1-2,
-                    type_a_units_player_2: group.type_a_units_player_2-1,
+                    type_a_units_player_1: group.type_a_units_player_1 - app.instructions.ex1_type_a_bid,
+                    type_a_units_player_2: group.type_a_units_player_2 - app.instructions.ex1_type_a_bid_counterpart,
                     type_b_units_player_1: group.type_b_units_player_1,
                     type_b_units_player_2: group.type_b_units_player_2,
-                    type_a_phase_1_units_player_1: 2,
-                    type_a_phase_1_units_player_2: 1,},
+                    type_a_phase_1_units_player_1: app.instructions.ex1_type_a_bid,
+                    type_a_phase_1_units_player_2: app.instructions.ex1_type_a_bid_counterpart,},
                 session_player_id: app.session_player.id,
                 status: "success",
                 error_message: ""};

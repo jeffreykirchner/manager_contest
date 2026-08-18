@@ -28,19 +28,28 @@
     </div>
     <div class="card-body"> 
         <!-- units table -->
-        <div class="row justify-content-center" >
+        <div class="row justify-content-center">
             <div class="col-auto">
-                <table class="table table-condensed"> 
-                    <thead>
+                <table class="table table-condensed text-nowrap"> 
+                    <thead class="history_table">
                         <tr>
                             <th scope="col" class = "text-center">
                                Period
                             </th>
                             <th scope="col" class = "text-center">
+                               Type B<br>Value
+                            </th>
+                            <th scope="col" class = "text-center">
+                               My Starting<br>Units
+                            </th>
+                            <th scope="col" class = "text-center">
+                               Counterpart's<br>Starting Units
+                            </th>
+                            <th scope="col" class = "text-center">
                                 My Phase 1<br>Type A Bid
                             </th>
                             <th scope="col" class = "text-center">
-                                Counterpart's Phase 1<br>Type A Bid
+                                Counterpart's<br>Phase 1<br>Type A Bid
                             </th>                            
                             <th scope="col" class = "text-center">
                                 My Role
@@ -59,10 +68,19 @@
                             </th>                     
                         </tr>
                     </thead>
-                    <tbody >
+                    <tbody>
                         <tr v-for="item in get_history()" :key="item.period_number">
                             <td class="text-center">
                                [[item.period_number]]
+                            </td>
+                            <td class="text-center">
+                               <span style="color:cornflowerblue;">$[[item.type_b_value]]</span>
+                            </td>
+                            <td class="text-center" v-html="item.my_starting_units_string">
+
+                            </td>
+                            <td class="text-center" v-html="item.counterpart_starting_units_string">
+
                             </td>
                             <td class="text-center">
                                 [[item.my_type_a_phase_1_units]]

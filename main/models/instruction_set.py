@@ -29,6 +29,11 @@ class InstructionSet(models.Model):
 
     ex1_work_payout = models.DecimalField(verbose_name='Work Payout', max_digits=10, decimal_places=2, default=1.00)                       #payout per unit of work, for both types and both players 
     ex1_outside_option_payout = models.DecimalField(verbose_name='Outside Option Payout', max_digits=10, decimal_places=2, default=0.75)   #payout for outside option, for type b units
+
+    ex1_type_a_bid = models.IntegerField(verbose_name='Type A Bid', default=0)                       #bid for type a units, for both players
+    ex1_type_a_bid_counterpart = models.IntegerField(verbose_name='Type A Bid Counterpart', default=0)                       #bid for type a units, for both players
+    ex1_part_2_offer = models.DecimalField(verbose_name='Part 2 Offer', max_digits=10, decimal_places=2, default=0.00)                       #offer for part 2, for both players
+    ex1_part_2_accept = models.BooleanField(verbose_name='Part 2 Accept', default=False)                       #accept for part 2, for both players
         
     timestamp = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
@@ -65,6 +70,11 @@ class InstructionSet(models.Model):
 
         self.ex1_work_payout = new_ps.get("ex1_work_payout")
         self.ex1_outside_option_payout = new_ps.get("ex1_outside_option_payout")
+
+        self.ex1_type_a_bid = new_ps.get("ex1_type_a_bid")
+        self.ex1_type_a_bid_counterpart = new_ps.get("ex1_type_a_bid_counterpart")
+        self.ex1_part_2_offer = new_ps.get("ex1_part_2_offer")
+        self.ex1_part_2_accept = True if new_ps.get("ex1_part_2_accept", True) else False
 
         self.save()
         
@@ -145,8 +155,14 @@ class InstructionSet(models.Model):
             "ex1_type_a_units_player_2" : self.ex1_type_a_units_player_2,
             "ex1_type_b_units_player_1" : self.ex1_type_b_units_player_1,
             "ex1_type_b_units_player_2" : self.ex1_type_b_units_player_2,
+
             "ex1_work_payout" : self.ex1_work_payout,
             "ex1_outside_option_payout" : self.ex1_outside_option_payout,
+
+            "ex1_type_a_bid" : self.ex1_type_a_bid,
+            "ex1_type_a_bid_counterpart" : self.ex1_type_a_bid_counterpart,
+            "ex1_part_2_offer" : self.ex1_part_2_offer,
+            "ex1_part_2_accept" : 1 if self.ex1_part_2_accept else 0,
 
             "instruction_pages" : [i.json() for i in self.instructions.all()],
             "help_docs_subject" : [i.json() for i in self.help_docs_subject.all()],
@@ -173,8 +189,14 @@ class InstructionSet(models.Model):
             "ex1_type_a_units_player_2" : self.ex1_type_a_units_player_2,
             "ex1_type_b_units_player_1" : self.ex1_type_b_units_player_1,
             "ex1_type_b_units_player_2" : self.ex1_type_b_units_player_2,
+
             "ex1_work_payout" : self.ex1_work_payout,
             "ex1_outside_option_payout" : self.ex1_outside_option_payout,
+
+            "ex1_type_a_bid" : self.ex1_type_a_bid,
+            "ex1_type_a_bid_counterpart" : self.ex1_type_a_bid_counterpart,
+            "ex1_part_2_offer" : self.ex1_part_2_offer,
+            "ex1_part_2_accept" : 1 if self.ex1_part_2_accept else 0,
 
             "instruction_pages" : [await i.ajson() async for i in self.instructions.all()],
             "help_docs_subject" : [await i.ajson() async for i in self.help_docs_subject.all()],

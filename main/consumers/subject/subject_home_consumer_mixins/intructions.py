@@ -135,6 +135,7 @@ def take_current_instruction_complete(session_id, session_player_id, data):
         session_player = session.session_players.get(id=session_player_id)
 
         session_player.current_instruction_complete = data["page_number"]
+        session_player.quiz_answers = data["quiz_answers"]
         session_player.save()
 
     except ObjectDoesNotExist:
