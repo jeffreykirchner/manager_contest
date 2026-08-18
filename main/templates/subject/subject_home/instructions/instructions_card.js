@@ -112,7 +112,6 @@ process_instruction_page: function process_instruction_page(){
         group.player_1 = app.session_player.id+1;
         group.player_2 = app.session_player.id;
         group.manager_draw = 0.4;
-        group.manager_offer = null;
         group.player_1_probability = 0.6666666666666666;
         group.player_2_probability = 0.3333333333333333;
         group.type_a_units_player_1 = app.instructions.ex1_type_a_units_player_1 - app.instructions.ex1_type_a_bid;
@@ -122,7 +121,7 @@ process_instruction_page: function process_instruction_page(){
         group.type_a_phase_1_units_player_1 = app.instructions.ex1_type_a_bid;
         group.type_a_phase_1_units_player_2 = app.instructions.ex1_type_a_bid_counterpart;
 
-        group.manager_offer = app.instructions.ex1_part_2_offer;
+        group.manager_offer = parseFloat(app.instructions.ex1_part_2_offer);
 
         group.manager_offer_accepted = app.instructions.ex1_part_2_accept == 1 ? "accept" : "reject";   
         group.phase = "Review";          
@@ -170,7 +169,7 @@ process_instruction_page: function process_instruction_page(){
 
             if(app.session_player.current_instruction_complete == app.instructions.action_page_2)
             {
-                group.manager_offer = app.instructions.ex1_part_2_offer;
+                group.manager_offer = parseFloat(app.instructions.ex1_part_2_offer);
 
                 Vue.nextTick(() => {
                     app.update_graphs();
@@ -198,7 +197,6 @@ process_instruction_page: function process_instruction_page(){
             group.player_1 = app.session_player.id+1;
             group.player_2 = app.session_player.id;
             group.manager_draw = 0.4;
-            group.manager_offer = null;
             group.player_1_probability = 0.6666666666666666;
             group.player_2_probability = 0.3333333333333333;
             group.type_a_units_player_1 = app.instructions.ex1_type_a_units_player_1 - app.instructions.ex1_type_a_bid;
@@ -208,7 +206,7 @@ process_instruction_page: function process_instruction_page(){
             group.type_a_phase_1_units_player_1 = app.instructions.ex1_type_a_bid;
             group.type_a_phase_1_units_player_2 = app.instructions.ex1_type_a_bid_counterpart;
 
-            group.manager_offer = app.instructions.ex1_part_2_offer;
+            group.manager_offer = parseFloat(app.instructions.ex1_part_2_offer);
 
             Vue.nextTick(() => {
                 app.update_graphs();
