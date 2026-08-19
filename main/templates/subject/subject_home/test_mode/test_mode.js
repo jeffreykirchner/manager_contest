@@ -77,15 +77,20 @@ do_test_mode_instructions: function do_test_mode_instructions()
         else
             document.getElementById("instructions_next_id").click();
 
-    }else
+    }else if (app.instructions.instruction_pages[app.session_player.current_instruction-1].quiz_question)
+    {
+        app.quiz_answer = app.instructions.instruction_pages[app.session_player.current_instruction-1].quiz_answer.split(",")[0];
+        app.check_quiz_question_answer();
+    }
+    else
     {
         //take action if needed to complete page
         switch (app.session_player.current_instruction)
         {
             case app.instructions.action_page_1:
                 //phase 1
-                app.type_a_bid = 2;
-                app.type_a_bid_counterpart = 1
+                app.type_a_bid = app.instructions.ex1_type_a_bid;
+                app.type_a_bid_counterpart = app.instructions.ex1_type_a_bid_counterpart;
                 app.submit_type_a_bid();
         
                 break;
@@ -97,14 +102,19 @@ do_test_mode_instructions: function do_test_mode_instructions()
                 }
                 else if(app.spinner_complete)
                 {
-                    let counterpart_profit_if_working_alone = app.get_counterpart_profit_if_working_alone();
-                    counterpart_profit_if_working_alone += 0.5;
-                    app.manager_offer_to_worker = counterpart_profit_if_working_alone;
+                    app.manager_offer_to_worker = app.instructions.ex1_part_2_offer;
                     app.submit_manager_offer_to_worker();
                 }
                 break;
             case app.instructions.action_page_3:
-                app.submit_worker_response_to_manager("accept");
+                if(app.instructions.ex1_part_2_accept)
+                {
+                    app.submit_worker_response_to_manager("accept");
+                }
+                else
+                {
+                    app.submit_worker_response_to_manager("reject");
+                }
                 break;
             case app.instructions.action_page_4:
                 
