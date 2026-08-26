@@ -236,8 +236,8 @@ get_total_player_value_string: function get_total_player_value_string(player_num
             //check if type_a_bid is greater than or equal to 0
             if(app.type_a_bid < 0) return place_holder;
 
-            type_a_units -= parseInt(app.type_a_bid);
-            type_a_spent = parseInt(app.type_a_bid);
+            type_a_units -= parseFloat(app.type_a_bid).toFixed(1);
+            type_a_spent = parseFloat(app.type_a_bid).toFixed(1);
         }
         else
         {
@@ -245,8 +245,8 @@ get_total_player_value_string: function get_total_player_value_string(player_num
             if(!Number.isFinite(app.type_a_bid_counterpart)) return place_holder;
             if(app.type_a_bid_counterpart < 0) return place_holder;
 
-            type_a_units -= parseInt(app.type_a_bid_counterpart);
-            type_a_spent = parseInt(app.type_a_bid_counterpart);
+            type_a_units -= parseFloat(app.type_a_bid_counterpart).toFixed(1);
+            type_a_spent = parseFloat(app.type_a_bid_counterpart).toFixed(1);
         }
 
         if(type_a_units < 0) return place_holder;
@@ -261,16 +261,25 @@ get_total_player_value_string: function get_total_player_value_string(player_num
 
     //calculate value for type A and type B units
     let units_for_work = Math.min(type_a_units, type_b_units);
+    units_for_work = parseFloat(units_for_work).toFixed(1);
+
     let value_from_work = parseFloat(units_for_work) * work_payout;
 
     //add value for unused type B units
     let unused_b_units = Math.max(0, type_b_units - type_a_units);
-    let unused_a_units = Math.max(0, type_a_units - type_b_units);
-    let value_from_unused_b_units = parseFloat(unused_b_units) * outside_option_payout;
+    unused_b_units = parseFloat(unused_b_units).toFixed(1);
 
-    let value_from_work_total = value_from_work + value_from_unused_b_units;
+    let unused_a_units = Math.max(0, type_a_units - type_b_units);
+    unused_a_units = parseFloat(unused_a_units).toFixed(1);
+
+    let value_from_unused_b_units = parseFloat(unused_b_units) * outside_option_payout;
+    value_from_unused_b_units = parseFloat(value_from_unused_b_units).toFixed(1);
+
+    let value_from_work_total = parseFloat(value_from_work) + parseFloat(value_from_unused_b_units);
+    value_from_work_total = parseFloat(value_from_work_total).toFixed(2);
 
     let value_from_outside_option = parseFloat(type_b_units) * outside_option_payout;
+    value_from_outside_option = parseFloat(value_from_outside_option).toFixed(1);
 
     //format in 0.00
     if(format == "json")
@@ -306,7 +315,7 @@ get_total_player_value_string: function get_total_player_value_string(player_num
     {
         if(work_payout >= outside_option_payout)
         {
-            return `<span class="fs-4">$${value_from_work_total.toFixed(2)}</span>
+            return `<span class="fs-4">$${value_from_work_total}</span>
                     <br>
                     (<span style="color:crimson">${unused_a_units}A x $0.00</span> + 
                      <span style="color:cornflowerblue">${unused_b_units}B x $${outside_option_payout.toFixed(2)}</span> + 
@@ -314,7 +323,7 @@ get_total_player_value_string: function get_total_player_value_string(player_num
         }
         else
         {
-            return `<span class="fs-4">$${value_from_outside_option.toFixed(2)}</span>
+            return `<span class="fs-4">$${value_from_outside_option}</span>
                     <br>
                     (<span style="color:crimson">${type_a_units}A x $0.00</span> + 
                      <span style="color:cornflowerblue">${type_b_units}B * $${outside_option_payout.toFixed(2)}</span>)`;
@@ -378,17 +387,17 @@ get_total_value_value_string : function get_total_value_value_string(format = "s
         //chec if bids are greater than total type a units for players
         if(app.get_player_number() == 1)   
         {
-            if(parseInt(app.type_a_bid) > group["type_a_units_player_1"]) return place_holder;
-            if(parseInt(app.type_a_bid_counterpart) > group["type_a_units_player_2"]) return place_holder;
+            if(parseFloat(app.type_a_bid) > group["type_a_units_player_1"]) return place_holder;
+            if(parseFloat(app.type_a_bid_counterpart) > group["type_a_units_player_2"]) return place_holder;
         }
         else
         {
-            if(parseInt(app.type_a_bid) > group["type_a_units_player_2"]) return place_holder;
-            if(parseInt(app.type_a_bid_counterpart) > group["type_a_units_player_1"]) return place_holder;
+            if(parseFloat(app.type_a_bid) > group["type_a_units_player_2"]) return place_holder;
+            if(parseFloat(app.type_a_bid_counterpart) > group["type_a_units_player_1"]) return place_holder;
         }
 
-        type_a_units -= (parseInt(app.type_a_bid) + parseInt(app.type_a_bid_counterpart));
-        type_a_spent = parseInt(app.type_a_bid) + parseInt(app.type_a_bid_counterpart);
+        type_a_units -= (parseFloat(app.type_a_bid) + parseFloat(app.type_a_bid_counterpart));
+        type_a_spent = parseFloat(app.type_a_bid) + parseFloat(app.type_a_bid_counterpart);
 
         if(type_a_units < 0) return place_holder;
     }
@@ -398,20 +407,31 @@ get_total_value_value_string : function get_total_value_value_string(format = "s
     }
 
     let work_payout = parseFloat(parameter_set_period.work_payout);
+
     let outside_option_payout = parseFloat(parameter_set_period.outside_option_payout);
 
     //calculate value for player 1
     let units_for_work = Math.min(type_a_units, type_b_units);
+    units_for_work = parseFloat(units_for_work).toFixed(1);
+
     let value_from_work = parseFloat(units_for_work) * work_payout;
+    value_from_work = parseFloat(value_from_work).toFixed(2);
 
     //add value for unused type B units for player 1
     let unused_b_units = Math.max(0, type_b_units - type_a_units);
-    let unused_a_units = Math.max(0, type_a_units - type_b_units);
-    let value_from_unused_b_units = parseFloat(unused_b_units) * outside_option_payout;
+    unused_b_units = parseFloat(unused_b_units).toFixed(1);
 
-    let value_from_work_total = value_from_work + value_from_unused_b_units;
+    let unused_a_units = Math.max(0, type_a_units - type_b_units);
+    unused_a_units = parseFloat(unused_a_units).toFixed(1);
+
+    let value_from_unused_b_units = parseFloat(unused_b_units) * outside_option_payout;
+    value_from_unused_b_units = parseFloat(value_from_unused_b_units).toFixed(2);
+
+    let value_from_work_total = parseFloat(value_from_work) + parseFloat(value_from_unused_b_units);
+    value_from_work_total = parseFloat(value_from_work_total).toFixed(2);
 
     let value_from_outside_option = parseFloat(type_b_units) * outside_option_payout;
+    value_from_outside_option = parseFloat(value_from_outside_option).toFixed(2);
 
     if(format == "json")
     {
@@ -446,7 +466,7 @@ get_total_value_value_string : function get_total_value_value_string(format = "s
     {
         if(work_payout >= outside_option_payout)
         {
-            return `<span class="fs-4">$${value_from_work_total.toFixed(2)}</span>
+            return `<span class="fs-4">$${value_from_work_total}</span>
                     <br>
                     (<span style="color:crimson">${unused_a_units}A x $0.00</span> + 
                      <span style="color:cornflowerblue">${unused_b_units}B x $${outside_option_payout.toFixed(2)}</span> + 
@@ -454,7 +474,7 @@ get_total_value_value_string : function get_total_value_value_string(format = "s
         }
         else
         {
-            return `<span class="fs-4">$${value_from_outside_option.toFixed(2)}</span>
+            return `<span class="fs-4">$${value_from_outside_option}</span>
                     <br>
                     (<span style="color:crimson">${type_a_units}A x $0.00</span> + 
                      <span style="color:cornflowerblue">${type_b_units}B x $${outside_option_payout.toFixed(2)}</span>)`;

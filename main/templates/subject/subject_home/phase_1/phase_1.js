@@ -171,7 +171,7 @@ draw_units_graph: function draw_units_graph(canvas_id,
     let parameter_set_period = app.get_current_parameter_set_period();
 
     let left_margin = 30;
-    let right_margin = 30;
+    let right_margin = 60;
     let top_margin = 10;
     let bottom_margin = 10;
     let bar_spacing = 10;
