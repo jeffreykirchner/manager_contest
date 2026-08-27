@@ -88,23 +88,24 @@
                 <div class="row justify-content-center mt-4">
                     <div class="col-auto text-center" id="div_id_type_a_bid">
                         <div class="fw-bold fs-5">
-                            Your purchase offer($) to your counterpart for their remaining type A and type B units.
+                            Your purchase offer(p) to your counterpart for their remaining type A and type B units.
                         </div>
                         <div class="fw-normal fs-5">
-                            Counterpart's potential profit if they reject your offer and work alone: $[[get_counterpart_profit_if_working_alone().toFixed(2)]].
+                            Counterpart's potential profit if they reject your offer and work alone: [[get_counterpart_profit_if_working_alone().toFixed(2)]]p.
                         </div>
                     </div>
                 </div>
                 <div class="row justify-content-center fw-bold mt-2">                
                     <div class="col-auto text-start" id="div_id_type_a_bid">
-                        <span class="fs-4 pe-1">$</span>
+                        
                         <input type="number" 
                             class="transfer_model_input form-control-lg fw-bold"
                             v-model="manager_offer_to_worker"
                             min="0"
                             max="999"
                             step="0.01"
-                            id="manager_offer_to_worker">     
+                            id="manager_offer_to_worker">   
+                        <span class="fs-4 ps-1">p</span>  
                     </div>
                 </div>
 
@@ -114,7 +115,7 @@
                             You keep [[get_manager_share_if_worker_accepts_offers_string()]] if your counterpart accepts your offer and you work together.
                         </div>
                         <div class="fw-normal fs-5">
-                            My potential profit if I work alone: $[[get_my_profit_if_working_alone().toFixed(2)]].
+                            My potential profit if I work alone: [[get_my_profit_if_working_alone().toFixed(2)]]p.
                         </div>
                     </div>
                 </div>

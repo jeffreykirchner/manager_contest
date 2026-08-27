@@ -31,14 +31,14 @@ class ParameterSetPeriodForm(forms.ModelForm):
                                                                         "step": "1",
                                                                         "min": "0"}))
 
-    work_payout = forms.DecimalField(label='Work Payout($)',
+    work_payout = forms.DecimalField(label='AB Value(points)',
                                         max_digits=10,
                                         decimal_places=2,
                                         widget=forms.NumberInput(attrs={"v-model": "current_parameter_set_period.work_payout",
                                                                         "step": "0.01",
                                                                         "min": "0"}))
     
-    outside_option_payout = forms.DecimalField(label='Outside Option Payout($)',
+    outside_option_payout = forms.DecimalField(label='B Only Value(points)',
                                                max_digits=10,
                                                decimal_places=2,
                                                widget=forms.NumberInput(attrs={"v-model": "current_parameter_set_period.outside_option_payout",

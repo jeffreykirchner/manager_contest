@@ -315,18 +315,18 @@ get_total_player_value_string: function get_total_player_value_string(player_num
     {
         if(work_payout >= outside_option_payout)
         {
-            return `<span class="fs-4">$${value_from_work_total}</span>
+            return `<span class="fs-4">${value_from_work_total}p</span>
                     <br>
-                    (<span style="color:crimson">${unused_a_units}A x $0.00</span> + 
-                     <span style="color:cornflowerblue">${unused_b_units}B x $${outside_option_payout.toFixed(2)}</span> + 
-                     <span style="color:purple">${units_for_work}AB x $${work_payout.toFixed(2)}</span>)`;
+                    (<span style="color:crimson">${unused_a_units}A x 0.00p</span> + 
+                     <span style="color:cornflowerblue">${unused_b_units}B x ${outside_option_payout.toFixed(2)}p</span> + 
+                     <span style="color:purple">${units_for_work}AB x ${work_payout.toFixed(2)}p</span>)`;
         }
         else
         {
-            return `<span class="fs-4">$${value_from_outside_option}</span>
+            return `<span class="fs-4">${value_from_outside_option}p</span>
                     <br>
-                    (<span style="color:crimson">${type_a_units}A x $0.00</span> + 
-                     <span style="color:cornflowerblue">${type_b_units}B * $${outside_option_payout.toFixed(2)}</span>)`;
+                    (<span style="color:crimson">${type_a_units}A x 0.00p</span> + 
+                     <span style="color:cornflowerblue">${type_b_units}B * ${outside_option_payout.toFixed(2)}p</span>)`;
         }
     }
 
@@ -466,18 +466,18 @@ get_total_value_value_string : function get_total_value_value_string(format = "s
     {
         if(work_payout >= outside_option_payout)
         {
-            return `<span class="fs-4">$${value_from_work_total}</span>
+            return `<span class="fs-4">${value_from_work_total}p</span>
                     <br>
-                    (<span style="color:crimson">${unused_a_units}A x $0.00</span> + 
-                     <span style="color:cornflowerblue">${unused_b_units}B x $${outside_option_payout.toFixed(2)}</span> + 
-                     <span style="color:purple">${units_for_work}AB x $${work_payout.toFixed(2)})</span>`;
+                    (<span style="color:crimson">${unused_a_units}A x 0.00p</span> + 
+                     <span style="color:cornflowerblue">${unused_b_units}B x ${outside_option_payout.toFixed(2)}p</span> + 
+                     <span style="color:purple">${units_for_work}AB x ${work_payout.toFixed(2)}p</span>)`;
         }
         else
         {
-            return `<span class="fs-4">$${value_from_outside_option}</span>
+            return `<span class="fs-4">${value_from_outside_option}p</span>
                     <br>
-                    (<span style="color:crimson">${type_a_units}A x $0.00</span> + 
-                     <span style="color:cornflowerblue">${type_b_units}B x $${outside_option_payout.toFixed(2)}</span>)`;
+                    (<span style="color:crimson">${type_a_units}A x 0.00p</span> + 
+                     <span style="color:cornflowerblue">${type_b_units}B x ${outside_option_payout.toFixed(2)}p</span>)`;
         }
     }
 },
@@ -535,7 +535,7 @@ get_my_final_profit_string: function get_my_final_profit_string()
     let group = app.get_current_group();
     let player_number = app.get_player_number();
 
-    return "$" + parseFloat(group["player_" + player_number + "_earnings"]).toFixed(2);
+    return parseFloat(group["player_" + player_number + "_earnings"]).toFixed(2) + "p";
 },
 
 /**
