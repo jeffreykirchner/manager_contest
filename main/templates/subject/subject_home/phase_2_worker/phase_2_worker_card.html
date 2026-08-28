@@ -91,7 +91,7 @@
             <div v-if="get_current_group().manager_offer != null">
                 <div class="row justify-content-center fw-bold mt-4 fs-5">
                     <div class="col-auto text-center">
-                        The manager offers you $<span v-html="get_current_group().manager_offer.toFixed(2)"></span> to work together.<br>
+                        The manager offers you $<span v-html="get_current_group().manager_offer.toFixed(2)"></span> to proceed together.<br>
                         Make your decision below.
                     </div>
                 </div>
@@ -101,10 +101,10 @@
                         <button type="button"
                                 v-bind:class="tick_tock=='tick' ? 'btn btn-primary btn-lg' : 'btn btn btn-outline-primary btn-lg'"
                                 v-on:click = "submit_worker_response_to_manager('accept')"
-                                title="Work together."                       
+                                title="Proceed together."                       
                                 v-bind:disabled="reconnecting || working">
                                                     
-                            Work together and earn [[get_current_group().manager_offer.toFixed(2)]]p.
+                            Proceed together and earn [[get_current_group().manager_offer.toFixed(2)]]p.
                         </button>
             
                         OR
@@ -112,10 +112,10 @@
                         <button type="button"
                                 v-bind:class="tick_tock=='tick' ? 'btn btn-primary btn-lg' : 'btn btn btn-outline-primary btn-lg'"
                                 v-on:click = "submit_worker_response_to_manager('reject')"
-                                title="Work together."                       
+                                title="Proceed separately."                       
                                 v-bind:disabled="reconnecting || working">
                                                     
-                            Work separately and earn [[get_my_profit_if_working_alone().toFixed(2)]]p.
+                            Proceed separately and earn [[get_my_profit_if_working_alone().toFixed(2)]]p.
                         </button>
                     </div>
                 </div>
@@ -135,10 +135,10 @@
             <div class="row justify-content-center mt-4">
                 <div class="col-auto text-center">
                     <span v-if="get_current_group().manager_offer_accepted == 'accept'">
-                        You have accepted the manager's offer to work together.
+                        You have accepted the manager's offer to proceed together.
                     </span>
                     <span v-else>
-                        You have rejected the manager's offer and will work separately.
+                        You have rejected the manager's offer and will proceed separately.
                     </span>
                 </div>
             </div>

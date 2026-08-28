@@ -34,7 +34,7 @@ submit_worker_response_to_manager_instructions: function submit_worker_response_
     {
         if(worker_response_to_manager != "accept")
         {
-            app.worker_response_to_manager_error = "Error: You must Work Together to proceed.";
+            app.worker_response_to_manager_error = "Error: You must Proceed Together to proceed.";
             return;
         }
     }
@@ -42,7 +42,7 @@ submit_worker_response_to_manager_instructions: function submit_worker_response_
     {
         if(worker_response_to_manager != "reject")
         {
-            app.worker_response_to_manager_error = "Error: You must Work Separately to proceed.";
+            app.worker_response_to_manager_error = "Error: You must Proceed Separately to proceed.";
             return;
         }
     }

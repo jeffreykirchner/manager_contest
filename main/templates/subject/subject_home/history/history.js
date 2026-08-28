@@ -52,6 +52,18 @@ get_history: function get_history()
             manager_offer =  parseFloat(group["manager_offer"]).toFixed(2)+"p";
         }
 
+        let my_type_a_phase_1_units = null;
+        if(group["type_a_phase_1_units_player_" + player_number] != null)
+        {
+            my_type_a_phase_1_units = group["type_a_phase_1_units_player_" + player_number]+"p";
+        }
+
+        let counterpart_type_a_phase_1_units = null;
+        if(group["type_a_phase_1_units_player_" + counterpart_number] != null)
+        {
+            counterpart_type_a_phase_1_units = group["type_a_phase_1_units_player_" + counterpart_number]+"p";
+        }
+
         //starting unit strings
         let my_starting_units_string = "";
         let counterpart_starting_units_string = "";
@@ -76,8 +88,8 @@ get_history: function get_history()
             type_b_value: parameter_set_period.outside_option_payout,
             my_starting_units_string:my_starting_units_string,
             counterpart_starting_units_string:counterpart_starting_units_string,
-            my_type_a_phase_1_units: group["type_a_phase_1_units_player_" + player_number]+"A",
-            counterpart_type_a_phase_1_units: group["type_a_phase_1_units_player_" + counterpart_number]+"A",
+            my_type_a_phase_1_units: my_type_a_phase_1_units,
+            counterpart_type_a_phase_1_units: counterpart_type_a_phase_1_units,
             my_role: my_role,
             group_id: group_id,
             player_number: player_number,

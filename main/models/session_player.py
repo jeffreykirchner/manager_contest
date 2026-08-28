@@ -195,9 +195,9 @@ class SessionPlayer(models.Model):
             text = text.replace(f'#{i}#', str(instruction_set[i]))
 
         if instruction_set["ex1_part_2_accept"]==1:
-            text = text.replace("#ex1_part_2_accept_button#", "Work Together")
+            text = text.replace("#ex1_part_2_accept_button#", "Proceed Together")
         else:
-            text = text.replace("#ex1_part_2_accept_button#", "Work Separately")
+            text = text.replace("#ex1_part_2_accept_button#", "Proceed Separately")
 
         text = text.replace("#player_count-1#", str(len(parameter_set["parameter_set_players"])-1))
         text = text.replace("#period_count#", str(self.session.session_periods.count()))

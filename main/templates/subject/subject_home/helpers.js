@@ -483,7 +483,7 @@ get_total_value_value_string : function get_total_value_value_string(format = "s
 },
 
 /**
- * get my profit if I work alone
+ * get my profit if I proceed alone
  */
 get_my_profit_if_working_alone: function get_my_profit_if_working_alone()
 {
