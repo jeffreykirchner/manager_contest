@@ -18,7 +18,8 @@ from main.globals import GroupPhase
 from main.globals import is_non_negative_int
 from main.globals import get_total_player_value
 from main.globals import get_total_group_value
-from main.globals import is_non_negative_float_with_2_decimal_places
+from main.globals import is_non_negative_float
+from main.globals import round_half_away_from_zero
 
 import main
 
@@ -275,22 +276,23 @@ class SubjectUpdatesMixin():
         group = await self.get_world_state_group(player_id)
         player_number = await self.get_world_state_player_number(player_id)
 
-        group["type_a_phase_1_units_player_" + str(player_number)] = type_a_bid
-        group["type_a_phase_1_units_player_" + str(player_number) + "_prediction"] = type_a_bid_counterpart
-
-        player_1_bid = group["type_a_phase_1_units_player_1"]
-        player_2_bid = group["type_a_phase_1_units_player_2"]
-
-        #check if bid is a non-negative integer
-        if not is_non_negative_int(type_a_bid):
+        #check if bid is a non-negative float with at most 1 decimal place
+        if not is_non_negative_float(type_a_bid, 1):
             status = "fail"
-            error_message = "Invalid entry for your bid."
+            error_message = "Invalid entry for your bid. Only one decimal place is allowed."
         
-        #check if prediction is a non-negative integer
+        #check if prediction is a non-negative float with at most 1 decimal place
         if status == "success":
-            if not is_non_negative_int(type_a_bid_counterpart):
+            if not is_non_negative_float(type_a_bid_counterpart, 1):
                 status = "fail"
-                error_message = "Invalid entry for your prediction."
+                error_message = "Invalid entry for your prediction. Only one decimal place is allowed."
+
+        if status == "success":
+            group["type_a_phase_1_units_player_" + str(player_number)] = round_half_away_from_zero(type_a_bid,1)
+            group["type_a_phase_1_units_player_" + str(player_number) + "_prediction"] = round_half_away_from_zero(type_a_bid_counterpart,1)
+    
+            player_1_bid = group["type_a_phase_1_units_player_1"]
+            player_2_bid = group["type_a_phase_1_units_player_2"]
 
         #check if bid is less than or equal to the inventory of type a units for the player
         if status == "success":     
@@ -396,15 +398,15 @@ class SubjectUpdatesMixin():
             status = "fail"
             error_message = "Only the manager can submit an offer."
         
-        #check if offer is a non-negative integer
+        #check if offer is a non-negative float with at most 2 decimal places
         if status == "success":
-            if not is_non_negative_float_with_2_decimal_places(manager_offer_to_worker):
+            if not is_non_negative_float(manager_offer_to_worker, 2):
                 status = "fail"
                 error_message = "Invalid entry."
 
         #check if offer exceeds the total group value
         if status == "success":
-            if Decimal(manager_offer_to_worker) > Decimal(group["group_total_value"]):
+            if float(manager_offer_to_worker) > float(group["group_total_value"]):
                 status = "fail"
                 error_message = f"Offer exceeds total group profit of ${group['group_total_value']:.2f}."
 
@@ -476,11 +478,11 @@ class SubjectUpdatesMixin():
             if group["manager_offer_accepted"] == "accept":
 
                 if group["player_1"] == group["manager"]:
-                    group["player_1_earnings"] =  Decimal(group["group_total_value"]) - Decimal(group["manager_offer"])
-                    group["player_2_earnings"] = Decimal(group["manager_offer"])
+                    group["player_1_earnings"] =  float(group["group_total_value"]) - float(group["manager_offer"])
+                    group["player_2_earnings"] = float(group["manager_offer"])
                 else:
-                    group["player_2_earnings"] =  Decimal(group["group_total_value"]) - Decimal(group["manager_offer"])
-                    group["player_1_earnings"] = Decimal(group["manager_offer"])
+                    group["player_2_earnings"] =  float(group["group_total_value"]) - float(group["manager_offer"])
+                    group["player_1_earnings"] = float(group["manager_offer"])
             else:
                 group["player_1_earnings"] = group["player_1_total_value"]
                 group["player_2_earnings"] = group["player_2_total_value"]
@@ -574,12 +576,12 @@ class SubjectUpdatesMixin():
 
             for g in session_period["groups"].values():
                 if g.get("player_1_earnings") is not None:
-                    player_1_total_gain += Decimal(g["player_1_earnings"])
-                    player_1_total_gain -= Decimal(g["player_1_start_total_value"])
+                    player_1_total_gain += float(g["player_1_earnings"])
+                    player_1_total_gain -= float(g["player_1_start_total_value"])
                     player_1_count += 1
                 if g.get("player_2_earnings") is not None:
-                    player_2_total_gain += Decimal(g["player_2_earnings"])
-                    player_2_total_gain -= Decimal(g["player_2_start_total_value"])
+                    player_2_total_gain += float(g["player_2_earnings"])
+                    player_2_total_gain -= float(g["player_2_start_total_value"])
                     player_2_count += 1
 
             if player_1_count > 0:
@@ -633,9 +635,9 @@ class SubjectUpdatesMixin():
                         group = session_period["groups"][str(group_id)]
 
                         if group["player_1"] == session_player_id:
-                            session_player["earnings"] = Decimal(str(session_player["earnings"])) + Decimal(str(group["player_1_earnings"]))
+                            session_player["earnings"] = float(str(session_player["earnings"])) + float(str(group["player_1_earnings"]))
                         elif group["player_2"] == session_player_id:
-                            session_player["earnings"] = Decimal(str(session_player["earnings"])) + Decimal(str(group["player_2_earnings"]))
+                            session_player["earnings"] = float(str(session_player["earnings"])) + float(str(group["player_2_earnings"]))
 
                 self.world_state_local["current_experiment_phase"] = ExperimentPhase.NAMES
                 

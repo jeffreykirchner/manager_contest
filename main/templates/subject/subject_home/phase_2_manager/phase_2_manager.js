@@ -84,11 +84,11 @@ get_manager_share_if_worker_accepts_offers_string: function get_manager_share_if
 
     if(app.manager_offer_to_worker == null)
     {
-        return "$---";
+        return "---";
     }
 
-    if(!Number.isFinite(app.manager_offer_to_worker)) return "$---";
-    if(app.manager_offer_to_worker < 0) return "$---";
+    if(!Number.isFinite(app.manager_offer_to_worker)) return "---";
+    if(app.manager_offer_to_worker < 0) return "---";
 
     let group = app.get_current_group();
 
@@ -98,8 +98,8 @@ get_manager_share_if_worker_accepts_offers_string: function get_manager_share_if
 
     if(manager_offer < 0)
     {
-        return "$---";
+        return "---";
     } 
-    return "$" + manager_offer.toFixed(2);
+    return manager_offer.toFixed(2) + "p";
 },
     
