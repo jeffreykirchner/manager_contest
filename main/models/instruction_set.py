@@ -108,7 +108,10 @@ class InstructionSet(models.Model):
         for instruction_page in instruction_pages:
             instructions.append(main.models.Instruction(instruction_set=self, 
                                                         text_html=instruction_page['text_html'], 
-                                                        page_number=instruction_page['page_number']))
+                                                        page_number=instruction_page['page_number'],
+                                                        quiz_state=instruction_page['quiz_state'] if 'quiz_state' in instruction_page else {},
+                                                        quiz_question=True if instruction_page['quiz_question'] else False,
+                                                        quiz_answer=instruction_page['quiz_answer']))
 
         main.models.Instruction.objects.bulk_create(instructions)
 
@@ -164,7 +167,7 @@ class InstructionSet(models.Model):
             "ex1_part_2_offer" : self.ex1_part_2_offer,
             "ex1_part_2_accept" : 1 if self.ex1_part_2_accept else 0,
 
-            "instruction_pages" : [i.json() for i in self.instructions.all()],
+            "instruction_pages" : [i.json(quiz_state_in_string_format=True) for i in self.instructions.all()],
             "help_docs_subject" : [i.json() for i in self.help_docs_subject.all()],
         }
     
@@ -198,7 +201,7 @@ class InstructionSet(models.Model):
             "ex1_part_2_offer" : self.ex1_part_2_offer,
             "ex1_part_2_accept" : 1 if self.ex1_part_2_accept else 0,
 
-            "instruction_pages" : [await i.ajson() async for i in self.instructions.all()],
+            "instruction_pages" : [await i.ajson(quiz_state_in_string_format=True) async for i in self.instructions.all()],
             "help_docs_subject" : [await i.ajson() async for i in self.help_docs_subject.all()],
         }
     

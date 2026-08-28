@@ -2,7 +2,7 @@
 axios.defaults.xsrfHeaderName = "X-CSRFTOKEN";
 axios.defaults.xsrfCookieName = "csrftoken";
 
-const { createApp, ref } = Vue
+const { createApp, ref , reactive, computed } = Vue
 //vue app
 let app = createApp({
     delimiters: ["[[", "]]"],
@@ -264,7 +264,6 @@ let app = createApp({
             send_update_help_doc,
             send_add_help_doc,
             send_delete_help_doc,
-
         }
     }
 }).mount('#app');
