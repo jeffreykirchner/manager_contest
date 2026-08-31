@@ -112,10 +112,10 @@
                         <button type="button"
                                 v-bind:class="tick_tock=='tick' ? 'btn btn-primary btn-lg' : 'btn btn btn-outline-primary btn-lg'"
                                 v-on:click = "submit_worker_response_to_manager('reject')"
-                                title="Proceed separately."                       
+                                title="Proceed alone."                       
                                 v-bind:disabled="reconnecting || working">
                                                     
-                            Proceed separately and earn [[get_my_profit_if_working_alone().toFixed(2)]]p.
+                            Proceed alone and earn [[get_my_profit_if_working_alone().toFixed(2)]]p.
                         </button>
                     </div>
                 </div>
@@ -138,7 +138,7 @@
                         You have accepted the manager's offer to proceed together.
                     </span>
                     <span v-else>
-                        You have rejected the manager's offer and will proceed separately.
+                        You have rejected the manager's offer and will proceed alone.
                     </span>
                 </div>
             </div>

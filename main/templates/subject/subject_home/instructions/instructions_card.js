@@ -140,6 +140,46 @@ process_instruction_page: function process_instruction_page(){
     if(app.session_player.current_instruction in app.session_player.quiz_answers && 
        !app.session_player.quiz_answers[app.session_player.current_instruction].complete)
     {
+        let instruction_page = app.instructions.instruction_pages[app.session_player.current_instruction-1];
+        let quiz_state = instruction_page.quiz_state;
+        let parameter_set_period = app.get_current_parameter_set_period();
+
+        if(quiz_state)
+        {
+            //check if quiz_state has keys "group" and "parameter_set_period"
+            if("group" in quiz_state)
+            {
+                //use keys from quiz_state["group"] to upate keys in group
+                for (const [key, value] of Object.entries(quiz_state["group"])) {
+
+                    if(value == "me")
+                    {
+                        group[key] = app.session_player.id;
+                    }
+                    else if(value == "counterpart")
+                    {
+                        group[key] = app.session_player.id+1;
+                    }
+                    else
+                    {
+                        group[key] = value;
+                    }
+                }
+            }
+            
+            if("parameter_set_period" in quiz_state)
+            {
+                //use keys from quiz_state["parameter_set_period"] to update keys in parameter_set_period
+                for (const [key, value] of Object.entries(quiz_state["parameter_set_period"])) {
+                    parameter_set_period[key] = value;
+                }
+            }
+
+            Vue.nextTick(() => {
+                app.update_graphs();
+            });
+        }
+
         return;
     }
 
