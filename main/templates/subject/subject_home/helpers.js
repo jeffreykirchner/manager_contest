@@ -348,7 +348,7 @@ get_total_value_value_string : function get_total_value_value_string(format = "s
     let parameter_set_period = app.get_current_parameter_set_period();
 
     let type_a_units = group["type_a_units_player_1"] + group["type_a_units_player_2"];
-    let type_a_total_units = group["type_a_units_start_player_1"] + group["type_a_units_start_player_2"];;
+    let type_a_total_units = group["type_a_units_start_player_1"] + group["type_a_units_start_player_2"];
     let type_b_units = group["type_b_units_player_1"] + group["type_b_units_player_2"];
     let type_b_total_units = type_b_units;
     let type_a_spent = 0;

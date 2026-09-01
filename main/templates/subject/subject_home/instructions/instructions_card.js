@@ -387,6 +387,7 @@ check_quiz_question_answer: function check_quiz_question_answer()
         
             app.session_player.current_instruction_complete = app.session_player.current_instruction;
             app.send_current_instruction_complete();
+            app.quiz_answer = "";
         }
         else
         {
