@@ -171,6 +171,7 @@ def take_duplicate_parameterset_player(data):
     parameter_set_player = main.models.ParameterSetPlayer()
     parameter_set_player.parameter_set = parameter_set
     parameter_set_player.instruction_set = parameter_set_player_source.instruction_set
+    parameter_set_player.exchange_rate = parameter_set_player_source.exchange_rate
     
     parameter_set_player.from_dict(parameter_set_player_source.json())
 

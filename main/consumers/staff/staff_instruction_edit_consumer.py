@@ -295,7 +295,7 @@ def take_download_instruction_set(data):
     instruction_set = InstructionSet.objects.get(id=data['instruction_set_id'])
     
     return {"value" : "success", 
-            "instruction_set": instruction_set.json()}
+            "instruction_set": instruction_set.json(False)}
 
 @sync_to_async
 def take_upload_instruction_set(data):

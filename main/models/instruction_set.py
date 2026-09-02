@@ -137,7 +137,7 @@ class InstructionSet(models.Model):
         main.models.HelpDocsSubject.objects.bulk_create(help_docs_subjects)
         
     #return json object of class
-    def json(self):
+    def json(self, quiz_state_in_string_format=True):
         '''
         json object of model
         '''
@@ -167,7 +167,7 @@ class InstructionSet(models.Model):
             "ex1_part_2_offer" : self.ex1_part_2_offer,
             "ex1_part_2_accept" : 1 if self.ex1_part_2_accept else 0,
 
-            "instruction_pages" : [i.json(quiz_state_in_string_format=True) for i in self.instructions.all()],
+            "instruction_pages" : [i.json(quiz_state_in_string_format=quiz_state_in_string_format) for i in self.instructions.all()],
             "help_docs_subject" : [i.json() for i in self.help_docs_subject.all()],
         }
     
