@@ -627,6 +627,7 @@ class SubjectUpdatesMixin():
 
                 for session_player_id in self.world_state_local["session_players_order"]:
                     session_player = self.world_state_local["session_players"][str(session_player_id)]
+                    parameter_set_player = self.parameter_set_local["parameter_set_players"][str(session_player["parameter_set_player_id"])]
                     session_player["earnings"] = 0
 
                     for p in periods_paid:
@@ -638,6 +639,10 @@ class SubjectUpdatesMixin():
                             session_player["earnings"] = float(str(session_player["earnings"])) + float(str(group["player_1_earnings"]))
                         elif group["player_2"] == session_player_id:
                             session_player["earnings"] = float(str(session_player["earnings"])) + float(str(group["player_2_earnings"]))
+
+                    #convert earnings to dollars using the exchange rate from the parameter set player
+                    session_player["earnings"] = float(str(session_player["earnings"])) / float(str(parameter_set_player["exchange_rate"]))
+                    session_player["earnings"] = round(session_player["earnings"], 2)
 
                 self.world_state_local["current_experiment_phase"] = ExperimentPhase.NAMES
                 

@@ -191,6 +191,9 @@ class SessionPlayer(models.Model):
         for i in parameter_set:
             text = text.replace(f'#{i}#', str(parameter_set[i]))
 
+        for i in parameter_set_player:
+            text = text.replace(f'#{i}#', str(parameter_set_player[i]))
+
         for i in instruction_set:
             text = text.replace(f'#{i}#', str(instruction_set[i]))
 
@@ -201,6 +204,7 @@ class SessionPlayer(models.Model):
 
         text = text.replace("#player_count-1#", str(len(parameter_set["parameter_set_players"])-1))
         text = text.replace("#period_count#", str(self.session.session_periods.count()))
+        text = text.replace("#exchange_rate_x_5#", str(parameter_set_player["exchange_rate"]*5))
         
         return text
     

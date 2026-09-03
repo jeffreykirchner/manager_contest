@@ -19,6 +19,7 @@ class ParameterSetPlayer(models.Model):
     instruction_set = models.ForeignKey(InstructionSet, on_delete=models.SET_NULL, related_name="parameter_set_players_c", blank=True, null=True)
 
     player_number = models.IntegerField(verbose_name='Player number', default=0)         #player number, from 1 to N 
+    exchange_rate = models.IntegerField(verbose_name='Exchange Rate', default=100)       #exchange rate for converting points to $1
 
     timestamp = models.DateTimeField(auto_now_add=True)
     updated= models.DateTimeField(auto_now=True)
@@ -76,6 +77,7 @@ class ParameterSetPlayer(models.Model):
             "instruction_set_label" : self.instruction_set.label if self.instruction_set else "---",
 
             "player_number" : self.player_number,
+            "exchange_rate" : self.exchange_rate,
         }
     
     def get_json_for_subject(self, update_required=False):

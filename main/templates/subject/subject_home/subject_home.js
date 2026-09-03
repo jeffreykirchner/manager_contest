@@ -310,10 +310,12 @@ let app = Vue.createApp({
                     {
                         app.setup_instructions();
                     }
-
-                    Vue.nextTick(() => {
-                        app.update_graphs();
-                    });
+                    else
+                    {
+                        Vue.nextTick(() => {
+                            app.update_graphs();
+                        });
+                    }
                 });
             }
             else
@@ -341,14 +343,30 @@ let app = Vue.createApp({
                 group.type_b_units_player_1 = app.instructions.ex1_type_b_units_player_1;
                 group.type_b_units_player_2 = app.instructions.ex1_type_b_units_player_2;
 
+                group.type_a_units_start_player_1 = app.instructions.ex1_type_a_units_player_1;
+                group.type_a_units_start_player_2 = app.instructions.ex1_type_a_units_player_2;
+
+                group.type_b_units_start_player_1 = app.instructions.ex1_type_b_units_player_1;
+                group.type_b_units_start_player_2 = app.instructions.ex1_type_b_units_player_2;
+
                 parameter_set_period.outside_option_payout = app.instructions.ex1_outside_option_payout;
                 parameter_set_period.work_payout = app.instructions.ex1_work_payout;
+
+                parameter_set_period.type_a_units_player_1 = app.instructions.ex1_type_a_units_player_1;
+                parameter_set_period.type_a_units_player_2 = app.instructions.ex1_type_a_units_player_2;
+                parameter_set_period.type_b_units_player_1 = app.instructions.ex1_type_b_units_player_1;
+                parameter_set_period.type_b_units_player_2 = app.instructions.ex1_type_b_units_player_2;
+                
 
                 group.player_1 = app.session_player.id;
                 group.player_2 = app.session_player.id+1;
 
                 app.process_instruction_page();
                 app.instruction_display_scroll();
+
+                Vue.nextTick(() => {
+                    app.update_graphs();
+                });
             });
             
         },

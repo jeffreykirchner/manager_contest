@@ -195,6 +195,7 @@ get_total_player_value_string: function get_total_player_value_string(player_num
 
     let group = app.get_current_group();
     let parameter_set_period = app.get_current_parameter_set_period();
+    let parameter_set_player = app.session.parameter_set.parameter_set_players[app.session_player.parameter_set_player];
     
     let place_holder = `<span class="fs-4">---</span><br>---`;
     let type_a_units = group["type_a_units_player_" + player_number];
@@ -294,7 +295,7 @@ get_total_player_value_string: function get_total_player_value_string(player_num
                 "type_b_total_units": type_b_total_units,
                 "type_ab_units": units_for_work,
                 "type_ab_total_units": type_ab_total_units,
-                "profit": Math.round(value_from_work_total * 100) / 100,
+                "profit": Math.round(value_from_work_total * parameter_set_player.exchange_rate) / parameter_set_player.exchange_rate,
             };
         }
         else
@@ -307,7 +308,7 @@ get_total_player_value_string: function get_total_player_value_string(player_num
                 "type_b_total_units": type_b_units,
                 "type_ab_units": 0,
                 "type_ab_total_units": 0,
-                "profit": Math.round(value_from_outside_option * 100) / 100,
+                "profit": Math.round(value_from_outside_option * parameter_set_player.exchange_rate) / parameter_set_player.exchange_rate,
             };
         }
     }
@@ -348,7 +349,7 @@ get_total_value_value_string : function get_total_value_value_string(format = "s
     let parameter_set_period = app.get_current_parameter_set_period();
 
     let type_a_units = group["type_a_units_player_1"] + group["type_a_units_player_2"];
-    let type_a_total_units = group["type_a_units_start_player_1"] + group["type_a_units_start_player_2"];;
+    let type_a_total_units = group["type_a_units_start_player_1"] + group["type_a_units_start_player_2"];
     let type_b_units = group["type_b_units_player_1"] + group["type_b_units_player_2"];
     let type_b_total_units = type_b_units;
     let type_a_spent = 0;

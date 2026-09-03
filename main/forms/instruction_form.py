@@ -22,9 +22,13 @@ class InstructionForm(forms.ModelForm):
                                   required=False,
                                   widget=forms.TextInput(attrs={"v-model":"current_instruction.quiz_answer", "class":"w-25"}))
 
+    quiz_state = forms.JSONField(label='Quiz State',
+                                required=False,
+                                widget=forms.Textarea(attrs={"v-model":"current_instruction.quiz_state", "class":"w-50", "rows":"20"}))
+
     class Meta:
         model=Instruction
-        fields = ('page_number','text_html', 'quiz_question', 'quiz_answer')
+        fields = ('page_number','text_html', 'quiz_question', 'quiz_answer', 'quiz_state')
 
     def clean_quiz_answer(self):
             
