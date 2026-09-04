@@ -287,13 +287,6 @@ class SubjectUpdatesMixin():
                 status = "fail"
                 error_message = "Invalid entry for your prediction. Only one decimal place is allowed."
 
-        if status == "success":
-            group["type_a_phase_1_units_player_" + str(player_number)] = round_half_away_from_zero(type_a_bid,1)
-            group["type_a_phase_1_units_player_" + str(player_number) + "_prediction"] = round_half_away_from_zero(type_a_bid_counterpart,1)
-    
-            player_1_bid = group["type_a_phase_1_units_player_1"]
-            player_2_bid = group["type_a_phase_1_units_player_2"]
-
         #check if bid is less than or equal to the inventory of type a units for the player
         if status == "success":     
             type_a_units_player = group["type_a_units_player_" + str(player_number)]
@@ -308,12 +301,18 @@ class SubjectUpdatesMixin():
             if type_a_bid_counterpart > type_a_units_player_counterpart:
                 status = "fail"
                 error_message = f"Prediction must be less than or equal to {type_a_units_player_counterpart} (counterpart's inventory of type A units)."
-
+           
         #check if both players in the group have submitted their type a bid, if so, process the bids and determine the manager for the next period
         #if the probability of player 1 winning is player 1's bid / (player 1's bid + player 2's bid), then we can randomly determine the winner based on that probability
         #if both players have a zero bid then we can randomly determine the winner with equal probability
         start_phase_2 = False
         if status == "success":
+            group["type_a_phase_1_units_player_" + str(player_number)] = round_half_away_from_zero(type_a_bid,1)
+            group["type_a_phase_1_units_player_" + str(player_number) + "_prediction"] = round_half_away_from_zero(type_a_bid_counterpart,1)
+    
+            player_1_bid = group["type_a_phase_1_units_player_1"]
+            player_2_bid = group["type_a_phase_1_units_player_2"]
+             
             if player_1_bid is not None and player_2_bid is not None:   
                 start_phase_2 = True     
                 if player_1_bid == 0 and player_2_bid == 0:
