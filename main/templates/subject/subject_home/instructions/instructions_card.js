@@ -145,6 +145,13 @@ process_instruction_page: function process_instruction_page(){
         let quiz_state = instruction_page.quiz_state;
         let parameter_set_period = app.get_current_parameter_set_period();
 
+        app.type_a_bid = null;
+        app.type_a_bid_counterpart = null;
+        app.type_a_bid_error = null;
+        app.manager_offer_to_worker = null;
+        app.manager_offer_to_worker_error = null;
+        app.worker_response_to_manager_error = null;
+
         if(quiz_state)
         {
             //check if quiz_state has keys "group" and "parameter_set_period"
