@@ -104,7 +104,8 @@ process_instruction_page: function process_instruction_page(){
     let group = app.get_current_group();
 
      // check if example complete show review page
-    if(app.session_player.current_instruction > app.instructions.action_page_3)
+    if(!app.session_player.current_instruction in app.session_player.quiz_answers &&
+        app.session_player.current_instruction > app.instructions.action_page_3)
     {
         group.phase = "Phase 2";
         group.worker = app.session_player.id;
@@ -394,4 +395,21 @@ check_quiz_question_answer: function check_quiz_question_answer()
             app.show_quiz_error = true;
         }
     }
+},
+
+//return a string that says quiz answer correct and what the correct answer
+get_quiz_answer_correct_label_text: function get_quiz_answer_correct_label_text()
+{
+    //check if current instruction is in quiz_answers and if it is complete
+    if(!(app.session_player.current_instruction in app.session_player.quiz_answers) || 
+       !app.session_player.quiz_answers[app.session_player.current_instruction].complete)
+    {
+        return "";
+    }
+    
+    //last answer in the array of answers for the current instruction
+    let answers_length = app.session_player.quiz_answers[app.session_player.current_instruction].answers.length;
+    let answer = app.session_player.quiz_answers[app.session_player.current_instruction].answers[answers_length-1];
+    let text = `Quiz answer correct (${answer}). Click Next to continue.`;
+    return text;
 },
