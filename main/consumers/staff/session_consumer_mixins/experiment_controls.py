@@ -266,6 +266,7 @@ def take_next_phase(session_id, data):
             "current_experiment_phase" : session.world_state["current_experiment_phase"],
             "finished" : session.world_state["finished"],
             "world_state" : session.world_state,
+            "parameter_set" : session.parameter_set.json()
             }
 
 def take_refresh_screens(session_id, data):
