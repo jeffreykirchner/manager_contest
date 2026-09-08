@@ -137,7 +137,10 @@ get_manager_probability: function get_manager_probability()
     
     win_probability *= 100;
     win_probability = Math.round(win_probability * 10) / 10;
-    
+
+    if(win_probability > 100) win_probability = 100;
+    if(win_probability < 0) win_probability = 0;
+
     return win_probability + "%";
 },
 
