@@ -571,7 +571,9 @@ let app = Vue.createApp({
             if(app.session.world_state.current_experiment_phase == 'Run' || 
                 app.session.world_state.current_experiment_phase == 'Instructions')
             {
-                app.session.world_state = message_data.world_state;                
+                app.session.world_state = message_data.world_state;         
+                app.session.parameter_set = message_data.parameter_set;
+                       
                 app.do_reload();
 
                 Vue.nextTick(() => {

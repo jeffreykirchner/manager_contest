@@ -15,7 +15,7 @@ class ParameterSetForm(forms.ModelForm):
     Parameterset edit form
     '''
     number_of_periods_paid = forms.IntegerField(label='Number of periods paid',
-                                                min_value=0,
+                                                min_value=1,
                                                 initial=4,
                                                 widget=forms.NumberInput(attrs={"v-model":"parameter_set.number_of_periods_paid",
                                                                                 "step":"1",

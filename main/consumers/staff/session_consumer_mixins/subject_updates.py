@@ -616,7 +616,8 @@ class SubjectUpdatesMixin():
             else:
                 
                 #randomly select N session_periods from the experiment to pay the subjects on, where N is determined by the parameter set number_of_periods_paid
-                number_of_periods_paid = self.parameter_set_local["number_of_periods_paid"]
+                number_of_periods_paid = int(self.parameter_set_local.get("number_of_periods_paid", 1))
+                number_of_periods_paid = max(1, min(number_of_periods_paid, len(self.world_state_local["session_periods_order"])))
 
                 periods_paid = random.sample(self.world_state_local["session_periods_order"], min(number_of_periods_paid, len(self.world_state_local["session_periods_order"])))
 
