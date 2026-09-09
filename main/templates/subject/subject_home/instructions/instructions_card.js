@@ -103,6 +103,13 @@ send_current_instruction_complete: function current_instruction_complete()
 process_instruction_page: function process_instruction_page(){
     let group = app.get_current_group();
 
+    app.type_a_bid = null;
+    app.type_a_bid_counterpart = null;
+    app.type_a_bid_error = null;
+    app.manager_offer_to_worker = null;
+    app.manager_offer_to_worker_error = null;
+    app.worker_response_to_manager_error = null;
+
      // check if example complete show review page
     if(!app.session_player.current_instruction in app.session_player.quiz_answers &&
         app.session_player.current_instruction > app.instructions.action_page_3)
@@ -130,11 +137,11 @@ process_instruction_page: function process_instruction_page(){
         group.player_1_earnings = app.get_total_value_value_string("json").profit - group.manager_offer;
         group.player_1_review_complete=true;
         group.player_2_review_complete=true;
-
-        Vue.nextTick(() => {
-            app.update_graphs();
-        });
     }
+
+    Vue.nextTick(() => {
+        app.update_graphs();
+    });
 
     //check for quiz question that needs to be answered
     //check if current instructions is in quiz_answers and if it is not complete
@@ -144,13 +151,6 @@ process_instruction_page: function process_instruction_page(){
         let instruction_page = app.instructions.instruction_pages[app.session_player.current_instruction-1];
         let quiz_state = instruction_page.quiz_state;
         let parameter_set_period = app.get_current_parameter_set_period();
-
-        app.type_a_bid = null;
-        app.type_a_bid_counterpart = null;
-        app.type_a_bid_error = null;
-        app.manager_offer_to_worker = null;
-        app.manager_offer_to_worker_error = null;
-        app.worker_response_to_manager_error = null;
 
         if(quiz_state)
         {
