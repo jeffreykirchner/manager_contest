@@ -324,13 +324,13 @@ is_phase_1_input_disabled: function is_phase_1_input_disabled()
 {
     if(!app.session.started) return true;
 
-    if(app.session.world_state.current_experiment_phase == 'Instructions')
-    {
-        if(app.session_player.current_instruction < app.instructions.action_page_1)
-        {
-            return true;
-        }
-    }
+    // if(app.session.world_state.current_experiment_phase == 'Instructions')
+    // {
+    //     if(app.session_player.current_instruction < app.instructions.action_page_1)
+    //     {
+    //         return true;
+    //     }
+    // }
 
     return false;
 },
