@@ -59,7 +59,7 @@ def take_next_instruction(session_id, session_player_id, data):
     '''
 
     logger = logging.getLogger(__name__) 
-    logger.info(f"Take next instruction: {session_id} {session_player_id} {data}")
+    # logger.info(f"Take next instruction: {session_id} {session_player_id} {data}")
 
     try:       
 
@@ -100,7 +100,7 @@ def take_finish_instructions(session_id, session_player_id, data):
     '''
 
     logger = logging.getLogger(__name__) 
-    logger.info(f"Take finish instructions: {session_id} {session_player_id} {data}")
+    # logger.info(f"Take finish instructions: {session_id} {session_player_id} {data}")
 
     try:       
 
@@ -127,7 +127,7 @@ def take_current_instruction_complete(session_id, session_player_id, data):
     '''
 
     logger = logging.getLogger(__name__) 
-    logger.info(f"Take current instruction complete: {session_id} {session_player_id} {data}")
+    # logger.info(f"Take current instruction complete: {session_id} {session_player_id} {data}")
 
     try:       
 

@@ -487,7 +487,7 @@ class Session(models.Model):
 
             writer = csv.writer(output, quoting=csv.QUOTE_NONNUMERIC)
 
-            writer.writerow(["Session ID", "Period", "Client #", "Action","Info (Plain)", "Info (JSON)", "Timestamp"])
+            writer.writerow(["Session ID", "Period", "Client #", "Action","Info", "Timestamp"])
 
             # session_events =  main.models.SessionEvent.objects.filter(session__id=self.id).prefetch_related('period_number', 'time_remaining', 'type', 'data', 'timestamp')
             # session_events = session_events.select_related('session_player')
@@ -507,7 +507,6 @@ class Session(models.Model):
                                 parameter_set_players[str(p.session_player_id)]["player_number"], 
                                 p.type, 
                                 self.action_data_parse(p.type, p.data, session_players),
-                                p.data, 
                                 p.timestamp])
             
             v = output.getvalue()
