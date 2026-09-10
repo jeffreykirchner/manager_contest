@@ -77,9 +77,9 @@ draw_summary_graph: function draw_summary_graph()
     ctx.textAlign = "right";
     ctx.textBaseline = "middle";
 
-    ctx.fillText("$" + max_gain, -5, 0);
-    ctx.fillText("$0", -5, h/2 - top_margin - bottom_margin);
-    ctx.fillText("-$" + max_gain, -5, h - top_margin - bottom_margin);
+    ctx.fillText(max_gain, -3, 0);
+    ctx.fillText("0", -3, h/2 - top_margin - bottom_margin);
+    ctx.fillText("-" + max_gain, -3, h - top_margin - bottom_margin);
 
     let scale_factor = (h/2 - top_margin - bottom_margin) / max_gain; //scale factor for bar length
 
