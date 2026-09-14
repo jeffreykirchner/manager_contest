@@ -61,6 +61,15 @@ send_setup_random_pairs: function send_setup_random_pairs()
     app.send_message("setup_random_pairs", {"session_id" : app.session.id});
 },
 
+/**
+ * randomize period order within each block
+ */
+send_randomize_period_order_within_block: function send_randomize_period_order_within_block()
+{
+    app.working = true;
+    app.send_message("randomize_period_order_within_block", {"session_id" : app.session.id});
+},
+
 /** copy current period settings forward to all future periods
 */
 send_copy_forward_parameter_set_period: function send_copy_forward_parameter_set_period()

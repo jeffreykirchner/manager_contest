@@ -130,6 +130,16 @@
                         Random Pairs <i class="fa-regular fa-handshake"></i>
                 </button>
             </div>
+
+            <div class="col-md-auto">
+                <button class="btn btn-outline-primary btn-sm"
+                        type="button"
+                        title="Randomize period order within each block"
+                        v-bind:disabled="session.started || reconnecting || working"
+                        v-on:click="send_randomize_period_order_within_block()">
+                        Randomize order within block <i class="fa-solid fa-shuffle"></i>
+                </button>
+            </div>
         </div>
 
     </div>

@@ -78,6 +78,18 @@ class ParameterSetPeriodsMixin():
 
         await self.send_message(message_to_self=message_data, message_to_group=None,
                                 message_type="update_parameter_set", send_to_client=True, send_to_group=False)
+
+    async def randomize_period_order_within_block(self, event):
+        '''
+        randomize period order within each block
+        '''
+
+        message_data = {}
+        message_data["status"] = await take_randomize_period_order_within_block(event["message_text"])
+        message_data["parameter_set"] = await take_get_parameter_set(event["message_text"]["session_id"])
+
+        await self.send_message(message_to_self=message_data, message_to_group=None,
+                                message_type="update_parameter_set", send_to_client=True, send_to_group=False)
     
     async def copy_forward_parameter_set_period(self, event):
         '''
@@ -273,6 +285,37 @@ def take_setup_random_pairs(data):
         period.pairs = round_pairs
         period.save()
     
+    session.parameter_set.update_json_fk(update_periods=True)
+
+    return {"value": "success"}
+
+@sync_to_async
+def take_randomize_period_order_within_block(data):
+    '''
+    randomize the order of periods without moving them between blocks
+    '''
+    logger = logging.getLogger(__name__)
+
+    session_id = data["session_id"]
+
+    try:
+        session = Session.objects.get(id=session_id)
+    except ObjectDoesNotExist:
+        logger.warning(f"take_randomize_period_order_within_block session, not found ID: {session_id}")
+        return {"value": "fail"}
+
+    periods = list(session.parameter_set.parameter_set_periods.order_by("period_number"))
+    periods_by_block = {}
+    for period in periods:
+        periods_by_block.setdefault(period.block_number, []).append(period)
+
+    for block_periods in periods_by_block.values():
+        period_numbers = [period.period_number for period in block_periods]
+        random.shuffle(block_periods)
+        for period, period_number in zip(block_periods, period_numbers):
+            period.period_number = period_number
+            period.save(update_fields=["period_number", "updated"])
+
     session.parameter_set.update_json_fk(update_periods=True)
 
     return {"value": "success"}
