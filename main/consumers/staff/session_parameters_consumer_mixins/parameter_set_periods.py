@@ -297,6 +297,7 @@ def take_copy_forward_parameter_set_period(data):
     future_periods = session.parameter_set.parameter_set_periods.filter(period_number__gt=source_period.period_number)
 
     for period in future_periods:
+        period.block_number = source_period.block_number
         period.type_a_units_player_1 = source_period.type_a_units_player_1
         period.type_a_units_player_2 = source_period.type_a_units_player_2
         period.type_b_units_player_1 = source_period.type_b_units_player_1

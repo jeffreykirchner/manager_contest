@@ -15,6 +15,7 @@ class ParameterSetPeriod(models.Model):
     parameter_set = models.ForeignKey(ParameterSet, on_delete=models.CASCADE, related_name="parameter_set_periods")
 
     period_number = models.IntegerField(verbose_name='Period Number', default=1)
+    block_number = models.IntegerField(verbose_name='Block Number', default=1)
 
     type_a_units_player_1 = models.IntegerField(verbose_name='Type A Player 1', default=0)            #starting number of type a units for player 1
     type_a_units_player_2 = models.IntegerField(verbose_name='Type A Player 2', default=0)            #starting number of type a units for player 2    
@@ -47,6 +48,7 @@ class ParameterSetPeriod(models.Model):
         '''
 
         self.period_number = new_ps.get("period_number", self.period_number)
+        self.block_number = new_ps.get("block_number", self.block_number)
  
         self.type_a_units_player_1 = new_ps.get("type_a_units_player_1", self.type_a_units_player_1)
         self.type_a_units_player_2 = new_ps.get("type_a_units_player_2", self.type_a_units_player_2)
@@ -88,6 +90,7 @@ class ParameterSetPeriod(models.Model):
         return {
             "id": self.id,
             "period_number": self.period_number,
+            "block_number": self.block_number,
   
             "type_a_units_player_1": self.type_a_units_player_1,
             "type_a_units_player_2": self.type_a_units_player_2,

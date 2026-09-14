@@ -23,6 +23,9 @@
                                     #
                                 </th>
                                 <th scope="col" class = "m-1 p-1">
+                                    Block
+                                </th>
+                                <th scope="col" class = "m-1 p-1">
                                     A Units<br>P1
                                 </th>
                                 <th scope="col" class = "m-1 p-1">
@@ -52,6 +55,10 @@
                                 >
                                 <td>
                                     [[temp_p.period_number]]
+                                </td>
+                                <td v-on:click="show_edit_parameter_set_period(p)"
+                                    class="player_table_cell">
+                                    [[temp_p.block_number]]
                                 </td>
                                 <td v-on:click="show_edit_parameter_set_period(p)"
                                     class="player_table_cell">
