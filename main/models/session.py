@@ -367,7 +367,7 @@ class Session(models.Model):
             
            
             top_row = ["Session ID", "Period", "Group", "Player ID (Global)", "Player Number (Session)", "Player 1", "Player 2", "Player 1 Start A", "Player 2 Start A", "Player 1 Start B", "Player 2 Start B", 
-                       "AB Value", "B Value",
+                       "AB Price (points)", "B Only Price (points)",
                        "Phase 1, Player 1 Separate Value", "Phase 1, Player 2 Separate Value", "Phase 1, Group Total Value",
                        "Player 1 A Bid", "Player 2 A Bid", "Player 1 A Bid Prediction", "Player 2 A Bid Prediction",
                        "Phase 2, Player 1 Separate Value", "Phase 2, Player 2 Separate Value", "Phase 2, Group Total Value",
