@@ -85,7 +85,7 @@ get_history: function get_history()
 
         history.push({
             period_number: i + 1,
-            type_b_value: parameter_set_period.outside_option_payout,
+            type_b_value: group.outside_option_payout,
             my_starting_units_string:my_starting_units_string,
             counterpart_starting_units_string:counterpart_starting_units_string,
             my_type_a_phase_1_units: my_type_a_phase_1_units,

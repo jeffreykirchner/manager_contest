@@ -220,6 +220,7 @@ class Session(models.Model):
                 p["manager_offer"] = None
                 p["manager_offer_accepted"] = None
 
+                p["outside_option_payout"] = parameter_set_period.outside_option_payout
                 p["player_1_total_value"] = async_to_sync(get_total_player_value)(p, 1, parameter_set_period_json)
                 p["player_2_total_value"] = async_to_sync(get_total_player_value)(p, 2, parameter_set_period_json)
                 p["group_total_value"] = async_to_sync(get_total_group_value)(p, parameter_set_period_json)
@@ -236,6 +237,8 @@ class Session(models.Model):
 
                 p["phase"] = GroupPhase.PHASE_1
                 p["id"] = p_id
+
+                
 
                 groups[str(p_id)] = p
 
@@ -399,7 +402,7 @@ class Session(models.Model):
                                 parameter_set_period["type_b_units_player_1"],
                                 parameter_set_period["type_b_units_player_2"],
                                 parameter_set_period["work_payout"],
-                                parameter_set_period["outside_option_payout"],
+                                group["outside_option_payout"],
                                 group["player_1_start_total_value"],
                                 group["player_2_start_total_value"],
                                 group["group_start_total_value"],
@@ -432,7 +435,7 @@ class Session(models.Model):
                                 parameter_set_period["type_b_units_player_1"],
                                 parameter_set_period["type_b_units_player_2"],
                                 parameter_set_period["work_payout"],
-                                parameter_set_period["outside_option_payout"],
+                                group["outside_option_payout"],
                                 group["player_1_start_total_value"],
                                 group["player_2_start_total_value"],
                                 group["group_start_total_value"],

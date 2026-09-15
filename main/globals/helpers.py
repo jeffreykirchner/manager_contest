@@ -20,11 +20,11 @@ async def get_total_group_value(group: dict, parameter_set_period: dict) -> floa
 
     # add value for unused type B units
     unused_b_units = max(0, total_b_units - total_a_units)
-    total_value += unused_b_units * float(parameter_set_period["outside_option_payout"])  
+    total_value += unused_b_units * float(group["outside_option_payout"])  
 
     #check if all type B units are worth more than the work payout, if so calculate value as if all type B units are used for outside option
-    if float(parameter_set_period["outside_option_payout"]) * total_b_units > total_value:
-        total_value = total_b_units * float(parameter_set_period["outside_option_payout"])
+    if float(group["outside_option_payout"]) * total_b_units > total_value:
+        total_value = total_b_units * float(group["outside_option_payout"])
 
     return round_half_away_from_zero(total_value, 1)
 
@@ -50,10 +50,10 @@ async def get_total_player_value(group: dict, player_number: int, parameter_set_
 
     # add value for unused type B units
     unused_b_units = max(0, b_units - a_units)
-    total_value += unused_b_units * float(parameter_set_period["outside_option_payout"])
+    total_value += unused_b_units * float(group["outside_option_payout"])
 
     #check if all type B units are worth more than the work payout, if so calculate value as if all type B units are used for outside option
-    if float(parameter_set_period["outside_option_payout"]) * b_units > total_value:
-        total_value = b_units * float(parameter_set_period["outside_option_payout"])    
+    if float(group["outside_option_payout"]) * b_units > total_value:
+        total_value = b_units * float(group["outside_option_payout"])    
 
     return round_half_away_from_zero(total_value, 1)
