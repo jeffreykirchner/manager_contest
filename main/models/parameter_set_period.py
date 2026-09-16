@@ -23,7 +23,7 @@ class ParameterSetPeriod(models.Model):
     type_b_units_player_2 = models.IntegerField(verbose_name='Type B Player 2', default=0)            #starting number of type b units for player 2
 
     work_payout = models.DecimalField(verbose_name='Work Payout', max_digits=10, decimal_places=2, default=1.00)                       #payout per unit of work, for both types and both players 
-    outside_option_payout = models.DecimalField(verbose_name='Outside Option Payout', max_digits=10, decimal_places=2, default=0.75)   #payout for outside option, for type b units
+    outside_option_payout = models.CharField(verbose_name='Outside Option Payouts', max_length=1000, default="0.20,0.25,0.30,0.35,0.40,0.45,0.55,0.65,0.75,0.90")                     #csv list of outside option payouts by group for this period.
 
     pairs = models.JSONField(verbose_name='Pairs', default=dict)  #store pairs for this period, format {"pair number": ()}
 

@@ -220,7 +220,9 @@ class Session(models.Model):
                 p["manager_offer"] = None
                 p["manager_offer_accepted"] = None
 
-                p["outside_option_payout"] = parameter_set_period.outside_option_payout
+                outside_option_payouts = parameter_set_period.outside_option_payout.split(",")
+
+                p["outside_option_payout"] = float(outside_option_payouts[int(p_id)-1])
                 p["player_1_total_value"] = async_to_sync(get_total_player_value)(p, 1, parameter_set_period_json)
                 p["player_2_total_value"] = async_to_sync(get_total_player_value)(p, 2, parameter_set_period_json)
                 p["group_total_value"] = async_to_sync(get_total_group_value)(p, parameter_set_period_json)
@@ -237,8 +239,6 @@ class Session(models.Model):
 
                 p["phase"] = GroupPhase.PHASE_1
                 p["id"] = p_id
-
-                
 
                 groups[str(p_id)] = p
 
