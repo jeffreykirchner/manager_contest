@@ -134,6 +134,16 @@
             <div class="col-md-auto">
                 <button class="btn btn-outline-primary btn-sm"
                         type="button"
+                        title="Randomize pairs (odd paired with random even) and randomize outside option prices, avoiding repeats within a block"
+                        v-bind:disabled="session.started || reconnecting || working"
+                        v-on:click="send_setup_round_robin_prices()">
+                        Round Robin Prices <i class="fa-regular fa-handshake"></i>
+                </button>
+            </div>
+
+            <div class="col-md-auto">
+                <button class="btn btn-outline-primary btn-sm"
+                        type="button"
                         title="Randomize period order within each block"
                         v-bind:disabled="session.started || reconnecting || working"
                         v-on:click="send_randomize_period_order_within_block()">

@@ -62,6 +62,15 @@ send_setup_random_pairs: function send_setup_random_pairs()
 },
 
 /**
+ * setup round robin pairs (odd paired with random even) and randomize outside option prices
+ */
+send_setup_round_robin_prices: function send_setup_round_robin_prices()
+{
+    app.working = true;
+    app.send_message("setup_round_robin_prices", {"session_id" : app.session.id});
+},
+
+/**
  * randomize period order within each block
  */
 send_randomize_period_order_within_block: function send_randomize_period_order_within_block()
