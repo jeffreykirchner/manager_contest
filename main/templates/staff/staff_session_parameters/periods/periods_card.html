@@ -23,6 +23,9 @@
                                     #
                                 </th>
                                 <th scope="col" class = "m-1 p-1">
+                                    Block
+                                </th>
+                                <th scope="col" class = "m-1 p-1">
                                     A Units<br>P1
                                 </th>
                                 <th scope="col" class = "m-1 p-1">
@@ -35,10 +38,10 @@
                                     B Units<br>P2
                                 </th>
                                 <th scope="col" class = "m-1 p-1">
-                                    AB<br>Value (points)
+                                    AB<br>Price (points)
                                 </th>
                                 <th scope="col" class = "m-1 p-1">
-                                    B Only<br>Value (points)
+                                    List (by pair) <br> of B Only<br>Price (points)
                                 </th>
                                 <th scope="col" class = "m-1 p-1">
                                     Pairs [P1, P2]
@@ -52,6 +55,10 @@
                                 >
                                 <td>
                                     [[temp_p.period_number]]
+                                </td>
+                                <td v-on:click="show_edit_parameter_set_period(p)"
+                                    class="player_table_cell">
+                                    [[temp_p.block_number]]
                                 </td>
                                 <td v-on:click="show_edit_parameter_set_period(p)"
                                     class="player_table_cell">
@@ -104,6 +111,16 @@
                 </button>
             </div>
 
+            <div class="col-md-auto">
+                <button class="btn btn-outline-success btn-sm"
+                        type="button"
+                        title="Upload periods from CSV or TAB delimited text"
+                        v-bind:disabled="session.started || reconnecting || working"
+                        v-on:click="show_upload_parameterset_periods()">
+                        Upload Price and Pairs <i class="fas fa-upload"></i>
+                </button>
+            </div>
+
              <div class="col-md-auto">
                 <button class="btn btn-outline-primary btn-sm"
                         type="button"
@@ -121,6 +138,26 @@
                         v-bind:disabled="session.started || reconnecting || working"
                         v-on:click="send_setup_random_pairs()">
                         Random Pairs <i class="fa-regular fa-handshake"></i>
+                </button>
+            </div>
+
+            <div class="col-md-auto" hidden >
+                <button class="btn btn-outline-primary btn-sm"
+                        type="button"
+                        title="Randomize pairs (odd paired with random even) and randomize outside option prices, avoiding repeats within a block"
+                        v-bind:disabled="session.started || reconnecting || working"
+                        v-on:click="send_setup_round_robin_prices()">
+                        Round Robin Prices <i class="fa-regular fa-handshake"></i>
+                </button>
+            </div>
+
+            <div class="col-md-auto">
+                <button class="btn btn-outline-primary btn-sm"
+                        type="button"
+                        title="Randomize period order within each block"
+                        v-bind:disabled="session.started || reconnecting || working"
+                        v-on:click="send_randomize_period_order_within_block()">
+                        Randomize order within block <i class="fa-solid fa-shuffle"></i>
                 </button>
             </div>
         </div>

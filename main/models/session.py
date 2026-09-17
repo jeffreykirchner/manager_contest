@@ -220,6 +220,9 @@ class Session(models.Model):
                 p["manager_offer"] = None
                 p["manager_offer_accepted"] = None
 
+                outside_option_payouts = parameter_set_period.outside_option_payout.split(",")
+
+                p["outside_option_payout"] = float(outside_option_payouts[int(p_id)-1])
                 p["player_1_total_value"] = async_to_sync(get_total_player_value)(p, 1, parameter_set_period_json)
                 p["player_2_total_value"] = async_to_sync(get_total_player_value)(p, 2, parameter_set_period_json)
                 p["group_total_value"] = async_to_sync(get_total_group_value)(p, parameter_set_period_json)
@@ -367,7 +370,7 @@ class Session(models.Model):
             
            
             top_row = ["Session ID", "Period", "Group", "Player ID (Global)", "Player Number (Session)", "Player 1", "Player 2", "Player 1 Start A", "Player 2 Start A", "Player 1 Start B", "Player 2 Start B", 
-                       "AB Value", "B Value",
+                       "AB Price (points)", "B Only Price (points)",
                        "Phase 1, Player 1 Separate Value", "Phase 1, Player 2 Separate Value", "Phase 1, Group Total Value",
                        "Player 1 A Bid", "Player 2 A Bid", "Player 1 A Bid Prediction", "Player 2 A Bid Prediction",
                        "Phase 2, Player 1 Separate Value", "Phase 2, Player 2 Separate Value", "Phase 2, Group Total Value",
@@ -399,7 +402,7 @@ class Session(models.Model):
                                 parameter_set_period["type_b_units_player_1"],
                                 parameter_set_period["type_b_units_player_2"],
                                 parameter_set_period["work_payout"],
-                                parameter_set_period["outside_option_payout"],
+                                group["outside_option_payout"],
                                 group["player_1_start_total_value"],
                                 group["player_2_start_total_value"],
                                 group["group_start_total_value"],
@@ -432,7 +435,7 @@ class Session(models.Model):
                                 parameter_set_period["type_b_units_player_1"],
                                 parameter_set_period["type_b_units_player_2"],
                                 parameter_set_period["work_payout"],
-                                parameter_set_period["outside_option_payout"],
+                                group["outside_option_payout"],
                                 group["player_1_start_total_value"],
                                 group["player_2_start_total_value"],
                                 group["group_start_total_value"],

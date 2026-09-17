@@ -75,6 +75,18 @@ get_current_parameter_set_period: function get_current_parameter_set_period()
 },
 
 /**
+ * get my outside option payout for the current period
+ */
+get_my_outside_option_payout: function get_my_outside_option_payout()
+{
+    if(!app.session) return null;
+    if(!app.session.started) return null;
+
+    let group = app.get_current_group();
+    return group.outside_option_payout;
+},
+
+/**
  * get my type A units for the current period
  */
 get_my_type_a_units: function get_my_type_a_units()
@@ -202,7 +214,7 @@ get_total_player_value_string: function get_total_player_value_string(player_num
     let type_a_total_units = group["type_a_units_start_player_" + player_number];
     let type_b_units = group["type_b_units_player_" + player_number];
     let type_b_total_units = type_b_units;
-    let type_ab_total_units = parameter_set_period.work_payout>parameter_set_period.outside_option_payout ? Math.min(type_a_total_units, type_b_total_units) : 0;
+    let type_ab_total_units = parameter_set_period.work_payout > group.outside_option_payout ? Math.min(type_a_total_units, type_b_total_units) : 0;
     let type_a_spent = 0;
 
     if(format == "json")
@@ -258,7 +270,7 @@ get_total_player_value_string: function get_total_player_value_string(player_num
     }
 
     let work_payout = parseFloat(parameter_set_period.work_payout);
-    let outside_option_payout = parseFloat(parameter_set_period.outside_option_payout);
+    let outside_option_payout = parseFloat(group.outside_option_payout);
 
     //calculate value for type A and type B units
     let units_for_work = Math.min(type_a_units, type_b_units);
@@ -353,7 +365,7 @@ get_total_value_value_string : function get_total_value_value_string(format = "s
     let type_b_units = group["type_b_units_player_1"] + group["type_b_units_player_2"];
     let type_b_total_units = type_b_units;
     let type_a_spent = 0;
-    let type_ab_total_units = parameter_set_period.work_payout>parameter_set_period.outside_option_payout ? Math.min(type_a_total_units, type_b_total_units) : 0;
+    let type_ab_total_units = parameter_set_period.work_payout > group.outside_option_payout ? Math.min(type_a_total_units, type_b_total_units) : 0;
 
     let place_holder = `<span class="fs-4">---</span><br>---`;
 
@@ -409,7 +421,7 @@ get_total_value_value_string : function get_total_value_value_string(format = "s
 
     let work_payout = parseFloat(parameter_set_period.work_payout);
 
-    let outside_option_payout = parseFloat(parameter_set_period.outside_option_payout);
+    let outside_option_payout = parseFloat(group.outside_option_payout);
 
     //calculate value for player 1
     let units_for_work = Math.min(type_a_units, type_b_units);

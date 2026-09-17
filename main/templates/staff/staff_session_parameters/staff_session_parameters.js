@@ -40,9 +40,13 @@ let app = Vue.createApp({
                     edit_parameterset_player_modal : null,
                     edit_parameterset_period_modal : null,
                     upload_parameter_set_modal : null,
+                    upload_parameterset_periods_modal : null,
 
                     //form paramters
                     session_import : null,
+
+                    upload_parameterset_periods_text : "",
+                    upload_parameterset_periods_error : "",
                 }},
     methods: {
 
@@ -86,6 +90,9 @@ let app = Vue.createApp({
                 case "import_parameters":
                     app.take_import_parameters(message_data);
                     break;
+                case "upload_parameterset_periods":
+                    app.take_upload_parameterset_periods(message_data);
+                    break;
                 case "download_parameters":
                     app.take_download_parameters(message_data);
                     break;
@@ -117,10 +124,12 @@ let app = Vue.createApp({
             app.edit_parameterset_player_modal = bootstrap.Modal.getOrCreateInstance(document.getElementById('edit_parameterset_player_modal'), {keyboard: false})
             app.upload_parameter_set_modal = bootstrap.Modal.getOrCreateInstance(document.getElementById('upload_parameter_set_modal'), {keyboard: false})   
             app.edit_parameterset_period_modal = bootstrap.Modal.getOrCreateInstance(document.getElementById('edit_parameterset_period_modal'), {keyboard: false})
+            app.upload_parameterset_periods_modal = bootstrap.Modal.getOrCreateInstance(document.getElementById('upload_parameterset_periods_modal'), {keyboard: false})
 
             document.getElementById('import_parameters_modal').addEventListener('hidden.bs.modal', app.hide_import_parameters);
             document.getElementById('edit_parameterset_modal').addEventListener('hidden.bs.modal', app.hide_edit_parameter_set);
             document.getElementById('upload_parameter_set_modal').addEventListener('hidden.bs.modal', app.hide_upload_parameters);
+            document.getElementById('upload_parameterset_periods_modal').addEventListener('hidden.bs.modal', app.hide_upload_parameterset_periods);
 
             app.first_load_done = true;
         },

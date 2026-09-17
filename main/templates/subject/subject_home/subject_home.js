@@ -349,7 +349,7 @@ let app = Vue.createApp({
                 group.type_b_units_start_player_1 = app.instructions.ex1_type_b_units_player_1;
                 group.type_b_units_start_player_2 = app.instructions.ex1_type_b_units_player_2;
 
-                parameter_set_period.outside_option_payout = app.instructions.ex1_outside_option_payout;
+                group.outside_option_payout = app.instructions.ex1_outside_option_payout;
                 parameter_set_period.work_payout = app.instructions.ex1_work_payout;
 
                 parameter_set_period.type_a_units_player_1 = app.instructions.ex1_type_a_units_player_1;

@@ -15,6 +15,7 @@ class ParameterSetPeriod(models.Model):
     parameter_set = models.ForeignKey(ParameterSet, on_delete=models.CASCADE, related_name="parameter_set_periods")
 
     period_number = models.IntegerField(verbose_name='Period Number', default=1)
+    block_number = models.IntegerField(verbose_name='Block Number', default=1)
 
     type_a_units_player_1 = models.IntegerField(verbose_name='Type A Player 1', default=0)            #starting number of type a units for player 1
     type_a_units_player_2 = models.IntegerField(verbose_name='Type A Player 2', default=0)            #starting number of type a units for player 2    
@@ -22,7 +23,7 @@ class ParameterSetPeriod(models.Model):
     type_b_units_player_2 = models.IntegerField(verbose_name='Type B Player 2', default=0)            #starting number of type b units for player 2
 
     work_payout = models.DecimalField(verbose_name='Work Payout', max_digits=10, decimal_places=2, default=1.00)                       #payout per unit of work, for both types and both players 
-    outside_option_payout = models.DecimalField(verbose_name='Outside Option Payout', max_digits=10, decimal_places=2, default=0.75)   #payout for outside option, for type b units
+    outside_option_payout = models.CharField(verbose_name='Outside Option Payouts', max_length=1000, default="0.20,0.25,0.30,0.35,0.40,0.45,0.55,0.65,0.75,0.90")                     #csv list of outside option payouts by group for this period.
 
     pairs = models.JSONField(verbose_name='Pairs', default=dict)  #store pairs for this period, format {"pair number": ()}
 
@@ -47,6 +48,7 @@ class ParameterSetPeriod(models.Model):
         '''
 
         self.period_number = new_ps.get("period_number", self.period_number)
+        self.block_number = new_ps.get("block_number", self.block_number)
  
         self.type_a_units_player_1 = new_ps.get("type_a_units_player_1", self.type_a_units_player_1)
         self.type_a_units_player_2 = new_ps.get("type_a_units_player_2", self.type_a_units_player_2)
@@ -88,6 +90,7 @@ class ParameterSetPeriod(models.Model):
         return {
             "id": self.id,
             "period_number": self.period_number,
+            "block_number": self.block_number,
   
             "type_a_units_player_1": self.type_a_units_player_1,
             "type_a_units_player_2": self.type_a_units_player_2,
