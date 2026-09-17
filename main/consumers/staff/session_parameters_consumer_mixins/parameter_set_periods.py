@@ -14,7 +14,7 @@ from main.forms import ParameterSetPeriodForm
 from ..session_parameters_consumer_mixins.get_parameter_set import take_get_parameter_set
 
 #number of times to restart the full period loop if a period can't find a valid no-repeat assignment
-TAKE_SETUP_ROUND_ROBIN_PRICES_MAX_RESTARTS = 1000000
+TAKE_SETUP_ROUND_ROBIN_PRICES_MAX_RESTARTS = 100000000
 
 class ParameterSetPeriodsMixin():
     '''
@@ -328,96 +328,92 @@ def take_setup_round_robin_prices(data):
         logger.warning("take_setup_round_robin_prices requires an equal, non-zero number of odd and even numbered players")
         return {"value": "fail", "errors": {"players": ["An equal, non-zero number of odd and even numbered players are required."]}}
 
-    periods = list(session.parameter_set.parameter_set_periods.all())
+    periods = list(session.parameter_set.parameter_set_periods.order_by("period_number"))
 
     if not periods:
         logger.warning("take_setup_round_robin_prices requires at least one period")
         return {"value": "fail"}
 
-    furthest_period = 0
-    #set of block numbers to process
-    block_numbers = set(p.block_number for p in periods)
-    reference_values = session.parameter_set.parameter_set_periods.first().outside_option_payout.split(",")
+    reference_values = periods[0].outside_option_payout.split(",")
 
-    for block_number in block_numbers:
-
-        used_pair = {}
+    #mutate periods in memory only; a single bulk_update persists everything once at the end
+    #instead of one query per period on every retry attempt
+    for block_number in sorted({p.block_number for p in periods}):
         periods_in_block = [p for p in periods if p.block_number == block_number]
 
-        error_found = True
+        #values already committed to players, snapshotted at furthest_period_reached_before_restart
+        committed_player_values = {}
         furthest_period_reached_before_restart = 0
         fail_count = 0
         retry_count = 0
-        while error_found:
+        furthest_period_reached_before_restart_best = 0
 
-            if retry_count == 1000:
-                logger.warning(f"retrying from the beginning.")
+        while True:
+            if retry_count == 3000:
+                # logger.warning("take_setup_round_robin_prices: retrying from the beginning.")
                 furthest_period_reached_before_restart = 0
+                committed_player_values = {}
                 retry_count = 0
 
-            #generate random pairings
+            player_values = {p_id: set(v) for p_id, v in committed_player_values.items()}
+            conflict_period_number = None
+
             for period in periods_in_block:
-
-                if period.period_number < furthest_period_reached_before_restart:
+                if period.period_number <= furthest_period_reached_before_restart:
                     continue
-
-                round_pairs = {}
 
                 #randomly assign odd players to even players without repeating pairs within the same block
                 random.shuffle(even_players)
-                for i, odd_player in enumerate(odd_players):
-                    even_player = even_players[i]
-                    round_pairs[str(i+1)] = (odd_player.id, even_player.id)
+                round_pairs = {str(i + 1): (odd_player.id, even_players[i].id) for i, odd_player in enumerate(odd_players)}
 
-                period.pairs = round_pairs
-                random.shuffle(reference_values)
-                period.outside_option_payout = ",".join(reference_values)
-                period.save()
+                payout_values = list(reference_values)
+                random.shuffle(payout_values)
 
-            error_found = False
-
-            #check if any player has been assigned the same outside_option_payout value more than once within the block, if so break and restart the process for this block
-            player_value_assignments = {}
-            
-            for period in periods_in_block:
-               
-                payouts = period.outside_option_payout.split(",")
-
-                for pair_id, (p1_id, p2_id) in period.pairs.items():
-                    payout = payouts[int(pair_id)-1]
-
-                    if p1_id not in player_value_assignments:
-                        player_value_assignments[p1_id] = set()
-                    if p2_id not in player_value_assignments:
-                        player_value_assignments[p2_id] = set()
-
-                    if payout in player_value_assignments[p1_id] or payout in player_value_assignments[p2_id]:
-                        #restart the process for this block
-                        error_found = True
+                conflict = False
+                for pair_id, (p1_id, p2_id) in round_pairs.items():
+                    payout = payout_values[int(pair_id) - 1]
+                    if payout in player_values.get(p1_id, ()) or payout in player_values.get(p2_id, ()):
+                        conflict = True
                         break
-                    else:
-                        player_value_assignments[p1_id].add(payout)
-                        player_value_assignments[p2_id].add(payout)
 
-                if error_found:
-                    if(furthest_period_reached_before_restart < period.period_number):
-                        retry_count = 0
-                        furthest_period_reached_before_restart = period.period_number
-                        logger.warning(f"take_setup_round_robin_prices: Restarting block {block_number}, reached period {furthest_period_reached_before_restart} before restart")
-                    
-                    fail_count += 1
-                    retry_count += 1
+                #stop as soon as a conflict is found instead of generating/checking the remaining periods
+                if conflict:
+                    conflict_period_number = period.period_number
                     break
 
-            if fail_count > TAKE_SETUP_ROUND_ROBIN_PRICES_MAX_RESTARTS:
-                logger.warning(f"take_setup_round_robin_prices: Failed to find valid assignment for block {block_number} after {fail_count} restarts")
-                error_found = False
-            elif not error_found:
+                for pair_id, (p1_id, p2_id) in round_pairs.items():
+                    payout = payout_values[int(pair_id) - 1]
+                    player_values.setdefault(p1_id, set()).add(payout)
+                    player_values.setdefault(p2_id, set()).add(payout)
+
+                period.pairs = round_pairs
+                period.outside_option_payout = ",".join(payout_values)
+
+            if conflict_period_number is None:
                 logger.warning(f"take_setup_round_robin_prices completed block {block_number} with {fail_count} restarts")
-                
-        #test
+                break
+
+            fail_count += 1
+            retry_count += 1
+
+            if furthest_period_reached_before_restart < conflict_period_number - 1:
+                furthest_period_reached_before_restart = conflict_period_number - 1
+
+                if(max(furthest_period_reached_before_restart_best, furthest_period_reached_before_restart) > furthest_period_reached_before_restart_best):
+                    logger.warning(f"Best attempt so far: Restarting block {block_number}, reached period {furthest_period_reached_before_restart} before restart")
+                furthest_period_reached_before_restart_best = max(furthest_period_reached_before_restart_best, furthest_period_reached_before_restart)
+                committed_player_values = player_values
+                retry_count = 0
+                # logger.warning(f"take_setup_round_robin_prices: Restarting block {block_number}, reached period {furthest_period_reached_before_restart} before restart")
+
+            if fail_count > TAKE_SETUP_ROUND_ROBIN_PRICES_MAX_RESTARTS:
+                logger.warning(f"take_setup_round_robin_prices: Failed to find valid assignment for block {block_number} after {fail_count} restarts, reached period {furthest_period_reached_before_restart_best} on best attempt.")
+                break
+
+        #for testing
         break
-    
+
+    ParameterSetPeriod.objects.bulk_update(periods, ["pairs", "outside_option_payout"])
 
     session.parameter_set.update_json_fk(update_periods=True)
     return {"value": "success"}
