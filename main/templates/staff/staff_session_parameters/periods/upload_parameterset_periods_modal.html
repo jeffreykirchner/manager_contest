@@ -1,0 +1,36 @@
+<!-- Upload parameterset periods modal -->
+<div class="modal fade"
+     id="upload_parameterset_periods_modal"
+     data-bs-backdrop="static"
+     data-bs-keyboard="false"
+     tabindex="-1"
+     aria-labelledby="upload_parameterset_periods_modal"
+     aria-hidden="true">
+<div class="modal-dialog">
+    <div class="modal-content">
+    <div class="modal-header">
+        <h5 class="modal-title">Upload Price and Pair Data</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    </div>
+    <div class="modal-body">
+        <label for="id_upload_parameterset_periods" class="form-label">
+            Periods, CSV or TAB format. Columns: Round,RoleA_ID,RoleB_ID,Price<br>
+            One row per pair. RoleA_ID and RoleB_ID are the player numbers of the two players in the pair. Price is the price for that pair in that period. Round is the period number.
+            </b>
+        </label>
+        <textarea class="form-control" id="id_upload_parameterset_periods" v-model="upload_parameterset_periods_text" rows="10"></textarea>
+        <span v-if="upload_parameterset_periods_error" class="text-danger">
+            <span v-for="e in upload_parameterset_periods_error">[[e]]<br></span>
+        </span>
+    </div>
+    <div class="modal-footer">
+        <button type="button"
+                class="btn btn-outline-primary"
+                v-bind:disabled="reconnecting || working"
+                v-on:click = "send_upload_parameterset_periods()">
+            Upload <i class="fas fa-upload"></i>
+        </button>
+    </div>
+    </div>
+</div>
+</div>

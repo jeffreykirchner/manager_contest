@@ -111,6 +111,16 @@
                 </button>
             </div>
 
+            <div class="col-md-auto">
+                <button class="btn btn-outline-success btn-sm"
+                        type="button"
+                        title="Upload periods from CSV or TAB delimited text"
+                        v-bind:disabled="session.started || reconnecting || working"
+                        v-on:click="show_upload_parameterset_periods()">
+                        Upload Price and Pairs <i class="fas fa-upload"></i>
+                </button>
+            </div>
+
              <div class="col-md-auto">
                 <button class="btn btn-outline-primary btn-sm"
                         type="button"

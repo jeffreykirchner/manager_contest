@@ -118,6 +118,18 @@ class ParameterSetPeriodsMixin():
         await self.send_message(message_to_self=message_data, message_to_group=None,
                                 message_type="update_parameter_set", send_to_client=True, send_to_group=False)
 
+    async def upload_parameterset_periods(self, event):
+        '''
+        parse csv or tab delimited text and create/update parameterset periods
+        '''
+
+        message_data = {}
+        message_data["status"] = await take_upload_parameterset_periods(event["message_text"])
+        message_data["parameter_set"] = await take_get_parameter_set(event["message_text"]["session_id"])
+
+        await self.send_message(message_to_self=message_data, message_to_group=None,
+                                message_type="upload_parameterset_periods", send_to_client=True, send_to_group=False)
+
 
 @sync_to_async
 def take_update_parameter_set_period(data):
@@ -482,4 +494,92 @@ def take_copy_forward_parameter_set_period(data):
 
     return {"value": "success"}
 
-    
+@sync_to_async
+def take_upload_parameterset_periods(data):
+    '''
+    data is in the format of a csv file with the following columns:
+    Round, RoleA_ID, RoleB_ID, Price
+    rows are tab or comma delimted
+    '''
+
+    logger = logging.getLogger(__name__)
+
+    session_id = data["session_id"]
+    csv_data = data.get("csv_data", "")
+
+    try:
+        session = Session.objects.get(id=session_id)
+    except ObjectDoesNotExist:
+        logger.warning(f"take_upload_parameterset_periods session, not found ID: {session_id}")
+        return {"value": "fail", "errors": ["Session not found."]}
+
+    parameter_set_player_number_to_id = {p.player_number: p.id for p in session.parameter_set.parameter_set_players.all()}  
+
+    parameter_set = session.parameter_set
+    columns = ["Round", "RoleA_ID", "RoleB_ID", "Price"]
+
+    rows = []
+    for line in csv_data.splitlines():
+        line = line.strip()
+        if not line:
+            continue
+
+        #outside_option_payout may itself contain commas, so cap the number of comma splits
+        parts = line.split("\t") if "\t" in line else line.split(",", len(columns) - 1)
+        rows.append([p.strip() for p in parts])
+
+    if not rows:
+        return {"value": "fail", "errors": ["No data found."]}
+
+    #allow an optional header row (first cell not parseable as a period number)
+    if not rows[0][0].lstrip("-").isdigit():
+        rows.pop(0)
+
+    if not rows:
+        return {"value": "fail", "errors": ["No data found."]}
+
+    errors = []
+    periods_to_save = {}
+
+    for row_number, parts in enumerate(rows, start=1):
+        if len(parts) != len(columns):
+            errors.append(f"Row {row_number}: expected {len(columns)} columns, found {len(parts)}.")
+            continue
+
+        row_data = dict(zip(columns, parts))
+
+        try:
+            period_number = int(row_data["Round"])
+            person_a_number = int(row_data["RoleA_ID"]) * 2 - 1
+            person_b_number = int(row_data["RoleB_ID"]) * 2
+            outside_option_payout = float(row_data["Price"])
+        except ValueError:
+            errors.append(f"Row {row_number}: non-numeric value found.")
+            continue
+
+        #check if period number is in periods_to_save,s
+        if not period_number in periods_to_save:
+            periods_to_save[period_number] = {"outside_option_payout": [], "pairs": {}}
+
+        periods_to_save[period_number]["outside_option_payout"].append(outside_option_payout)
+        periods_to_save[period_number]["pairs"][str(row_data["RoleA_ID"])] = (parameter_set_player_number_to_id[person_a_number], 
+                                                                              parameter_set_player_number_to_id[person_b_number])
+
+    if errors:
+        return {"value": "fail", "errors": errors}
+
+    for period in periods_to_save:
+        
+        parameter_set_period = session.parameter_set.parameter_set_periods.filter(period_number=period).first()
+        parameter_set_period.outside_option_payout = ",".join(str(v) for v in periods_to_save[period]["outside_option_payout"])
+        parameter_set_period.pairs = periods_to_save[period]["pairs"]
+        parameter_set_period.save()
+
+        if not parameter_set_period:
+            errors.append(f"Period {period}: not found in parameter set.")
+            return {"value": "fail", "errors": errors}
+
+    parameter_set.update_json_fk(update_periods=True)
+
+    return {"value": "success"}
+

@@ -99,3 +99,50 @@ get_player_number: function get_player_number(parameter_set_player_id)
     }
     return app.parameter_set.parameter_set_players[parameter_set_player_id].player_number;
 },
+
+/** show upload periods modal
+*/
+show_upload_parameterset_periods: function show_upload_parameterset_periods()
+{
+    if(app.session.started) return;
+    if(app.working) return;
+
+    app.upload_parameterset_periods_text = "";
+    app.upload_parameterset_periods_error = "";
+
+    app.upload_parameterset_periods_modal.toggle();
+},
+
+/** send pasted csv/tab delimited period data to server
+*/
+send_upload_parameterset_periods: function send_upload_parameterset_periods()
+{
+    app.working = true;
+
+    app.send_message("upload_parameterset_periods", {"session_id" : app.session.id,
+                                                      "csv_data" : app.upload_parameterset_periods_text});
+},
+
+/** take result of uploading periods
+*/
+take_upload_parameterset_periods: function take_upload_parameterset_periods(message_data)
+{
+    if(message_data.status.value == "success")
+    {
+        app.take_get_parameter_set(message_data);
+
+        app.upload_parameterset_periods_error = "";
+        app.upload_parameterset_periods_modal.hide();
+    }
+    else
+    {
+        app.upload_parameterset_periods_error = message_data.status.errors;
+    }
+},
+
+/** hide upload periods modal
+*/
+hide_upload_parameterset_periods: function hide_upload_parameterset_periods()
+{
+    app.upload_parameterset_periods_text = "";
+},
