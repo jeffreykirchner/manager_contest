@@ -166,9 +166,9 @@ do_test_mode_phase_1: function do_test_mode_phase_1()
     let type_a_units = app.get_my_type_a_units();
     let type_a_units_counterpart = app.get_counterpart_type_a_units();
 
-    //random number of type a units
-    app.type_a_bid = app.random_number(0, type_a_units);
-    app.type_a_bid_counterpart = app.random_number(0, type_a_units_counterpart);
+    //random number of type a units with one decimal place
+    app.type_a_bid = app.random_number(0, type_a_units-1) + (app.random_number(0, 9) / 10);
+    app.type_a_bid_counterpart = app.random_number(0, type_a_units_counterpart-1) + (app.random_number(0, 9) / 10);
 
     app.submit_type_a_bid();
 },
@@ -195,7 +195,9 @@ do_test_mode_phase_2: function do_test_mode_phase_2()
         if(group.manager_offer == null)
         {
             let total_value_string = app.get_total_value_value_string("json");
-            app.manager_offer_to_worker = app.random_number(0, total_value_string.profit);
+
+            //random number between 0 and total_value_string.profit with two decimal places
+            app.manager_offer_to_worker = app.random_number(0, total_value_string.profit-1) + (app.random_number(0, 99) / 100);
             app.submit_manager_offer_to_worker();
         }
     }
