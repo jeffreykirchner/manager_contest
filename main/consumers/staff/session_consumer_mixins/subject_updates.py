@@ -477,11 +477,11 @@ class SubjectUpdatesMixin():
             if group["manager_offer_accepted"] == "accept":
 
                 if group["player_1"] == group["manager"]:
-                    group["player_1_earnings"] =  float(group["group_total_value"]) - float(group["manager_offer"])
-                    group["player_2_earnings"] = float(group["manager_offer"])
+                    group["player_1_earnings"] =  round_half_away_from_zero(float(group["group_total_value"]) - float(group["manager_offer"]), 2)
+                    group["player_2_earnings"] = round_half_away_from_zero(float(group["manager_offer"]), 2)
                 else:
-                    group["player_2_earnings"] =  float(group["group_total_value"]) - float(group["manager_offer"])
-                    group["player_1_earnings"] = float(group["manager_offer"])
+                    group["player_2_earnings"] =  round_half_away_from_zero(float(group["group_total_value"]) - float(group["manager_offer"]), 2)
+                    group["player_1_earnings"] = round_half_away_from_zero(float(group["manager_offer"]), 2)
             else:
                 group["player_1_earnings"] = group["player_1_total_value"]
                 group["player_2_earnings"] = group["player_2_total_value"]
