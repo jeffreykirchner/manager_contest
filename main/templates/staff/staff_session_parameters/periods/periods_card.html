@@ -160,6 +160,26 @@
                         Randomize order within block <i class="fa-solid fa-shuffle"></i>
                 </button>
             </div>
+
+            <div class="col-md-auto">
+                <button class="btn btn-outline-info btn-sm"
+                        type="button"
+                        title="Check pairs and outside option payouts"
+                        v-on:click="check_periods()">
+                        Check periods <i class="fa-solid fa-check"></i>
+                </button>
+            </div>
+        </div>
+
+        <div class="row justify-content-center mt-2" v-if="check_periods_results !== null">
+            <div class="col-md-auto">
+                <span v-if="check_periods_results.length == 0" class="text-success">
+                    All checks passed.
+                </span>
+                <span v-else class="text-danger">
+                    <span v-for="e in check_periods_results">[[e]]<br></span>
+                </span>
+            </div>
         </div>
 
     </div>
