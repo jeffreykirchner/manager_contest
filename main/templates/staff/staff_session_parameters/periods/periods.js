@@ -111,10 +111,28 @@ check_periods: function check_periods()
 
     let partners = {};  //block -> player id -> set of partner ids
     let payouts = {};   //block -> player id -> set of payouts
+    let block_units = {};  //block -> first period seen
+    const unit_fields = ["type_a_units_player_1", "type_a_units_player_2", "type_b_units_player_1", "type_b_units_player_2"];
 
     for(const period of periods)
     {
         let block = period.block_number;
+
+        if(!block_units[block])
+        {
+            block_units[block] = period;
+        }
+        else
+        {
+            for(const field of unit_fields)
+            {
+                if(period[field] !== block_units[block][field])
+                {
+                    errors.push("Period " + period.period_number + " (block " + block + "): " + field + " is " + period[field] +
+                                " but period " + block_units[block].period_number + " has " + block_units[block][field] + ".");
+                }
+            }
+        }
         let values = (period.outside_option_payout || "").split(",").map(v => v.trim());
         partners[block] = partners[block] || {};
         payouts[block] = payouts[block] || {};
