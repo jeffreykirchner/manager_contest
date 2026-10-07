@@ -47,6 +47,8 @@ let app = Vue.createApp({
 
                     upload_parameterset_periods_text : "",
                     upload_parameterset_periods_error : "",
+
+                    check_periods_results : null,
                 }},
     methods: {
 
